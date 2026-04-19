@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { OnboardingScreen } from "./components/OnboardingScreen";
 import { AuthScreen } from "./components/AuthScreen";
 import { UserProfile } from "./components/ProfileSetupScreen";
@@ -1278,7 +1278,7 @@ export default function App() {
   return (
     <div className="h-screen w-full bg-white flex items-center justify-center">
       {/* Mobile Container */}
-      <div className="relative w-full max-w-md h-full bg-white shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-3xl h-full bg-white shadow-2xl overflow-hidden">
         {renderScreen()}
         {showBottomNav && (
           <BottomNav

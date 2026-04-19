@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, CheckCircle, Sparkles, Users, Upload, Camera, Play, Pause, RotateCcw } from 'lucide-react';
 import { Button } from './ui/button';
 import { SkillCoin } from './CurrencyIcons';
@@ -82,7 +82,7 @@ function DynamicTimer({ defaultSeconds = 120 }: { defaultSeconds?: number }) {
       </button>
 
       {/* Controls */}
-      <div className="flex gap-2">
+      <div className="flex gap-4">
         <button
           onClick={toggle}
           className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold transition-all ${
@@ -93,7 +93,7 @@ function DynamicTimer({ defaultSeconds = 120 }: { defaultSeconds?: number }) {
         </button>
         <button
           onClick={reset}
-          className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gray-100 text-gray-600 border-2 border-gray-200"
+          className="flex items-center justify-center gap-4 px-4 py-3 rounded-xl bg-gray-100 text-gray-600 border-2 border-gray-200"
         >
           <RotateCcw size={16} />
         </button>
@@ -134,7 +134,7 @@ export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSub
     return (
       <div className="h-full bg-gradient-to-b from-blue-50 to-white pb-20 overflow-y-auto">
         <div className={`bg-gradient-to-r ${quest.color} px-6 pt-12 pb-6 rounded-b-[3rem] shadow-lg`}>
-          <button onClick={() => setCompletionMode('select')} className="text-white mb-3 flex items-center gap-2">
+          <button onClick={() => setCompletionMode('select')} className="text-white mb-3 flex items-center gap-4">
             <ArrowLeft size={20} /> Back
           </button>
           <div className="text-center">
@@ -198,7 +198,7 @@ export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSub
             <div className="text-6xl mb-4">{quest.icon}</div>
             <h3 className="text-gray-700 font-bold text-xl mb-6">{quest.title}</h3>
             <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-2xl p-6">
-              <div className="flex items-center justify-center gap-2 mb-1">
+              <div className="flex items-center justify-center gap-4 mb-1">
                 <SkillCoin size={32} />
                 <span className="text-white text-3xl font-bold">+{quest.points}</span>
               </div>
@@ -221,7 +221,7 @@ export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSub
   return (
     <div className="h-full bg-gradient-to-b from-blue-50 to-white pb-20 overflow-y-auto">
       <div className={`bg-gradient-to-r ${quest.color} px-6 pt-12 pb-8 rounded-b-[3rem] shadow-lg`}>
-        <button onClick={onBack} className="text-white mb-4 flex items-center gap-2">
+        <button onClick={onBack} className="text-white mb-4 flex items-center gap-4">
           <ArrowLeft size={20} /> Back
         </button>
         <div className="text-center">
@@ -236,7 +236,7 @@ export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSub
               </span>
             </div>
           )}
-          <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 inline-flex items-center gap-2">
+          <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 inline-flex items-center gap-4">
             <SkillCoin size={22} />
             <span className="text-white font-semibold">Worth {quest.points} SC coins</span>
           </div>
@@ -252,7 +252,7 @@ export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSub
           <h3 className="text-blue-600 font-bold mb-4">How to complete this quest:</h3>
           <div className="space-y-3">
             {quest.instructions.map((instruction: string, index: number) => (
-              <div key={index} className="flex gap-3">
+              <div key={index} className="flex gap-5">
                 <div className="bg-blue-500 text-white rounded-full w-7 h-7 flex items-center justify-center flex-shrink-0 mt-0.5 text-sm font-bold">
                   {index + 1}
                 </div>
@@ -264,7 +264,7 @@ export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSub
 
         {/* Tips */}
         <div className="bg-gradient-to-r from-purple-100 to-pink-100 border-2 border-purple-200 rounded-3xl p-5 mb-6">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-4 mb-2">
             <Sparkles className="text-purple-600" size={20} />
             <h3 className="text-purple-700 font-bold">Pro Tip!</h3>
           </div>
@@ -279,7 +279,7 @@ export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSub
           className="w-full bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-3xl p-6 mb-4 shadow-lg active:scale-95 transition-transform"
         >
           <div className="flex items-center gap-4">
-            <div className="bg-white rounded-full p-3"><Camera className="text-blue-500" size={32} /></div>
+            <div className="bg-white rounded-full p-5"><Camera className="text-blue-500" size={32} /></div>
             <div className="text-left">
               <h3 className="text-xl font-bold mb-1">Do It Solo</h3>
               <p className="text-blue-100 text-sm">Complete on your own and upload proof</p>
@@ -292,7 +292,7 @@ export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSub
           className="w-full bg-gradient-to-r from-orange-400 to-yellow-400 text-white rounded-3xl p-6 shadow-lg mb-6 active:scale-95 transition-transform"
         >
           <div className="flex items-center gap-4">
-            <div className="bg-white rounded-full p-3"><Users className="text-orange-500" size={32} /></div>
+            <div className="bg-white rounded-full p-5"><Users className="text-orange-500" size={32} /></div>
             <div className="text-left">
               <h3 className="text-xl font-bold mb-1">Challenge Mode</h3>
               <p className="text-orange-100 text-sm">Do it with friends or parents 🎮</p>

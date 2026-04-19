@@ -306,10 +306,10 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
       return (
         <div className="h-full bg-white flex flex-col">
           <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 pt-12 pb-6">
-            <button onClick={() => setActiveLesson(null)} className="text-white mb-3 flex items-center gap-2">
+            <button onClick={() => setActiveLesson(null)} className="text-white mb-3 flex items-center gap-4">
               <X size={20} /> Close
             </button>
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-4 mb-1">
               <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full">ðŸ“ Lesson Quiz</span>
             </div>
             <h2 className="text-white text-xl font-bold">{activeLesson.title}</h2>
@@ -357,7 +357,7 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
       return (
         <div className="h-full bg-white flex flex-col">
           <div className={`bg-gradient-to-r ${quizPassed ? 'from-green-500 to-emerald-600' : 'from-orange-500 to-red-500'} px-6 pt-12 pb-8 rounded-b-[3rem]`}>
-            <button onClick={() => setActiveLesson(null)} className="text-white mb-4 flex items-center gap-2">
+            <button onClick={() => setActiveLesson(null)} className="text-white mb-4 flex items-center gap-4">
               <X size={20} /> Close
             </button>
             <div className="text-center text-white">
@@ -414,7 +414,7 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
       <div className="h-full bg-white flex flex-col overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 pt-12 pb-6 flex-shrink-0">
-          <button onClick={() => setActiveLesson(null)} className="text-white mb-3 flex items-center gap-2">
+          <button onClick={() => setActiveLesson(null)} className="text-white mb-3 flex items-center gap-4">
             <X size={20} /> Close
           </button>
           <h2 className="text-white text-xl font-bold">{activeLesson.title}</h2>
@@ -450,7 +450,7 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
           </div>
 
           {/* Step dots */}
-          <div className="flex justify-center gap-2 mb-4">
+          <div className="flex justify-center gap-4 mb-4">
             {steps.map((_, i) => (
               <div
                 key={i}
@@ -480,10 +480,10 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
     <div className="h-full bg-gradient-to-b from-purple-50 to-white pb-20 overflow-y-auto">
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 pt-12 pb-6 rounded-b-[3rem] shadow-lg">
-        <button onClick={onBack} className="text-white mb-4 flex items-center gap-2">
+        <button onClick={onBack} className="text-white mb-4 flex items-center gap-4">
           <ArrowLeft size={20} /> Back
         </button>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-5">
           <span className="text-5xl">{course.emoji}</span>
           <div>
             <h2 className="text-white mb-1 font-bold text-xl">{course.title}</h2>
@@ -495,9 +495,9 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
 
       {/* How it works */}
       <div className="px-6 mt-5">
-        <div className="bg-indigo-50 border-2 border-indigo-100 rounded-3xl p-4">
+        <div className="bg-indigo-50 border-2 border-indigo-100 rounded-3xl p-6">
           <p className="text-indigo-700 font-bold text-sm mb-2">ðŸ“‹ How it works</p>
-          <div className="flex items-center gap-2 text-indigo-600 text-xs">
+          <div className="flex items-center gap-4 text-indigo-600 text-xs">
             <span className="bg-indigo-200 rounded-full px-2 py-0.5 font-semibold">Step Videos</span>
             <span>â†’</span>
             <span className="bg-purple-200 rounded-full px-2 py-0.5 font-semibold">Lesson Quiz</span>

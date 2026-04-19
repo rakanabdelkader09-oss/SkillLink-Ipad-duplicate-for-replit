@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+﻿import { useState, useMemo, useEffect } from 'react';
 import { Checkbox } from './ui/checkbox';
 import { Badge } from './ui/badge';
 import { Star, Sparkles, ChevronRight, Heart, GraduationCap, Palette, Home, Users, RefreshCw, Lock } from 'lucide-react';
@@ -80,25 +80,25 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, assignedQuests: p
         <h2 className="text-white mb-2">{t.todaysMissions}</h2>
         <p className="text-white/80 mb-4">{t.completeMissions}</p>
         
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-5 mb-4">
           {userProfile && (
             <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 inline-block">
               <p className="text-white text-sm">🎯 Age {userProfile.age}</p>
             </div>
           )}
-          <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 inline-block flex items-center gap-2">
+          <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 inline-block flex items-center gap-4">
             <RefreshCw size={14} className="text-white" />
             <p className="text-white text-sm">Resets at Midnight</p>
           </div>
         </div>
         
-        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4">
+        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6">
           <div className="flex justify-between items-center mb-2">
             <span className="text-white">Progress</span>
             <span className="text-white">{completedCount}/{quests.length}</span>
           </div>
           <Progress value={progress} className="h-3 bg-white/30 mb-3" />
-          <div className="flex items-center justify-center gap-2 bg-yellow-400 rounded-xl py-2">
+          <div className="flex items-center justify-center gap-4 bg-yellow-400 rounded-xl py-2">
             <Star size={20} className="text-yellow-700" fill="currentColor" />
             <span className="text-yellow-900">{totalPoints} Points Earned</span>
           </div>
@@ -107,7 +107,7 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, assignedQuests: p
 
       {/* Info Banner */}
       <div className="px-6 mt-6">
-        <div className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 border-2 border-blue-300 dark:border-blue-700 rounded-2xl p-4 mb-6">
+        <div className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 border-2 border-blue-300 dark:border-blue-700 rounded-2xl p-6 mb-6">
           <h3 className="text-blue-700 dark:text-blue-300 mb-1">🎯 Choose Your Quests!</h3>
           <p className="text-blue-600 dark:text-blue-400 text-sm">All {quests.length} quests are unlocked - pick any you want to do today!</p>
         </div>
@@ -115,18 +115,18 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, assignedQuests: p
         {/* Next Quest Up */}
         {nextQuest && (
           <div className="mb-6 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-3xl p-6 shadow-lg">
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-4 mb-3">
               <Sparkles className="text-white" size={24} />
               <h3 className="text-white">Suggested Quest</h3>
             </div>
-            <div className="bg-white rounded-2xl p-4">
+            <div className="bg-white rounded-2xl p-6">
               <div className="flex items-center gap-4">
                 <div className={`flex items-center justify-center w-16 h-16 bg-gradient-to-br ${getCategoryColor(nextQuest.color, 'bg')} rounded-2xl text-3xl`}>
                   {nextQuest.icon}
                 </div>
                 <div className="flex-1">
                   <p className="text-foreground mb-1">{nextQuest.title}</p>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-4">
                     <Badge className={`${getDifficultyLabel(nextQuest.difficulty).color} text-white text-xs`}>
                       {getDifficultyLabel(nextQuest.difficulty).text}
                     </Badge>
@@ -174,7 +174,7 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, assignedQuests: p
                       <p className={`${isCompleted ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
                         {quest.title}
                       </p>
-                      <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-4 mt-1">
                         <Badge className={`${getDifficultyLabel(quest.difficulty).color} text-white text-xs px-2 py-0`}>
                           {getDifficultyLabel(quest.difficulty).text}
                         </Badge>
@@ -182,7 +182,7 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, assignedQuests: p
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-4">
                       <Badge className={`rounded-full ${isCompleted ? 'bg-green-500' : 'bg-primary'}`}>
                         +{quest.points}
                       </Badge>

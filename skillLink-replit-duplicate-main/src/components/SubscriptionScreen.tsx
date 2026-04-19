@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { ArrowLeft, Check, Crown, Users, Zap, Shield, Star, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
 
@@ -101,7 +101,7 @@ export function SubscriptionScreen({ onBack, currentPlan = 'none', onSubscribe }
           <ArrowLeft size={18} /> Back
         </button>
         <div className="text-center">
-          <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-4 py-1 mb-3">
+          <div className="inline-flex items-center gap-4 bg-white/20 rounded-full px-4 py-1 mb-3">
             <Crown size={16} className="text-yellow-300" />
             <span className="text-white text-sm font-semibold">Premium Plans</span>
           </div>
@@ -148,7 +148,7 @@ export function SubscriptionScreen({ onBack, currentPlan = 'none', onSubscribe }
 
               {/* Card header */}
               <div className={`bg-gradient-to-r ${plan.color} px-5 py-4 flex items-center justify-between`}>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-5">
                   <span className="text-3xl">{plan.emoji}</span>
                   <div>
                     <p className="text-white font-black text-lg">{plan.name}</p>
@@ -169,7 +169,7 @@ export function SubscriptionScreen({ onBack, currentPlan = 'none', onSubscribe }
               <div className={`px-5 py-4 ${isSelected ? plan.lightColor : 'bg-white'}`}>
                 <div className="space-y-2">
                   {plan.features.map((feature, i) => (
-                    <div key={i} className="flex items-center gap-3">
+                    <div key={i} className="flex items-center gap-5">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${isSelected ? 'bg-green-500' : 'bg-green-100'}`}>
                         <Check size={12} className={isSelected ? 'text-white' : 'text-green-500'} />
                       </div>
@@ -177,7 +177,7 @@ export function SubscriptionScreen({ onBack, currentPlan = 'none', onSubscribe }
                     </div>
                   ))}
                   {plan.notIncluded.map((feature, i) => (
-                    <div key={i} className="flex items-center gap-3 opacity-40">
+                    <div key={i} className="flex items-center gap-5 opacity-40">
                       <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-200">
                         <span className="text-gray-400 text-xs">✕</span>
                       </div>
@@ -199,7 +199,7 @@ export function SubscriptionScreen({ onBack, currentPlan = 'none', onSubscribe }
 
       {/* Compare summary */}
       <div className="px-6 mt-4">
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+        <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
           <p className="text-gray-500 text-xs font-bold uppercase mb-3">Plan Comparison</p>
           <div className="flex">
             <div className="flex-1">
@@ -231,9 +231,9 @@ export function SubscriptionScreen({ onBack, currentPlan = 'none', onSubscribe }
           disabled={subscribing}
           className={`w-full py-5 rounded-2xl text-lg font-black shadow-xl bg-gradient-to-r ${plans[selected].color} text-white`}>
           {subscribing ? (
-            <span className="flex items-center gap-2"><span className="animate-spin">⏳</span> Processing...</span>
+            <span className="flex items-center gap-4"><span className="animate-spin">⏳</span> Processing...</span>
           ) : (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-4">
               <Crown size={20} />
               Subscribe to {plans[selected].name} — €{getPrice(selected)}/mo
               <ChevronRight size={20} />

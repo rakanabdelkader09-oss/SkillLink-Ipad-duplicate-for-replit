@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { ArrowLeft, CheckCircle, X, Video, Star, Users } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -86,7 +86,7 @@ export function VideoReviewScreen({ onBack, onApprove, onReject }: VideoReviewSc
         <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 pt-12 pb-8 rounded-b-[3rem] shadow-lg">
           <button 
             onClick={() => setSelectedSubmission(null)} 
-            className="text-white mb-4 flex items-center gap-2"
+            className="text-white mb-4 flex items-center gap-4"
           >
             <ArrowLeft size={20} />
             Back to Reviews
@@ -95,7 +95,7 @@ export function VideoReviewScreen({ onBack, onApprove, onReject }: VideoReviewSc
           <div className="text-center">
             <div className="text-7xl mb-4">{selectedSubmission.questIcon}</div>
             <h2 className="text-white mb-3">{selectedSubmission.questTitle}</h2>
-            <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 inline-flex items-center gap-2">
+            <div className="bg-white/20 backdrop-blur-sm rounded-full px-6 py-2 inline-flex items-center gap-4">
               <Star size={20} className="text-yellow-300" fill="currentColor" />
               <span className="text-white">{selectedSubmission.questPoints} points</span>
             </div>
@@ -119,11 +119,11 @@ export function VideoReviewScreen({ onBack, onApprove, onReject }: VideoReviewSc
         {selectedSubmission.challengedWith.length > 0 && (
           <div className="px-6 mt-6">
             <Card className="p-5 border-2 border-purple-200 bg-purple-50">
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-4 mb-3">
                 <Users className="text-purple-600" size={20} />
                 <h3 className="text-purple-700">Challenge Participants</h3>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-4">
                 {selectedSubmission.challengedWith.map((person, idx) => (
                   <div key={idx} className="bg-white border-2 border-purple-300 rounded-full px-4 py-2">
                     <span className="text-purple-700">{person}</span>
@@ -189,7 +189,7 @@ export function VideoReviewScreen({ onBack, onApprove, onReject }: VideoReviewSc
     <div className="h-full bg-gradient-to-b from-indigo-50 to-white pb-20 overflow-y-auto">
       {/* Header */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 pt-12 pb-8 rounded-b-[3rem] shadow-lg">
-        <button onClick={onBack} className="text-white mb-4 flex items-center gap-2">
+        <button onClick={onBack} className="text-white mb-4 flex items-center gap-4">
           <ArrowLeft size={20} />
           Back to Dashboard
         </button>
@@ -214,7 +214,7 @@ export function VideoReviewScreen({ onBack, onApprove, onReject }: VideoReviewSc
             {pendingSubmissions.map((submission) => (
               <Card
                 key={submission.id}
-                className="p-4 border-2 border-orange-200 bg-orange-50 cursor-pointer hover:shadow-md transition-shadow"
+                className="p-6 border-2 border-orange-200 bg-orange-50 cursor-pointer hover:shadow-md transition-shadow"
                 onClick={() => setSelectedSubmission(submission)}
               >
                 <div className="flex items-center gap-4">

@@ -1,4 +1,4 @@
-import { Home, ListTodo, Trophy, BookOpen, User } from 'lucide-react';
+﻿import { Home, ListTodo, Trophy, BookOpen, User } from 'lucide-react';
 import { useTranslation, Language } from './translations';
 
 interface BottomNavProps {
@@ -19,7 +19,7 @@ export function BottomNav({ currentScreen, onNavigate, language = 'en' }: Bottom
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-card border-t-2 border-border px-2 py-2 max-w-md mx-auto shadow-lg z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-card border-t-2 border-border px-2 py-2 max-w-3xl mx-auto shadow-lg z-50">
       <div className="flex justify-around items-center">
         {navItems.map((item) => {
           const Icon = item.icon;

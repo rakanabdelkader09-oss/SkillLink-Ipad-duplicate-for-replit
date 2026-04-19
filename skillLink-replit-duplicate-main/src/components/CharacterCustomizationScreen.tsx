@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Settings, ShoppingBag, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { useTranslation, Language } from './translations';
@@ -103,7 +103,7 @@ export function CharacterCustomizationScreen({ onNavigate, language = 'en' }: Ch
           <div>
             {/* Skin tone row */}
             <p className="text-gray-500 text-xs font-semibold mb-2 uppercase tracking-wide">Skin Tone</p>
-            <div className="flex gap-2 mb-5">
+            <div className="flex gap-4 mb-5">
               {SKIN_COLORS.map((color, i) => (
                 <button key={i} onClick={() => handleSelect('skin', i)}
                   className={`w-10 h-10 rounded-full border-4 transition-all ${selections.skin === i ? 'border-blue-500 scale-110' : 'border-transparent'}`}
@@ -111,7 +111,7 @@ export function CharacterCustomizationScreen({ onNavigate, language = 'en' }: Ch
               ))}
             </div>
             <p className="text-gray-500 text-xs font-semibold mb-2 uppercase tracking-wide">Expression</p>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-5">
               {FACE_OPTIONS.map(face => (
                 <button key={face.id} onClick={() => handleSelect('face', face.id)}
                   className={`rounded-2xl p-4 flex flex-col items-center gap-1 border-2 transition-all active:scale-95 ${
@@ -126,7 +126,7 @@ export function CharacterCustomizationScreen({ onNavigate, language = 'en' }: Ch
         );
       case 1: // Hair
         return (
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-5">
             {HAIR_OPTIONS.map(hair => (
               <button key={hair.id} onClick={() => handleSelect('hair', hair.id)}
                 className={`rounded-2xl p-4 flex flex-col items-center gap-1 border-2 transition-all active:scale-95 ${
@@ -140,7 +140,7 @@ export function CharacterCustomizationScreen({ onNavigate, language = 'en' }: Ch
         );
       case 2: // Body
         return (
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-5">
             {BODY_OPTIONS.map(body => (
               <button key={body.id} onClick={() => handleSelect('body', body.id)}
                 className={`rounded-2xl p-4 flex flex-col items-center gap-2 border-2 transition-all active:scale-95 ${
@@ -156,7 +156,7 @@ export function CharacterCustomizationScreen({ onNavigate, language = 'en' }: Ch
         );
       case 3: // Accessories
         return (
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-5">
             {ACCESSORY_OPTIONS.map(acc => (
               <button key={acc.id} onClick={() => handleSelect('accessory', acc.id)}
                 className={`rounded-2xl p-4 flex flex-col items-center gap-1 border-2 transition-all active:scale-95 ${
@@ -170,7 +170,7 @@ export function CharacterCustomizationScreen({ onNavigate, language = 'en' }: Ch
         );
       case 4: // Background
         return (
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-5">
             {BG_OPTIONS.map(bg => (
               <button key={bg.id} onClick={() => handleSelect('bg', bg.id)}
                 className={`rounded-2xl overflow-hidden border-4 transition-all active:scale-95 aspect-square ${
@@ -199,7 +199,7 @@ export function CharacterCustomizationScreen({ onNavigate, language = 'en' }: Ch
       <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 pt-12 pb-4 flex-shrink-0">
         <div className="flex justify-between items-center">
           <h2 className="text-white font-bold text-xl">My Avatar</h2>
-          <div className="flex gap-2">
+          <div className="flex gap-4">
             {onNavigate && <>
               <button onClick={() => onNavigate('settings')} className="bg-white/20 p-2 rounded-xl">
                 <Settings className="text-white" size={20} />
@@ -237,7 +237,7 @@ export function CharacterCustomizationScreen({ onNavigate, language = 'en' }: Ch
 
       {/* Category tabs - horizontal scroll */}
       <div className="px-4 flex-shrink-0">
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
           {CATEGORIES.map((cat, i) => (
             <button key={i} onClick={() => setActiveCategory(i)}
               className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all ${

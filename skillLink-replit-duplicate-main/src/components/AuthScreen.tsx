@@ -1,4 +1,4 @@
-import { Button } from './ui/button';
+﻿import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Baby, User, Sparkles } from 'lucide-react';
 import { useState } from 'react';
@@ -150,7 +150,7 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
   if (authMode === 'select') {
     return (
       <div className="h-full bg-gradient-to-b from-blue-50 to-white flex flex-col items-center justify-center px-6">
-        <div className="max-w-sm w-full">
+        <div className="max-w-2xl w-full">
           <h2 className="text-center text-blue-600 mb-2">Welcome to</h2>
           <h1 className="text-center text-blue-600 mb-12">SkillLink</h1>
           
@@ -161,7 +161,7 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
               onClick={() => handleUserTypeSelect('kid', 'signup')}
               className="w-full bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white p-6 rounded-3xl shadow-lg flex items-center justify-center gap-4 transform hover:scale-105 transition-all"
             >
-              <div className="bg-white rounded-full p-3">
+              <div className="bg-white rounded-full p-5">
                 <Baby className="text-[#2563eb]" size={32} />
               </div>
               <span className="text-2xl">I'm a Kid</span>
@@ -171,7 +171,7 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
               onClick={() => handleUserTypeSelect('parent', 'signup')}
               className="w-full bg-white border-4 border-blue-200 hover:border-blue-300 text-[#2563eb] p-6 rounded-3xl shadow-md flex items-center justify-center gap-4 transform hover:scale-105 transition-all"
             >
-              <div className="bg-blue-100 rounded-full p-3">
+              <div className="bg-blue-100 rounded-full p-5">
                 <User className="text-[#2563eb]" size={32} />
               </div>
               <span className="text-2xl">I'm a Parent</span>
@@ -181,7 +181,7 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
               onClick={() => handleUserTypeSelect('creator', 'signup')}
               className="w-full bg-gradient-to-r from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 text-white p-6 rounded-3xl shadow-lg flex items-center justify-center gap-4 transform hover:scale-105 transition-all"
             >
-              <div className="bg-white rounded-full p-3">
+              <div className="bg-white rounded-full p-5">
                 <Sparkles className="text-purple-500" size={32} />
               </div>
               <span className="text-2xl">I'm a Creator</span>
@@ -190,7 +190,7 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
 
           <div className="mt-8 text-center">
             <p className="text-slate-500 mb-2">Already have an account?</p>
-            <div className="flex gap-2 justify-center flex-wrap">
+            <div className="flex gap-4 justify-center flex-wrap">
               <button
                 onClick={() => handleUserTypeSelect('kid', 'login')}
                 className="text-[#2563eb] hover:text-[#1d4ed8] underline"
@@ -223,7 +223,7 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
     return (
       <div className="h-full bg-gradient-to-b from-blue-50 to-white overflow-y-auto">
         <div className="min-h-full flex flex-col items-center justify-center px-6 py-8">
-          <div className="max-w-sm w-full">
+          <div className="max-w-2xl w-full">
             <button
               onClick={handleBack}
               className="text-blue-500 mb-6 hover:text-blue-600"
@@ -346,7 +346,7 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
   if (authMode === 'login') {
     return (
       <div className="h-full bg-gradient-to-b from-blue-50 to-white flex flex-col items-center justify-center px-6">
-        <div className="max-w-sm w-full">
+        <div className="max-w-2xl w-full">
           <button
             onClick={handleBack}
             className="text-blue-500 mb-6 hover:text-blue-600"

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { ChevronRight } from 'lucide-react';
 import logo from '../assets/skilllink-logo.png';
@@ -121,7 +121,7 @@ export function OnboardingScreen({ onGetStarted }: OnboardingScreenProps) {
       </div>
 
       <div className="px-8 pb-12">
-        <div className="flex justify-center gap-2 mb-8">
+        <div className="flex justify-center gap-4 mb-8">
           {slides.map((_, i) => (
             <button key={i} onClick={() => goToSlide(i)} className="rounded-full transition-all duration-300" style={{
               width: i === currentSlide ? 24 : 8, height: 8,
@@ -136,7 +136,7 @@ export function OnboardingScreen({ onGetStarted }: OnboardingScreenProps) {
             Get Started 🚀
           </Button>
         ) : (
-          <button onClick={goToNext} className="w-full py-5 rounded-2xl text-xl font-semibold flex items-center justify-center gap-2"
+          <button onClick={goToNext} className="w-full py-5 rounded-2xl text-xl font-semibold flex items-center justify-center gap-4"
             style={{ background: 'rgba(255,255,255,0.2)', color: 'white', border: '2px solid rgba(255,255,255,0.4)' }}>
             Next <ChevronRight size={22} />
           </button>

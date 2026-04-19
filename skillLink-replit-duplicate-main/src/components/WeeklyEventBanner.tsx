@@ -1,4 +1,4 @@
-import { Sparkles, Calendar } from 'lucide-react';
+﻿import { Sparkles, Calendar } from 'lucide-react';
 
 export interface WeeklyEvent {
   theme: string;
@@ -19,7 +19,7 @@ export function WeeklyEventBanner({ event, onClick }: WeeklyEventBannerProps) {
       onClick={onClick}
       className={`w-full bg-gradient-to-r ${event.color} rounded-3xl p-5 shadow-lg mb-6 transform hover:scale-105 transition-all`}
     >
-      <div className="flex items-center gap-3 mb-3">
+      <div className="flex items-center gap-5 mb-3">
         <div className="bg-white/30 backdrop-blur-sm rounded-full p-2">
           <Calendar className="text-white" size={20} />
         </div>
@@ -32,7 +32,7 @@ export function WeeklyEventBanner({ event, onClick }: WeeklyEventBannerProps) {
       
       <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-4 py-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <Sparkles className="text-yellow-300" size={20} />
             <span className="text-white">2x Points on {event.focusCategory} quests!</span>
           </div>

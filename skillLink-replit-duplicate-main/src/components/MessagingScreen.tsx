@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Send, Smile } from 'lucide-react';
 import { Button } from './ui/button';
 
@@ -19,7 +19,7 @@ export function MessagingScreen() {
     <div className="h-full bg-gradient-to-b from-pink-50 to-white pb-20 overflow-y-auto flex flex-col">
       {/* Header */}
       <div className="bg-gradient-to-r from-pink-400 to-purple-500 px-6 pt-12 pb-6 rounded-b-[3rem] shadow-lg">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-5">
           <div className="text-4xl bg-white rounded-full p-2">👧</div>
           <div>
             <h2 className="text-white">Emma</h2>
@@ -56,13 +56,13 @@ export function MessagingScreen() {
 
       {/* Quick Stickers */}
       <div className="px-6 pb-3">
-        <div className="bg-white border-2 border-blue-100 rounded-3xl p-3">
+        <div className="bg-white border-2 border-blue-100 rounded-3xl p-5">
           <p className="text-slate-500 text-sm mb-2 px-2">Quick Stickers</p>
-          <div className="flex gap-2 overflow-x-auto pb-1">
+          <div className="flex gap-4 overflow-x-auto pb-1">
             {stickers.map((sticker, idx) => (
               <button
                 key={idx}
-                className="text-2xl bg-blue-50 hover:bg-blue-100 rounded-2xl p-3 min-w-[3rem] transition-all hover:scale-110"
+                className="text-2xl bg-blue-50 hover:bg-blue-100 rounded-2xl p-5 min-w-[3rem] transition-all hover:scale-110"
               >
                 {sticker}
               </button>
@@ -73,12 +73,12 @@ export function MessagingScreen() {
 
       {/* Message Input */}
       <div className="px-6 pb-4">
-        <div className="bg-white border-2 border-blue-200 rounded-3xl px-4 py-3 flex items-center gap-3">
+        <div className="bg-white border-2 border-blue-200 rounded-3xl px-4 py-3 flex items-center gap-5">
           <button className="text-blue-500">
             <Smile size={24} />
           </button>
           
-          <div className="flex-1 flex gap-2 overflow-x-auto">
+          <div className="flex-1 flex gap-4 overflow-x-auto">
             {quickEmojis.map((emoji, idx) => (
               <button
                 key={idx}

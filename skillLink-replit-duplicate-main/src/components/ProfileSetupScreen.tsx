@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -30,7 +30,7 @@ const PARENT_EMOJIS = [
 
 function EmojiPicker({ emojis, selected, onSelect }: { emojis: string[]; selected: string; onSelect: (e: string) => void }) {
   return (
-    <div className="grid grid-cols-6 gap-2">
+    <div className="grid grid-cols-6 gap-4">
       {emojis.map((emoji) => (
         <button
           key={emoji}
@@ -92,7 +92,7 @@ export function ProfileSetupScreen({ userType, onComplete }: ProfileSetupScreenP
             <EmojiPicker emojis={emojis} selected={selectedEmoji} onSelect={setSelectedEmoji} />
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-5">
             <Button
               type="button"
               onClick={() => setStep('info')}
@@ -132,7 +132,7 @@ export function ProfileSetupScreen({ userType, onComplete }: ProfileSetupScreenP
 
         <form onSubmit={handleInfoNext} className="space-y-5">
           <div className="bg-white dark:bg-card rounded-3xl p-6 shadow-md border-2 border-blue-100 dark:border-blue-900">
-            <Label htmlFor="name" className="text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-2 font-semibold">
+            <Label htmlFor="name" className="text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-4 font-semibold">
               <User size={18} className="text-blue-500" />
               {userType === 'kid' ? "What's your name?" : 'Your Name'}
             </Label>
@@ -147,7 +147,7 @@ export function ProfileSetupScreen({ userType, onComplete }: ProfileSetupScreenP
           </div>
 
           <div className="bg-white dark:bg-card rounded-3xl p-6 shadow-md border-2 border-blue-100 dark:border-blue-900">
-            <Label htmlFor="age" className="text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-2 font-semibold">
+            <Label htmlFor="age" className="text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-4 font-semibold">
               <Calendar size={18} className="text-purple-500" />
               {userType === 'kid' ? 'How old are you?' : 'Your Age'}
             </Label>
@@ -165,7 +165,7 @@ export function ProfileSetupScreen({ userType, onComplete }: ProfileSetupScreenP
 
           {userType === 'parent' && (
             <div className="bg-white dark:bg-card rounded-3xl p-6 shadow-md border-2 border-blue-100 dark:border-blue-900">
-              <Label htmlFor="childCount" className="text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-2 font-semibold">
+              <Label htmlFor="childCount" className="text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-4 font-semibold">
                 <Users size={18} className="text-green-500" />
                 How many children do you have?
               </Label>
@@ -186,7 +186,7 @@ export function ProfileSetupScreen({ userType, onComplete }: ProfileSetupScreenP
           <Button
             type="submit"
             disabled={!isInfoValid}
-            className="w-full h-14 bg-gradient-to-r from-[#2563eb] to-purple-500 hover:from-[#1d4ed8] hover:to-purple-600 text-white rounded-3xl shadow-lg disabled:opacity-50 font-bold flex items-center justify-center gap-2"
+            className="w-full h-14 bg-gradient-to-r from-[#2563eb] to-purple-500 hover:from-[#1d4ed8] hover:to-purple-600 text-white rounded-3xl shadow-lg disabled:opacity-50 font-bold flex items-center justify-center gap-4"
           >
             Pick Your Avatar
             <ChevronRight size={18} />

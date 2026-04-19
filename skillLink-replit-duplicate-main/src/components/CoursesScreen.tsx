@@ -1,4 +1,4 @@
-import { Palette, Users, ChevronRight, Star, Heart, Lightbulb, MessageCircle, Scissors } from 'lucide-react';
+﻿import { Palette, Users, ChevronRight, Star, Heart, Lightbulb, MessageCircle, Scissors } from 'lucide-react';
 import { useTranslation, Language } from './translations';
 import { UserProfile } from './ProfileSetupScreen';
 
@@ -146,16 +146,16 @@ export function CoursesScreen({ onCategorySelect, language = 'en', userProfile }
       {/* Age-based recommended courses */}
       <div className="px-6 mt-6">
         <div className="bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 border-2 border-indigo-200 dark:border-indigo-700 rounded-3xl p-5 mb-5">
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-4 mb-3">
             <span className="text-xl">🎯</span>
             <h3 className="text-indigo-700 dark:text-indigo-300 font-bold">Recommended for {ageGroupLabel}</h3>
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-4">
             {ageCourses.map((course) => (
               <button
                 key={course.name}
                 onClick={() => onCategorySelect('creativity')}
-                className="bg-white dark:bg-card rounded-2xl p-3 text-left shadow-sm border border-indigo-100 dark:border-indigo-800 active:scale-95 transition-transform"
+                className="bg-white dark:bg-card rounded-2xl p-5 text-left shadow-sm border border-indigo-100 dark:border-indigo-800 active:scale-95 transition-transform"
               >
                 <div className="text-2xl mb-1">{course.emoji}</div>
                 <p className="text-foreground font-semibold text-xs">{course.name}</p>
@@ -171,9 +171,9 @@ export function CoursesScreen({ onCategorySelect, language = 'en', userProfile }
           className="w-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-3xl p-5 mb-5 shadow-lg active:scale-[0.98] transition-transform"
         >
           <div className="flex items-center gap-4">
-            <div className="bg-white/20 rounded-2xl p-3 text-4xl">✂️</div>
+            <div className="bg-white/20 rounded-2xl p-5 text-4xl">✂️</div>
             <div className="flex-1 text-left">
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-4 mb-1">
                 <p className="text-white font-bold text-lg">Paper Crafts</p>
                 <span className="bg-white/30 text-white text-xs font-bold px-2 py-0.5 rounded-full">NEW ✨</span>
               </div>
@@ -199,7 +199,7 @@ export function CoursesScreen({ onCategorySelect, language = 'en', userProfile }
                     <Icon size={28} strokeWidth={2.5} />
                   </div>
                   <div className="flex-1 text-left">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-4 mb-1">
                       <h3 className="text-foreground font-bold">{category.name}</h3>
                       <span className="text-xl">{category.emoji}</span>
                     </div>
@@ -219,7 +219,7 @@ export function CoursesScreen({ onCategorySelect, language = 'en', userProfile }
         <h3 className="text-foreground font-bold mb-4">{t.continueLearning}</h3>
         <div className="bg-card border-2 border-border rounded-3xl p-5 shadow-md">
           <div className="flex items-center gap-4 mb-3">
-            <div className="bg-purple-100 dark:bg-purple-900/30 rounded-2xl p-3 text-3xl">🎨</div>
+            <div className="bg-purple-100 dark:bg-purple-900/30 rounded-2xl p-5 text-3xl">🎨</div>
             <div className="flex-1">
               <p className="text-foreground font-semibold">Drawing Basics</p>
               <p className="text-muted-foreground text-sm">2 of 5 {t.lessonsComplete}</p>

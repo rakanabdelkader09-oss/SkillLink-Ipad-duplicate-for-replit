@@ -1,4 +1,4 @@
-import { ArrowLeft, Lock, Star, TrendingUp } from 'lucide-react';
+﻿import { ArrowLeft, Lock, Star, TrendingUp } from 'lucide-react';
 import { Progress } from './ui/progress';
 
 interface AchievementDetailScreenProps {
@@ -68,7 +68,7 @@ export function AchievementDetailScreen({ badgeId, onBack }: AchievementDetailSc
           ? 'bg-gradient-to-r from-yellow-400 to-orange-400'
           : 'bg-gradient-to-r from-slate-400 to-slate-500'
       }`}>
-        <button onClick={onBack} className="text-white mb-6 flex items-center gap-2">
+        <button onClick={onBack} className="text-white mb-6 flex items-center gap-4">
           <ArrowLeft size={20} />
           Back
         </button>
@@ -102,7 +102,7 @@ export function AchievementDetailScreen({ badgeId, onBack }: AchievementDetailSc
               <span className="text-purple-600">{badge.progress}/{badge.total}</span>
             </div>
             <Progress value={progressPercent} className="h-4 bg-purple-100 mb-3" />
-            <div className="flex items-center gap-2 text-slate-600">
+            <div className="flex items-center gap-4 text-slate-600">
               <TrendingUp size={18} className="text-green-500" />
               <span>{badge.total - badge.progress} more to go!</span>
             </div>
@@ -123,7 +123,7 @@ export function AchievementDetailScreen({ badgeId, onBack }: AchievementDetailSc
         <h3 className="text-slate-700 mb-4">Tips to Unlock</h3>
         <div className="space-y-3">
           {badge.tips.map((tip: string, index: number) => (
-            <div key={index} className="bg-white border-2 border-green-100 rounded-2xl p-4 flex gap-3">
+            <div key={index} className="bg-white border-2 border-green-100 rounded-2xl p-6 flex gap-5">
               <div className="bg-green-500 text-white rounded-full w-7 h-7 flex items-center justify-center flex-shrink-0">
                 {index + 1}
               </div>

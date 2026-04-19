@@ -1,4 +1,4 @@
-import { Button } from './ui/button';
+﻿import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Baby, User } from 'lucide-react';
 import { useState } from 'react';
@@ -13,7 +13,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
   if (!selectedType) {
     return (
       <div className="h-full bg-gradient-to-b from-blue-50 to-white flex flex-col items-center justify-center px-6">
-        <div className="max-w-sm w-full">
+        <div className="max-w-2xl w-full">
           <h2 className="text-center text-blue-600 mb-2">Welcome to</h2>
           <h1 className="text-center text-blue-600 mb-12">SkillLink</h1>
           
@@ -24,7 +24,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               onClick={() => setSelectedType('kid')}
               className="w-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] hover:from-[#1d4ed8] hover:to-[#1e40af] text-white p-6 rounded-3xl shadow-lg flex items-center justify-center gap-4 transform hover:scale-105 transition-all"
             >
-              <div className="bg-white rounded-full p-3">
+              <div className="bg-white rounded-full p-5">
                 <Baby className="text-[#2563eb]" size={32} />
               </div>
               <span className="text-2xl">I'm a Kid</span>
@@ -34,7 +34,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               onClick={() => setSelectedType('parent')}
               className="w-full bg-white border-4 border-blue-200 hover:border-blue-300 text-blue-600 p-6 rounded-3xl shadow-md flex items-center justify-center gap-4 transform hover:scale-105 transition-all"
             >
-              <div className="bg-blue-100 rounded-full p-3">
+              <div className="bg-blue-100 rounded-full p-5">
                 <User className="text-blue-600" size={32} />
               </div>
               <span className="text-2xl">I'm a Parent</span>
@@ -47,7 +47,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
 
   return (
     <div className="h-full bg-gradient-to-b from-blue-50 to-white flex flex-col items-center justify-center px-6">
-      <div className="max-w-sm w-full">
+      <div className="max-w-2xl w-full">
         <button
           onClick={() => setSelectedType(null)}
           className="text-blue-500 mb-6"

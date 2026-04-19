@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Clock, Trophy, Zap } from 'lucide-react';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
@@ -38,7 +38,7 @@ export function ScreenTimeTracker({ onNavigate }: ScreenTimeTrackerProps) {
   return (
     <div className={`bg-gradient-to-r ${status.color} rounded-3xl p-5 shadow-lg`}>
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <div className="bg-white/30 backdrop-blur-sm rounded-full p-2">
             <Clock className="text-white" size={20} />
           </div>
@@ -55,7 +55,7 @@ export function ScreenTimeTracker({ onNavigate }: ScreenTimeTrackerProps) {
       {/* Main Timer */}
       <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 mb-3">
         <div className="text-center mb-3">
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-4">
             <span className="text-white text-5xl">{hoursOff}</span>
             <span className="text-white/80 text-2xl">h</span>
             <span className="text-white text-5xl">{minutesOff}</span>
@@ -75,13 +75,13 @@ export function ScreenTimeTracker({ onNavigate }: ScreenTimeTrackerProps) {
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
+      <div className="grid grid-cols-2 gap-5">
+        <div className="bg-white/20 backdrop-blur-sm rounded-xl p-5 text-center">
           <Trophy className="text-yellow-300 mx-auto mb-1" size={20} />
           <p className="text-white text-sm">Points Earned</p>
           <p className="text-white">+{pointsEarned}</p>
         </div>
-        <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 text-center">
+        <div className="bg-white/20 backdrop-blur-sm rounded-xl p-5 text-center">
           <Zap className="text-yellow-300 mx-auto mb-1" size={20} />
           <p className="text-white text-sm">Daily Goal</p>
           <p className="text-white">{Math.min(100, Math.floor((totalMinutes / 360) * 100))}%</p>

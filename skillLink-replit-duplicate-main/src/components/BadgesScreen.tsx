@@ -1,4 +1,4 @@
-import { Lock } from 'lucide-react';
+﻿import { Lock } from 'lucide-react';
 
 interface BadgesScreenProps {
   onBadgeSelect?: (badgeId: number) => void;
@@ -35,7 +35,7 @@ export function BadgesScreen({ onBadgeSelect }: BadgesScreenProps) {
         <h2 className="text-white mb-2">Badges & Achievements</h2>
         <p className="text-purple-100 mb-4">Collect them all! 🏆</p>
         
-        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 text-center">
           <p className="text-white mb-2">Your Collection</p>
           <p className="text-white text-3xl">{unlockedCount}/{badges.length}</p>
         </div>
@@ -78,7 +78,7 @@ export function BadgesScreen({ onBadgeSelect }: BadgesScreenProps) {
           <h3 className="text-blue-600 mb-3">Recently Unlocked</h3>
           <div className="space-y-3">
             {badges.filter(b => b.unlocked).slice(-3).reverse().map((badge) => (
-              <div key={badge.id} className="bg-white rounded-2xl p-3 flex items-center gap-3">
+              <div key={badge.id} className="bg-white rounded-2xl p-5 flex items-center gap-5">
                 <div className="text-3xl">{badge.emoji}</div>
                 <div className="flex-1">
                   <p className="text-slate-700">{badge.name}</p>

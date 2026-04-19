@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Camera, CheckCircle, Play, Pause, RotateCcw, Zap, Upload, Star, Trophy } from 'lucide-react';
 import { Progress } from './ui/progress';
 import { SkillCoin } from './CurrencyIcons';
@@ -62,7 +62,7 @@ function SpeedCleanTimer({ onFinish }: { onFinish: () => void }) {
   return (
     <div className={`rounded-3xl p-5 mb-5 border-2 transition-all ${finished ? 'bg-green-50 border-green-300 dark:bg-green-950/20 dark:border-green-700' : running ? 'bg-blue-50 border-blue-300 dark:bg-blue-950/20 dark:border-blue-700' : 'bg-card border-border'}`}>
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <Zap size={20} className={running ? 'text-blue-500' : 'text-muted-foreground'} />
           <h3 className="font-bold text-foreground">Speed Clean Timer</h3>
         </div>
@@ -85,7 +85,7 @@ function SpeedCleanTimer({ onFinish }: { onFinish: () => void }) {
         <Progress value={pct} className="h-2 mb-3" />
       )}
 
-      <div className="flex gap-2">
+      <div className="flex gap-4">
         {!finished && (
           <button
             onClick={() => setRunning(r => !r)}
@@ -96,7 +96,7 @@ function SpeedCleanTimer({ onFinish }: { onFinish: () => void }) {
         )}
         <button
           onClick={() => { setRunning(false); setSeconds(10 * 60); setFinished(false); }}
-          className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-muted text-muted-foreground border-2 border-border"
+          className="flex items-center justify-center gap-4 px-4 py-3 rounded-xl bg-muted text-muted-foreground border-2 border-border"
         >
           <RotateCcw size={16} />
         </button>
@@ -152,19 +152,19 @@ export function CleanRoomQuestScreen({ onBack, onComplete }: CleanRoomQuestScree
 
           <div className="bg-white dark:bg-card border-4 border-yellow-300 rounded-3xl p-6 mb-5 shadow-xl">
             <div className="text-6xl mb-3">🏠✨</div>
-            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl p-4 mb-3">
-              <div className="flex items-center justify-center gap-2">
+            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl p-6 mb-3">
+              <div className="flex items-center justify-center gap-4">
                 <SkillCoin size={32} />
                 <span className="text-white text-3xl font-bold">+{earnedPoints + (speedBonus ? 15 : 0)}</span>
               </div>
               <p className="text-yellow-100 text-sm text-center">SC Coins Earned!</p>
             </div>
             {speedBonus && (
-              <div className="bg-blue-100 dark:bg-blue-900/30 rounded-xl p-3 mb-3 border border-blue-200">
+              <div className="bg-blue-100 dark:bg-blue-900/30 rounded-xl p-5 mb-3 border border-blue-200">
                 <p className="text-blue-700 dark:text-blue-300 font-bold text-center">⚡ Speed Clean Bonus: +15 pts!</p>
               </div>
             )}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-4">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-2 text-center">
                   <Star size={20} className="text-yellow-500 mx-auto" fill="currentColor" />
@@ -186,7 +186,7 @@ export function CleanRoomQuestScreen({ onBack, onComplete }: CleanRoomQuestScree
     <div className="h-full bg-background overflow-y-auto pb-24">
       {/* Header */}
       <div className="bg-gradient-to-br from-orange-400 to-amber-500 px-6 pt-12 pb-8 rounded-b-[3rem] shadow-lg">
-        <button onClick={onBack} className="text-white mb-4 flex items-center gap-2 active:opacity-70">
+        <button onClick={onBack} className="text-white mb-4 flex items-center gap-4 active:opacity-70">
           <ArrowLeft size={20} /> Back
         </button>
         <div className="text-center">
@@ -195,7 +195,7 @@ export function CleanRoomQuestScreen({ onBack, onComplete }: CleanRoomQuestScree
           <span className="inline-block bg-orange-700 text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
             ⭐⭐⭐ Hard — Hero Quest
           </span>
-          <div className="flex items-center justify-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-5 py-2">
+          <div className="flex items-center justify-center gap-4 bg-white/20 backdrop-blur-sm rounded-full px-5 py-2">
             <SkillCoin size={22} />
             <span className="text-white font-semibold">Worth up to {TOTAL_POINTS} SC coins</span>
           </div>
@@ -231,9 +231,9 @@ export function CleanRoomQuestScreen({ onBack, onComplete }: CleanRoomQuestScree
         </div>
 
         {/* Points earned */}
-        <div className="bg-gradient-to-r from-yellow-400 to-amber-400 rounded-3xl p-4 mb-5 shadow-md">
+        <div className="bg-gradient-to-r from-yellow-400 to-amber-400 rounded-3xl p-6 mb-5 shadow-md">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <SkillCoin size={28} />
               <div>
                 <p className="text-white font-bold text-lg">{earnedPoints} pts earned</p>
@@ -264,7 +264,7 @@ export function CleanRoomQuestScreen({ onBack, onComplete }: CleanRoomQuestScree
             >
               {task.id === 'photo' ? (
                 <div>
-                  <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center gap-5 mb-3">
                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl ${task.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-muted'}`}>
                       {task.emoji}
                     </div>
@@ -272,14 +272,14 @@ export function CleanRoomQuestScreen({ onBack, onComplete }: CleanRoomQuestScree
                       <p className={`font-bold ${task.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{task.title}</p>
                       <p className="text-muted-foreground text-xs">{task.description}</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-4">
                       <span className={`text-xs font-bold ${task.completed ? 'text-green-600' : 'text-primary'}`}>+{task.points} pts</span>
                       {task.completed && <CheckCircle className="text-green-500" size={22} />}
                     </div>
                   </div>
                   {!task.completed && (
                     <label className="block cursor-pointer">
-                      <div className="border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-2xl p-4 text-center bg-blue-50 dark:bg-blue-950/20 active:bg-blue-100 transition-colors">
+                      <div className="border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-2xl p-6 text-center bg-blue-50 dark:bg-blue-950/20 active:bg-blue-100 transition-colors">
                         {proofPhoto ? (
                           <><CheckCircle className="text-green-500 mx-auto mb-1" size={28} /><p className="text-green-700 font-semibold text-sm">{proofPhoto.name}</p></>
                         ) : (
@@ -292,7 +292,7 @@ export function CleanRoomQuestScreen({ onBack, onComplete }: CleanRoomQuestScree
                 </div>
               ) : (
                 <button
-                  className="w-full flex items-center gap-3 text-left"
+                  className="w-full flex items-center gap-5 text-left"
                   onClick={() => toggleTask(task.id)}
                 >
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 transition-all ${task.completed ? 'bg-green-100 dark:bg-green-900/30' : 'bg-muted'}`}>
@@ -302,7 +302,7 @@ export function CleanRoomQuestScreen({ onBack, onComplete }: CleanRoomQuestScree
                     <p className={`font-bold transition-all ${task.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>{task.title}</p>
                     <p className="text-muted-foreground text-xs">{task.description}</p>
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
+                  <div className="flex items-center gap-4 flex-shrink-0">
                     <span className={`text-xs font-bold ${task.completed ? 'text-green-600' : 'text-primary'}`}>+{task.points} pts</span>
                     <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${task.completed ? 'bg-green-500 border-green-500' : 'border-border'}`}>
                       {task.completed && <CheckCircle size={14} className="text-white" />}
@@ -323,7 +323,7 @@ export function CleanRoomQuestScreen({ onBack, onComplete }: CleanRoomQuestScree
             🏆 Complete Quest! (+{earnedPoints + (speedBonus ? 15 : 0)} pts)
           </button>
         ) : (
-          <div className="bg-card border-2 border-border rounded-3xl p-4 text-center">
+          <div className="bg-card border-2 border-border rounded-3xl p-6 text-center">
             <p className="text-muted-foreground text-sm">Complete {subtasks.length - completedCount} more task{subtasks.length - completedCount !== 1 ? 's' : ''} to finish!</p>
             <Progress value={progress} className="h-2 mt-3" />
           </div>

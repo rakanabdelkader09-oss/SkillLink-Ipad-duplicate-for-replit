@@ -1,4 +1,4 @@
-import { ArrowLeft, Flame, Star, Trophy, TrendingUp, Target, Calendar, Award } from 'lucide-react';
+﻿import { ArrowLeft, Flame, Star, Trophy, TrendingUp, Target, Calendar, Award } from 'lucide-react';
 import { SkillLevels } from './SkillTreeScreen';
 import { Progress } from './ui/progress';
 
@@ -49,25 +49,25 @@ export function StatisticsScreen({ onBack, userPoints = 1247, skillLevels }: Sta
     <div className="h-full bg-background overflow-y-auto pb-6">
       {/* Header */}
       <div className="bg-gradient-to-br from-indigo-500 to-purple-600 px-6 pt-12 pb-8 rounded-b-[3rem] shadow-lg">
-        <button onClick={onBack} className="text-white mb-4 flex items-center gap-2 active:opacity-70">
+        <button onClick={onBack} className="text-white mb-4 flex items-center gap-4 active:opacity-70">
           <ArrowLeft size={20} /> Back
         </button>
         <h2 className="text-white font-bold text-2xl mb-1">Your Progress</h2>
         <p className="text-indigo-100 text-sm">Track your learning journey 📈</p>
 
         {/* Top stats */}
-        <div className="grid grid-cols-3 gap-3 mt-5">
-          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-3 text-center">
+        <div className="grid grid-cols-3 gap-5 mt-5">
+          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-5 text-center">
             <Flame className="text-orange-300 mx-auto mb-1" size={22} />
             <p className="text-white font-bold text-xl">7</p>
             <p className="text-indigo-100 text-xs">Day Streak</p>
           </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-3 text-center">
+          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-5 text-center">
             <Trophy className="text-yellow-300 mx-auto mb-1" size={22} />
             <p className="text-white font-bold text-xl">{userPoints}</p>
             <p className="text-indigo-100 text-xs">Total Points</p>
           </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-3 text-center">
+          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-5 text-center">
             <Star className="text-pink-300 mx-auto mb-1" size={22} />
             <p className="text-white font-bold text-xl">12</p>
             <p className="text-indigo-100 text-xs">Badges</p>
@@ -78,7 +78,7 @@ export function StatisticsScreen({ onBack, userPoints = 1247, skillLevels }: Sta
       {/* Weekly Activity Chart */}
       <div className="px-6 mt-6">
         <div className="bg-card border-2 border-border rounded-3xl p-5 shadow-md mb-5">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-4 mb-4">
             <Calendar className="text-indigo-500" size={20} />
             <h3 className="text-foreground font-bold">This Week's Activity</h3>
           </div>
@@ -109,23 +109,23 @@ export function StatisticsScreen({ onBack, userPoints = 1247, skillLevels }: Sta
         </div>
 
         {/* Summary cards */}
-        <div className="grid grid-cols-2 gap-3 mb-5">
-          <div className="bg-gradient-to-br from-green-400 to-emerald-500 rounded-3xl p-4 shadow-md">
+        <div className="grid grid-cols-2 gap-5 mb-5">
+          <div className="bg-gradient-to-br from-green-400 to-emerald-500 rounded-3xl p-6 shadow-md">
             <Target className="text-white mb-2" size={22} />
             <p className="text-white font-bold text-2xl">27</p>
             <p className="text-green-100 text-sm">Quests Done</p>
           </div>
-          <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl p-4 shadow-md">
+          <div className="bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl p-6 shadow-md">
             <TrendingUp className="text-white mb-2" size={22} />
             <p className="text-white font-bold text-2xl">Lv. {averageLevel}</p>
             <p className="text-amber-100 text-sm">Avg. Level</p>
           </div>
-          <div className="bg-gradient-to-br from-pink-400 to-rose-500 rounded-3xl p-4 shadow-md">
+          <div className="bg-gradient-to-br from-pink-400 to-rose-500 rounded-3xl p-6 shadow-md">
             <Award className="text-white mb-2" size={22} />
             <p className="text-white font-bold text-2xl">{totalXP}</p>
             <p className="text-pink-100 text-sm">Total XP</p>
           </div>
-          <div className="bg-gradient-to-br from-blue-400 to-cyan-500 rounded-3xl p-4 shadow-md">
+          <div className="bg-gradient-to-br from-blue-400 to-cyan-500 rounded-3xl p-6 shadow-md">
             <Flame className="text-white mb-2" size={22} />
             <p className="text-white font-bold text-2xl">7</p>
             <p className="text-blue-100 text-sm">Best Streak</p>
@@ -140,7 +140,7 @@ export function StatisticsScreen({ onBack, userPoints = 1247, skillLevels }: Sta
               ? Object.entries(skillLevels).map(([category, skill]) => (
                   <div key={category}>
                     <div className="flex justify-between items-center mb-1">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-4">
                         <span className="text-lg">{CATEGORY_EMOJIS[category] || '⭐'}</span>
                         <span className="text-sm font-semibold text-foreground">{category}</span>
                       </div>
@@ -152,7 +152,7 @@ export function StatisticsScreen({ onBack, userPoints = 1247, skillLevels }: Sta
               : ['Personal Care', 'Responsibility', 'Learning', 'Creativity', 'Social Skills'].map((cat) => (
                   <div key={cat}>
                     <div className="flex justify-between items-center mb-1">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-4">
                         <span className="text-lg">{CATEGORY_EMOJIS[cat]}</span>
                         <span className="text-sm font-semibold text-foreground">{cat}</span>
                       </div>
@@ -173,7 +173,7 @@ export function StatisticsScreen({ onBack, userPoints = 1247, skillLevels }: Sta
               { emoji: '🎓', title: 'Learning Champion', desc: 'Completed 10 learning quests', date: 'Yesterday' },
               { emoji: '💪', title: 'Fitness Starter', desc: 'First exercise quest done', date: '3 days ago' },
             ].map((a) => (
-              <div key={a.title} className="flex items-center gap-3 p-3 bg-muted/50 rounded-2xl">
+              <div key={a.title} className="flex items-center gap-5 p-5 bg-muted/50 rounded-2xl">
                 <div className="text-3xl">{a.emoji}</div>
                 <div className="flex-1">
                   <p className="font-semibold text-foreground text-sm">{a.title}</p>

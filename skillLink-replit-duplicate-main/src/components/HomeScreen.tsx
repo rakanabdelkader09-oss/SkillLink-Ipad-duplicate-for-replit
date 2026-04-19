@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Flame, Trophy, Sparkles, ListTodo, BookOpen, TrendingUp, Settings, Crown, Bell, BarChart2, X } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
@@ -21,7 +21,7 @@ interface HomeScreenProps {
 
 function StreakReminderBanner({ onDismiss }: { onDismiss: () => void }) {
   return (
-    <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-3xl p-4 flex items-center gap-3 shadow-lg mb-4 animate-pulse">
+    <div className="bg-gradient-to-r from-orange-400 to-red-500 rounded-3xl p-6 flex items-center gap-5 shadow-lg mb-4 animate-pulse">
       <div className="bg-white/20 rounded-2xl p-2 flex-shrink-0">
         <Bell className="text-white" size={22} />
       </div>
@@ -86,21 +86,21 @@ export function HomeScreen({ onNavigate, userProfile, userPoints, skillLevels, w
               {userProfile?.name || 'Friend'}! {userProfile?.avatar || '👋'}
             </h2>
           </div>
-          <div className="flex gap-2">
-            <button onClick={() => onNavigate('settings')} className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl hover:bg-white/30 transition-all active:scale-90">
+          <div className="flex gap-4">
+            <button onClick={() => onNavigate('settings')} className="bg-white/20 backdrop-blur-sm p-5 rounded-2xl hover:bg-white/30 transition-all active:scale-90">
               <Settings className="text-primary-foreground" size={22} />
             </button>
-            <button onClick={() => onNavigate('shop')} className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl hover:bg-white/30 transition-all active:scale-90">
+            <button onClick={() => onNavigate('shop')} className="bg-white/20 backdrop-blur-sm p-5 rounded-2xl hover:bg-white/30 transition-all active:scale-90">
               <Sparkles className="text-yellow-300" size={22} />
             </button>
           </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-5">
           <button
             onClick={() => onNavigate('statistics')}
-            className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center active:scale-95 transition-transform"
+            className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 text-center active:scale-95 transition-transform"
           >
             <div className="flex items-center justify-center gap-1 mb-1">
               <SkillCoin size={20} />
@@ -110,7 +110,7 @@ export function HomeScreen({ onNavigate, userProfile, userPoints, skillLevels, w
           </button>
           <button
             onClick={() => onNavigate('statistics')}
-            className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center active:scale-95 transition-transform"
+            className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 text-center active:scale-95 transition-transform"
           >
             <div className="flex items-center justify-center gap-1 mb-1">
               <Flame className="text-orange-400" size={20} />
@@ -120,7 +120,7 @@ export function HomeScreen({ onNavigate, userProfile, userPoints, skillLevels, w
           </button>
           <button
             onClick={() => onNavigate('badges')}
-            className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center active:scale-95 transition-transform"
+            className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 text-center active:scale-95 transition-transform"
           >
             <div className="flex items-center justify-center gap-1 mb-1">
               <Trophy className="text-yellow-300" size={20} />
@@ -142,7 +142,7 @@ export function HomeScreen({ onNavigate, userProfile, userPoints, skillLevels, w
       <div className="px-6 mt-5">
         <button
           onClick={() => onNavigate('subscription')}
-          className="w-full bg-gradient-to-r from-purple-600 to-pink-500 rounded-3xl p-4 flex items-center gap-4 shadow-lg active:scale-95 transition-transform"
+          className="w-full bg-gradient-to-r from-purple-600 to-pink-500 rounded-3xl p-6 flex items-center gap-4 shadow-lg active:scale-95 transition-transform"
         >
           <div className="bg-white/20 rounded-2xl p-2.5">
             <Crown className="text-yellow-300" size={24} />
@@ -185,7 +185,7 @@ export function HomeScreen({ onNavigate, userProfile, userPoints, skillLevels, w
       {/* Quick Actions */}
       <div className="px-6 mt-6">
         <h3 className="text-foreground font-bold mb-3">Quick Actions</h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-5">
           {quickActions.map((action) => (
             <button
               key={action.id}
@@ -210,12 +210,12 @@ export function HomeScreen({ onNavigate, userProfile, userPoints, skillLevels, w
       {/* Recent Badges */}
       <div className="px-6 mt-4 mb-6">
         <h3 className="text-foreground font-bold mb-3">Recent Badges</h3>
-        <div className="flex gap-3">
+        <div className="flex gap-5">
           {recentBadges.map((badge) => (
             <button
               key={badge.name}
               onClick={() => onNavigate('badges')}
-              className="flex-1 bg-card border-2 border-border rounded-2xl p-3 text-center shadow-sm active:scale-95 transition-transform"
+              className="flex-1 bg-card border-2 border-border rounded-2xl p-5 text-center shadow-sm active:scale-95 transition-transform"
             >
               <div className="text-3xl mb-1">{badge.emoji}</div>
               <p className="text-xs text-muted-foreground">{badge.name}</p>

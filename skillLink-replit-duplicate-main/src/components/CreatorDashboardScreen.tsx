@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { ArrowLeft, Plus, TrendingUp, Users, BookOpen, DollarSign, Eye, BarChart3 } from 'lucide-react';
 import { Button } from './ui/button';
 import { useTranslation, Language } from './translations';
@@ -68,8 +68,8 @@ export function CreatorDashboardScreen({
 
       {/* Stats Grid */}
       <div className="p-6 grid grid-cols-2 gap-4">
-        <div className="bg-white dark:bg-card rounded-2xl p-4 shadow-md">
-          <div className="flex items-center gap-3 mb-2">
+        <div className="bg-white dark:bg-card rounded-2xl p-6 shadow-md">
+          <div className="flex items-center gap-5 mb-2">
             <div className="bg-green-100 dark:bg-green-900 p-2 rounded-xl">
               <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400" />
             </div>
@@ -78,8 +78,8 @@ export function CreatorDashboardScreen({
           <p className="text-card-foreground">${totalEarnings.toFixed(2)}</p>
         </div>
 
-        <div className="bg-white dark:bg-card rounded-2xl p-4 shadow-md">
-          <div className="flex items-center gap-3 mb-2">
+        <div className="bg-white dark:bg-card rounded-2xl p-6 shadow-md">
+          <div className="flex items-center gap-5 mb-2">
             <div className="bg-blue-100 dark:bg-blue-900 p-2 rounded-xl">
               <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
@@ -88,8 +88,8 @@ export function CreatorDashboardScreen({
           <p className="text-card-foreground">{totalStudents}</p>
         </div>
 
-        <div className="bg-white dark:bg-card rounded-2xl p-4 shadow-md">
-          <div className="flex items-center gap-3 mb-2">
+        <div className="bg-white dark:bg-card rounded-2xl p-6 shadow-md">
+          <div className="flex items-center gap-5 mb-2">
             <div className="bg-purple-100 dark:bg-purple-900 p-2 rounded-xl">
               <BookOpen className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
@@ -98,8 +98,8 @@ export function CreatorDashboardScreen({
           <p className="text-card-foreground">{publishedCourses}</p>
         </div>
 
-        <div className="bg-white dark:bg-card rounded-2xl p-4 shadow-md">
-          <div className="flex items-center gap-3 mb-2">
+        <div className="bg-white dark:bg-card rounded-2xl p-6 shadow-md">
+          <div className="flex items-center gap-5 mb-2">
             <div className="bg-orange-100 dark:bg-orange-900 p-2 rounded-xl">
               <Eye className="w-5 h-5 text-orange-600 dark:text-orange-400" />
             </div>
@@ -113,7 +113,7 @@ export function CreatorDashboardScreen({
       <div className="px-6 mb-6">
         <Button
           onClick={onCreateCourse}
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white h-14 rounded-2xl shadow-lg flex items-center justify-center gap-2"
+          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white h-14 rounded-2xl shadow-lg flex items-center justify-center gap-4"
         >
           <Plus className="w-5 h-5" />
           {t.createNewCourse}
@@ -122,7 +122,7 @@ export function CreatorDashboardScreen({
 
       {/* Tabs */}
       <div className="px-6 mb-6">
-        <div className="bg-white dark:bg-card rounded-2xl p-2 shadow-md flex gap-2">
+        <div className="bg-white dark:bg-card rounded-2xl p-2 shadow-md flex gap-4">
           <button
             onClick={() => setSelectedTab('all')}
             className={`flex-1 py-3 rounded-xl transition-colors ${
@@ -180,7 +180,7 @@ export function CreatorDashboardScreen({
               className="bg-white dark:bg-card rounded-2xl p-5 shadow-md"
             >
               <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-5">
                   <div className="text-3xl">{course.icon}</div>
                   <div>
                     <h3 className="text-card-foreground">{course.title}</h3>
@@ -199,23 +199,23 @@ export function CreatorDashboardScreen({
               </div>
 
               {/* Course Stats */}
-              <div className="grid grid-cols-3 gap-3 mb-4">
-                <div className="bg-blue-50 dark:bg-blue-950 rounded-xl p-3">
+              <div className="grid grid-cols-3 gap-5 mb-4">
+                <div className="bg-blue-50 dark:bg-blue-950 rounded-xl p-5">
                   <p className="text-muted-foreground mb-1">Students</p>
                   <p className="text-card-foreground">{course.studentsEnrolled}</p>
                 </div>
-                <div className="bg-green-50 dark:bg-green-950 rounded-xl p-3">
+                <div className="bg-green-50 dark:bg-green-950 rounded-xl p-5">
                   <p className="text-muted-foreground mb-1">Earnings</p>
                   <p className="text-card-foreground">${course.earnings.toFixed(2)}</p>
                 </div>
-                <div className="bg-purple-50 dark:bg-purple-950 rounded-xl p-3">
+                <div className="bg-purple-50 dark:bg-purple-950 rounded-xl p-5">
                   <p className="text-muted-foreground mb-1">Lessons</p>
                   <p className="text-card-foreground">{course.lessonsCount}</p>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-2">
+              <div className="flex gap-4">
                 <Button
                   onClick={() => onEditCourse(course.id)}
                   variant="outline"

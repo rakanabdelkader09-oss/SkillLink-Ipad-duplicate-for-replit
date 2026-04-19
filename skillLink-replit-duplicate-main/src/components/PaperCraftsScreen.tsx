@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { ArrowLeft, ChevronRight, Play, CheckCircle, Star, Lock } from 'lucide-react';
 import { Progress } from './ui/progress';
 
@@ -150,7 +150,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
     <div className="h-full bg-background overflow-y-auto pb-6">
       {/* Header */}
       <div className={`bg-gradient-to-br ${diff.gradient} px-6 pt-12 pb-6 rounded-b-[3rem] shadow-lg`}>
-        <button onClick={onBack} className="text-white mb-4 flex items-center gap-2 active:opacity-70">
+        <button onClick={onBack} className="text-white mb-4 flex items-center gap-4 active:opacity-70">
           <ArrowLeft size={20} /> Back
         </button>
         <div className="text-center">
@@ -162,7 +162,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
         </div>
 
         {/* Progress */}
-        <div className="mt-4 bg-white/20 rounded-2xl p-3">
+        <div className="mt-4 bg-white/20 rounded-2xl p-5">
           <div className="flex justify-between text-white text-sm mb-2">
             <span>{completedSteps.size}/{course.steps.length} steps done</span>
             <span>{Math.round(progress)}%</span>
@@ -173,7 +173,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
 
       <div className="px-6 mt-5">
         {/* Step selector */}
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-5 no-scrollbar">
+        <div className="flex gap-4 overflow-x-auto pb-2 mb-5 no-scrollbar">
           {course.steps.map((s, i) => (
             <button
               key={i}
@@ -217,7 +217,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
           </div>
 
           <div className="p-5">
-            <div className="flex items-start justify-between gap-3 mb-3">
+            <div className="flex items-start justify-between gap-5 mb-3">
               <div>
                 <h3 className="text-foreground font-bold text-lg">Step {currentStep + 1}: {step.title}</h3>
                 <p className="text-muted-foreground text-sm mt-1">{step.description}</p>
@@ -234,7 +234,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
               </button>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-5">
               {currentStep > 0 && (
                 <button
                   onClick={() => setCurrentStep(i => i - 1)}
@@ -307,7 +307,7 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
     const config = DIFFICULTY_CONFIG[diff];
     return (
       <div className="mb-6">
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-4 mb-3">
           <span className="text-xl">{emoji}</span>
           <h3 className="text-foreground font-bold">{title}</h3>
           <span className={`${config.color} text-white text-xs font-bold px-2 py-0.5 rounded-full ml-1`}>{config.label}</span>
@@ -329,7 +329,7 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
                   <span className="text-xs text-green-600 font-semibold">✅ Completed</span>
                 )}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
                 {course.locked ? (
                   <div className="flex flex-col items-center gap-1">
                     <Lock size={18} className="text-muted-foreground" />
@@ -383,7 +383,7 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
       <div className="px-6 mt-6">
         {/* Intro banner */}
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 rounded-3xl p-5 mb-6 shadow-lg">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-5">
             <div className="text-4xl">🎁</div>
             <div>
               <h3 className="text-white font-bold">Start with Easy!</h3>

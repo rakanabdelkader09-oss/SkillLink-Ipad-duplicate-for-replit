@@ -1,4 +1,4 @@
-import { Trophy, Medal, Award, TrendingUp } from 'lucide-react';
+﻿import { Trophy, Medal, Award, TrendingUp } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { useTranslation, Language } from './translations';
 
@@ -34,10 +34,10 @@ export function LeaderboardScreen({ language = 'en' }: LeaderboardScreenProps = 
 
       {/* Top 3 Podium */}
       <div className="px-6 mt-8">
-        <div className="flex items-end justify-center gap-3 mb-8">
+        <div className="flex items-end justify-center gap-5 mb-8">
           {/* 2nd Place */}
           <div className="flex-1 text-center">
-            <div className="bg-gradient-to-br from-slate-200 to-slate-300 border-4 border-slate-400 rounded-2xl p-3 mb-2">
+            <div className="bg-gradient-to-br from-slate-200 to-slate-300 border-4 border-slate-400 rounded-2xl p-5 mb-2">
               <div className="text-4xl mb-2">{players[1].avatar}</div>
               <div className="flex items-center justify-center gap-1 bg-slate-400 rounded-full px-2 py-1 mb-2">
                 <Medal size={16} className="text-white" />
@@ -50,7 +50,7 @@ export function LeaderboardScreen({ language = 'en' }: LeaderboardScreenProps = 
 
           {/* 1st Place */}
           <div className="flex-1 text-center -mt-6">
-            <div className="bg-gradient-to-br from-yellow-200 to-yellow-400 border-4 border-yellow-500 rounded-2xl p-4 mb-2 shadow-xl">
+            <div className="bg-gradient-to-br from-yellow-200 to-yellow-400 border-4 border-yellow-500 rounded-2xl p-6 mb-2 shadow-xl">
               <div className="text-5xl mb-2 animate-bounce">{players[0].avatar}</div>
               <div className="flex items-center justify-center gap-1 bg-yellow-500 rounded-full px-3 py-1 mb-2">
                 <Trophy size={18} className="text-white" fill="currentColor" />
@@ -63,7 +63,7 @@ export function LeaderboardScreen({ language = 'en' }: LeaderboardScreenProps = 
 
           {/* 3rd Place */}
           <div className="flex-1 text-center">
-            <div className="bg-gradient-to-br from-orange-200 to-orange-300 border-4 border-orange-400 rounded-2xl p-3 mb-2">
+            <div className="bg-gradient-to-br from-orange-200 to-orange-300 border-4 border-orange-400 rounded-2xl p-5 mb-2">
               <div className="text-4xl mb-2">{players[2].avatar}</div>
               <div className="flex items-center justify-center gap-1 bg-orange-400 rounded-full px-2 py-1 mb-2">
                 <Award size={16} className="text-white" />
@@ -100,7 +100,7 @@ export function LeaderboardScreen({ language = 'en' }: LeaderboardScreenProps = 
                 <p className={player.isCurrentUser ? 'text-primary-foreground' : 'text-foreground'}>
                   {player.name}
                 </p>
-                <div className="flex items-center gap-2 mt-1">
+                <div className="flex items-center gap-4 mt-1">
                   <span className={`text-sm ${player.isCurrentUser ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
                     🔥 {player.streak} {t.dayStreak}
                   </span>

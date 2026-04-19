@@ -1,4 +1,4 @@
-import { ArrowLeft, Star, Clock, PlayCircle } from 'lucide-react';
+﻿import { ArrowLeft, Star, Clock, PlayCircle } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 interface CourseListScreenProps {
@@ -49,11 +49,11 @@ export function CourseListScreen({ category, onBack, onCourseSelect }: CourseLis
     <div className="h-full bg-gradient-to-b from-blue-50 to-white pb-20 overflow-y-auto">
       {/* Header */}
       <div className={`bg-gradient-to-r ${info.color} px-6 pt-12 pb-8 rounded-b-[3rem] shadow-lg`}>
-        <button onClick={onBack} className="text-white mb-4 flex items-center gap-2">
+        <button onClick={onBack} className="text-white mb-4 flex items-center gap-4">
           <ArrowLeft size={20} />
           Back
         </button>
-        <div className="flex items-center gap-3 mb-2">
+        <div className="flex items-center gap-5 mb-2">
           <h2 className="text-white">{info.name}</h2>
           <span className="text-4xl">{info.emoji}</span>
         </div>

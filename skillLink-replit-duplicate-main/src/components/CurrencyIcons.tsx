@@ -1,4 +1,4 @@
-import skillCoinNew from '../assets/skillcoin-new.png';
+﻿import skillCoinNew from '../assets/skillcoin-new.png';
 import robuxGold from '../assets/robux-gold.png';
 
 export function SkillCoin({ size = 28 }: { size?: number }) {

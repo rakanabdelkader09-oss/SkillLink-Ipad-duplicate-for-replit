@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { ShoppingBag, Sparkles, Lock, ArrowLeft, Check, Crown, Zap } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -101,7 +101,7 @@ export function ShopScreen({ currentPoints, onPurchase, onBack }: ShopScreenProp
     <div className="h-full bg-gradient-to-b from-purple-50 to-pink-50 pb-24 overflow-y-auto">
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-600 to-pink-500 px-6 pt-12 pb-8 rounded-b-[3rem] shadow-xl">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-5 mb-4">
           {onBack && (
             <button onClick={onBack} className="bg-white/20 backdrop-blur-sm p-2 rounded-xl active:scale-95">
               <ArrowLeft className="text-white" size={24} />
@@ -113,9 +113,9 @@ export function ShopScreen({ currentPoints, onPurchase, onBack }: ShopScreenProp
         <p className="text-purple-100 text-sm mb-4">Spend your SkillCoins on borders and Robux! 🎁</p>
 
         {/* Balance card */}
-        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4">
+        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-5">
               <SkillCoin size={44} />
               <div>
                 <p className="text-white/70 text-xs font-medium">SkillCoin Balance</p>
@@ -145,7 +145,7 @@ export function ShopScreen({ currentPoints, onPurchase, onBack }: ShopScreenProp
           <TabsContent value="borders" className="mt-5 space-y-5">
             {/* Featured */}
             <div>
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-4 mb-3">
                 <Crown className="text-yellow-500" size={20} />
                 <h3 className="text-gray-800 font-black text-lg">Featured</h3>
               </div>
@@ -159,7 +159,7 @@ export function ShopScreen({ currentPoints, onPurchase, onBack }: ShopScreenProp
                       <div className="flex items-center gap-4">
                         <BorderPreview item={item} />
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                          <div className="flex items-center gap-4 mb-0.5 flex-wrap">
                             <p className="font-black text-gray-800 text-sm">{item.name}</p>
                             <Badge className="bg-yellow-400 text-yellow-900 text-[10px] px-2">⭐ Featured</Badge>
                           </div>
@@ -192,7 +192,7 @@ export function ShopScreen({ currentPoints, onPurchase, onBack }: ShopScreenProp
             {/* All borders grid */}
             <div>
               <h3 className="text-gray-800 font-black text-lg mb-3">All Borders</h3>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-5">
                 {regularBorders.map(item => {
                   const canAfford = currentPoints >= item.price;
                   const owned = purchasedBorders.includes(item.id);
@@ -224,8 +224,8 @@ export function ShopScreen({ currentPoints, onPurchase, onBack }: ShopScreenProp
             </div>
 
             {/* Earn tip */}
-            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-3xl p-4">
-              <div className="flex items-start gap-3">
+            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-3xl p-6">
+              <div className="flex items-start gap-5">
                 <Zap className="text-yellow-500 flex-shrink-0 mt-0.5" size={18} />
                 <div>
                   <p className="text-yellow-700 font-bold text-sm">💡 Earn more SC</p>
@@ -250,7 +250,7 @@ export function ShopScreen({ currentPoints, onPurchase, onBack }: ShopScreenProp
             </div>
 
             {/* Exchange rate info */}
-            <div className="bg-white border-2 border-gray-100 rounded-2xl p-3 mb-4 flex items-center gap-3 shadow-sm">
+            <div className="bg-white border-2 border-gray-100 rounded-2xl p-5 mb-4 flex items-center gap-5 shadow-sm">
               <div className="flex items-center gap-1">
                 <SkillCoin size={20} />
                 <span className="text-gray-600 text-sm font-bold">5 SC</span>
@@ -305,7 +305,7 @@ export function ShopScreen({ currentPoints, onPurchase, onBack }: ShopScreenProp
                         ) : canAfford ? (
                           <Button
                             onClick={() => handleBuyRobux(item)}
-                            className="w-full bg-gray-900 hover:bg-black text-white rounded-2xl h-9 font-bold text-sm flex items-center justify-center gap-2 active:scale-95"
+                            className="w-full bg-gray-900 hover:bg-black text-white rounded-2xl h-9 font-bold text-sm flex items-center justify-center gap-4 active:scale-95"
                           >
                             <RobuxBadge size={16} />
                             Get {item.robux.toLocaleString()} Robux
@@ -324,8 +324,8 @@ export function ShopScreen({ currentPoints, onPurchase, onBack }: ShopScreenProp
             </div>
 
             {/* Tip */}
-            <div className="bg-gray-900 rounded-3xl p-4 mt-5">
-              <div className="flex items-start gap-3">
+            <div className="bg-gray-900 rounded-3xl p-6 mt-5">
+              <div className="flex items-start gap-5">
                 <RobuxBadge size={24} />
                 <div>
                   <p className="text-white font-bold text-sm">How it works</p>

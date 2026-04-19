@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+﻿import { useState, useRef } from 'react';
 import { ArrowLeft, Camera, Upload, User, Check } from 'lucide-react';
 import { Button } from './ui/button';
 
@@ -95,7 +95,7 @@ export function ProfilePhotoScreen({ onBack }: ProfilePhotoScreenProps) {
         {/* Upload button */}
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="flex items-center gap-2 bg-white border-2 border-purple-300 text-purple-600 font-bold px-6 py-3 rounded-2xl shadow-sm mb-2 active:scale-95 transition-transform"
+          className="flex items-center gap-4 bg-white border-2 border-purple-300 text-purple-600 font-bold px-6 py-3 rounded-2xl shadow-sm mb-2 active:scale-95 transition-transform"
         >
           <Upload size={18} />
           {photo ? 'Change Photo' : 'Upload Photo'}
@@ -108,7 +108,7 @@ export function ProfilePhotoScreen({ onBack }: ProfilePhotoScreenProps) {
         <h2 className="text-gray-800 font-black text-lg mb-1">Profile Border</h2>
         <p className="text-gray-400 text-sm mb-4">Choose a border style for your avatar</p>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-5">
           {BORDER_DESIGNS.map((border) => (
             <button
               key={border.id}
@@ -150,7 +150,7 @@ export function ProfilePhotoScreen({ onBack }: ProfilePhotoScreenProps) {
           className="w-full py-5 rounded-2xl text-lg font-black bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-xl"
         >
           {saved ? (
-            <span className="flex items-center gap-2"><Check size={20} /> Saved!</span>
+            <span className="flex items-center gap-4"><Check size={20} /> Saved!</span>
           ) : (
             'Save Profile Photo'
           )}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { ArrowLeft, Plus, Trash2, Save } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -244,7 +244,7 @@ export function CourseCreatorScreen({
               {lessons.map((lesson, index) => (
                 <div
                   key={lesson.id}
-                  className="border-2 border-border rounded-xl p-4 space-y-3"
+                  className="border-2 border-border rounded-xl p-6 space-y-3"
                 >
                   <div className="flex items-center justify-between">
                     <p className="text-card-foreground">Lesson {index + 1}</p>
@@ -303,9 +303,9 @@ export function CourseCreatorScreen({
           <p className="text-muted-foreground mb-3">
             Earn $2.00 per student who enrolls in your course. Students are charged when they start your course.
           </p>
-          <div className="bg-white dark:bg-card rounded-xl p-3">
+          <div className="bg-white dark:bg-card rounded-xl p-5">
             <p className="text-muted-foreground">Potential Earnings:</p>
-            <div className="flex items-baseline gap-2 mt-1">
+            <div className="flex items-baseline gap-4 mt-1">
               <span className="text-card-foreground">$2.00</span>
               <span className="text-muted-foreground">per student</span>
             </div>
@@ -313,7 +313,7 @@ export function CourseCreatorScreen({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3 sticky bottom-6">
+        <div className="flex gap-5 sticky bottom-6">
           <Button
             onClick={handleSaveAsDraft}
             variant="outline"

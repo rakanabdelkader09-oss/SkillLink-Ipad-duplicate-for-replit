@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { TrendingUp, Award, Flame, CheckCircle, User, Video, Calendar, Settings, Plus, Gift, TrendingDown, Star, Sparkles, X, Crown, ChevronRight, Shield, Zap } from 'lucide-react';
 import { RobuxIcon, SkillCoin } from './CurrencyIcons';
 import { Card } from './ui/card';
@@ -201,7 +201,7 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
       {/* Header */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 pt-12 pb-8 rounded-b-[3rem] shadow-lg">
         <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-5">
             <span className="text-4xl">{userProfile?.avatar || '👨‍💼'}</span>
             <div>
               <h2 className="text-white">Welcome, {userProfile?.name || 'Parent'}!</h2>
@@ -211,23 +211,23 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
           {onNavigate && (
             <button 
               onClick={() => onNavigate('settings')}
-              className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl hover:bg-white/30 transition-all"
+              className="bg-white/20 backdrop-blur-sm p-5 rounded-2xl hover:bg-white/30 transition-all"
             >
               <Settings className="text-white" size={24} />
             </button>
           )}
         </div>
-        <div className="flex gap-3 mt-6 mb-4">
+        <div className="flex gap-5 mt-6 mb-4">
           <button 
             onClick={onViewChildProfile}
-            className="flex-1 flex items-center justify-center gap-2 text-indigo-100 hover:text-white transition-colors bg-white/10 rounded-2xl py-3 backdrop-blur-sm"
+            className="flex-1 flex items-center justify-center gap-4 text-indigo-100 hover:text-white transition-colors bg-white/10 rounded-2xl py-3 backdrop-blur-sm"
           >
             <User size={18} />
             <span className="text-sm">Child Profile</span>
           </button>
           <button 
             onClick={onViewVideoReviews}
-            className="flex-1 flex items-center justify-center gap-2 text-indigo-100 hover:text-white transition-colors bg-white/10 rounded-2xl py-3 backdrop-blur-sm relative"
+            className="flex-1 flex items-center justify-center gap-4 text-indigo-100 hover:text-white transition-colors bg-white/10 rounded-2xl py-3 backdrop-blur-sm relative"
           >
             <Video size={18} />
             <span className="text-sm">Video Reviews</span>
@@ -240,18 +240,18 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
         </div>
 
         {/* Key Stats */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+        <div className="grid grid-cols-3 gap-5">
+          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 text-center">
             <TrendingUp className="text-white mx-auto mb-2" size={24} />
             <p className="text-white text-2xl">1,247</p>
             <p className="text-indigo-100 text-sm">Total Points</p>
           </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 text-center">
             <Flame className="text-orange-300 mx-auto mb-2" size={24} />
             <p className="text-white text-2xl">7 Days</p>
             <p className="text-indigo-100 text-sm">Streak</p>
           </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center">
+          <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 text-center">
             <Award className="text-yellow-300 mx-auto mb-2" size={24} />
             <p className="text-white text-2xl">12</p>
             <p className="text-indigo-100 text-sm">Badges</p>
@@ -262,7 +262,7 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
       {/* Highlight of the Week */}
       <div className="px-6 mt-6">
         <div className="bg-gradient-to-r from-yellow-400 to-orange-400 rounded-3xl p-6 shadow-lg">
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-5 mb-2">
             <Star className="text-white" size={28} fill="currentColor" />
             <h3 className="text-white">Highlight of the Week</h3>
           </div>
@@ -282,29 +282,29 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
         <div className="px-6 mt-6">
           <div className="bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 border-2 border-green-300 dark:border-green-700 rounded-3xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-green-700 dark:text-green-300 flex items-center gap-2">
+              <h3 className="text-green-700 dark:text-green-300 flex items-center gap-4">
                 <Calendar size={20} />
                 Weekly Insights
               </h3>
             </div>
             
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <div className="bg-white dark:bg-slate-800 rounded-xl p-3">
+            <div className="grid grid-cols-2 gap-5 mb-4">
+              <div className="bg-white dark:bg-slate-800 rounded-xl p-5">
                 <p className="text-slate-600 dark:text-slate-400 text-sm mb-1">Quests Completed</p>
                 <p className="text-green-700 dark:text-green-300 text-xl">{weeklySummary.questsCompleted}</p>
                 <p className="text-green-600 dark:text-green-400 text-xs mt-1">↑ {weeklySummary.lastWeekQuests} last week</p>
               </div>
-              <div className="bg-white dark:bg-slate-800 rounded-xl p-3">
+              <div className="bg-white dark:bg-slate-800 rounded-xl p-5">
                 <p className="text-slate-600 dark:text-slate-400 text-sm mb-1">Team Challenges</p>
                 <p className="text-green-700 dark:text-green-300 text-xl">{weeklySummary.teamChallenges}</p>
                 <p className="text-green-600 dark:text-green-400 text-xs mt-1">Family bonding! 👨‍👩‍👧</p>
               </div>
-              <div className="bg-white dark:bg-slate-800 rounded-xl p-3">
+              <div className="bg-white dark:bg-slate-800 rounded-xl p-5">
                 <p className="text-slate-600 dark:text-slate-400 text-sm mb-1">Points Earned</p>
                 <p className="text-green-700 dark:text-green-300 text-xl">{weeklySummary.pointsEarned}</p>
                 <p className="text-green-600 dark:text-green-400 text-xs mt-1">↑ {weeklySummary.lastWeekPoints} last week</p>
               </div>
-              <div className="bg-white dark:bg-slate-800 rounded-xl p-3">
+              <div className="bg-white dark:bg-slate-800 rounded-xl p-5">
                 <p className="text-slate-600 dark:text-slate-400 text-sm mb-1">Current Streak</p>
                 <p className="text-green-700 dark:text-green-300 text-xl">{weeklySummary.currentStreak} days</p>
                 <p className="text-green-600 dark:text-green-400 text-xs mt-1">🔥 On fire!</p>
@@ -312,8 +312,8 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
             </div>
 
             {/* Weekly Tip */}
-            <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 rounded-2xl p-4 border-2 border-purple-200 dark:border-purple-700">
-              <div className="flex items-center gap-2 mb-2">
+            <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 rounded-2xl p-6 border-2 border-purple-200 dark:border-purple-700">
+              <div className="flex items-center gap-4 mb-2">
                 <Sparkles className="text-purple-600 dark:text-purple-300" size={18} />
                 <h4 className="text-purple-700 dark:text-purple-300">Weekly Tip</h4>
               </div>
@@ -330,7 +330,7 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
           
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className={`rounded-2xl p-4 ${questGrowth >= 0 ? 'bg-green-100 dark:bg-green-900/30' : 'bg-red-100 dark:bg-red-900/30'}`}>
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-4 mb-2">
                 {questGrowth >= 0 ? (
                   <TrendingUp className="text-green-600 dark:text-green-400" size={20} />
                 ) : (
@@ -345,7 +345,7 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
             </div>
 
             <div className={`rounded-2xl p-4 ${pointsGrowth >= 0 ? 'bg-green-100 dark:bg-green-900/30' : 'bg-red-100 dark:bg-red-900/30'}`}>
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-4 mb-2">
                 {pointsGrowth >= 0 ? (
                   <TrendingUp className="text-green-600 dark:text-green-400" size={20} />
                 ) : (
@@ -365,10 +365,10 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
       {/* Quick Actions: Custom Quest & Reward Control */}
       <div className="px-6 mt-6">
         <h3 className="text-slate-700 dark:text-slate-300 mb-4">Parent Tools</h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-5">
           <button
             onClick={() => setShowCustomQuestDialog(true)}
-            className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl p-4 text-white shadow-lg hover:shadow-xl transition-all"
+            className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all"
           >
             <Plus className="mx-auto mb-2" size={28} />
             <p className="text-sm">Create Custom Quest</p>
@@ -376,7 +376,7 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
 
           <button
             onClick={() => setShowRewardsDialog(true)}
-            className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-4 text-white shadow-lg hover:shadow-xl transition-all relative"
+            className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all relative"
           >
             <Gift className="mx-auto mb-2" size={28} />
             <p className="text-sm">Reward Requests</p>
@@ -396,12 +396,12 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
           className="w-full bg-gradient-to-r from-purple-600 to-pink-500 rounded-3xl p-5 shadow-xl text-left hover:shadow-2xl active:scale-[0.98] transition-all"
         >
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-5">
               <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
                 <Crown size={26} className="text-yellow-300" />
               </div>
               <div>
-                <div className="flex items-center gap-2 mb-0.5">
+                <div className="flex items-center gap-4 mb-0.5">
                   <p className="text-white font-black text-base">Upgrade Your Plan</p>
                   <span className="bg-yellow-400 text-yellow-900 text-[10px] font-black px-2 py-0.5 rounded-full">BEST VALUE</span>
                 </div>
@@ -436,9 +436,9 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
         <Card className="p-5 border-2 border-indigo-100 dark:border-indigo-900">
           <h3 className="text-slate-700 dark:text-slate-300 mb-4">This Week vs Last Week</h3>
           
-          <div className="flex items-end justify-between gap-2 h-40 mb-4">
+          <div className="flex items-end justify-between gap-4 h-40 mb-4">
             {weeklyData.map((day, idx) => (
-              <div key={idx} className="flex-1 flex flex-col items-center gap-2">
+              <div key={idx} className="flex-1 flex flex-col items-center gap-4">
                 <div className="flex-1 flex items-end w-full gap-1">
                   {/* Last week bar (lighter) */}
                   <div
@@ -461,17 +461,17 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
           </div>
 
           <div className="flex items-center justify-center gap-4 mb-3">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <div className="w-4 h-4 bg-indigo-300 dark:bg-indigo-700 rounded opacity-60" />
               <p className="text-slate-600 dark:text-slate-400 text-xs">Last Week</p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <div className="w-4 h-4 bg-indigo-500 dark:bg-indigo-400 rounded" />
               <p className="text-slate-600 dark:text-slate-400 text-xs">This Week</p>
             </div>
           </div>
 
-          <div className="bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl p-3 text-center">
+          <div className="bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl p-5 text-center">
             <p className="text-indigo-700 dark:text-indigo-300">Average: 110 points/day 📈</p>
           </div>
         </Card>
@@ -529,7 +529,7 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
 
       {/* Custom Quest Creator Dialog */}
       <Dialog open={showCustomQuestDialog} onOpenChange={setShowCustomQuestDialog}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Create Custom Quest</DialogTitle>
             <DialogDescription>
@@ -614,7 +614,7 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
 
       {/* Reward Control Center Dialog */}
       <Dialog open={showRewardsDialog} onOpenChange={setShowRewardsDialog}>
-        <DialogContent className="max-w-sm w-[92vw] max-h-[82vh] flex flex-col overflow-hidden p-5">
+        <DialogContent className="max-w-2xl w-[92vw] max-h-[82vh] flex flex-col overflow-hidden p-5">
           <DialogHeader className="flex-shrink-0">
             <DialogTitle>Reward Control Center</DialogTitle>
             <DialogDescription>
@@ -640,7 +640,7 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
                       : 'bg-red-50 dark:bg-red-950/30 border-red-300 dark:border-red-700'
                   }`}
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-5">
                     <div className="flex-shrink-0 flex items-center justify-center w-10 h-10">
                       {reward.type === 'robux' ? (
                         <RobuxIcon size={40} />
@@ -661,7 +661,7 @@ export function ParentDashboardScreen({ onViewChildProfile, onViewVideoReviews, 
                       </div>
                       <div className="mt-2">
                         {reward.status === 'pending' && (
-                          <div className="flex gap-2">
+                          <div className="flex gap-4">
                             <Button
                               size="sm"
                               onClick={() => handleApproveReward(reward.id)}

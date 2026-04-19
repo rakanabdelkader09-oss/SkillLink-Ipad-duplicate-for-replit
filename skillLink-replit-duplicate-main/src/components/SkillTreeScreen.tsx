@@ -1,4 +1,4 @@
-import { ArrowLeft, Star, TrendingUp, Heart, Home, GraduationCap, Palette, Users } from 'lucide-react';
+﻿import { ArrowLeft, Star, TrendingUp, Heart, Home, GraduationCap, Palette, Users } from 'lucide-react';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
 
@@ -74,7 +74,7 @@ export function SkillTreeScreen({ onBack, skillLevels }: SkillTreeScreenProps) {
     <div className="h-full bg-gradient-to-b from-purple-50 to-white pb-20 overflow-y-auto">
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 pt-12 pb-8 rounded-b-[3rem] shadow-lg">
-        <button onClick={onBack} className="text-white mb-4 flex items-center gap-2">
+        <button onClick={onBack} className="text-white mb-4 flex items-center gap-4">
           <ArrowLeft size={20} />
           Back
         </button>
@@ -85,7 +85,7 @@ export function SkillTreeScreen({ onBack, skillLevels }: SkillTreeScreenProps) {
           <p className="text-purple-100 mb-4">Level up your life skills!</p>
           
           <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-6 py-3 inline-block">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <Star size={20} className="text-yellow-300" fill="currentColor" />
               <span className="text-white">Total Level: {getTotalLevel()}</span>
             </div>
@@ -95,7 +95,7 @@ export function SkillTreeScreen({ onBack, skillLevels }: SkillTreeScreenProps) {
 
       {/* Skills List */}
       <div className="px-6 mt-6 space-y-4">
-        <div className="bg-gradient-to-r from-blue-100 to-purple-100 border-2 border-blue-300 rounded-2xl p-4 mb-2">
+        <div className="bg-gradient-to-r from-blue-100 to-purple-100 border-2 border-blue-300 rounded-2xl p-6 mb-2">
           <h3 className="text-blue-700 mb-1">📈 Track Your Growth</h3>
           <p className="text-blue-600 text-sm">Complete quests to earn XP and level up each skill!</p>
         </div>
@@ -148,7 +148,7 @@ export function SkillTreeScreen({ onBack, skillLevels }: SkillTreeScreenProps) {
 
               {/* Milestones */}
               {skillData.level >= 5 && (
-                <div className="mt-3 flex items-center gap-2">
+                <div className="mt-3 flex items-center gap-4">
                   <TrendingUp size={16} className="text-green-600" />
                   <span className="text-green-700 text-sm">
                     {skillData.level >= 10 ? 'Master Level!' : 'Expert Level!'}
@@ -163,13 +163,13 @@ export function SkillTreeScreen({ onBack, skillLevels }: SkillTreeScreenProps) {
         <div className="bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-300 rounded-3xl p-6 mt-6">
           <h3 className="text-orange-700 mb-4 text-center">🏆 Overall Progress</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white rounded-2xl p-4 text-center">
+            <div className="bg-white rounded-2xl p-6 text-center">
               <p className="text-slate-600 text-sm mb-1">Total XP</p>
               <p className="text-orange-600 text-2xl">
                 {Object.values(skillLevels).reduce((sum, skill) => sum + skill.xp, 0)}
               </p>
             </div>
-            <div className="bg-white rounded-2xl p-4 text-center">
+            <div className="bg-white rounded-2xl p-6 text-center">
               <p className="text-slate-600 text-sm mb-1">Active Streaks</p>
               <p className="text-orange-600 text-2xl">
                 {Object.values(skillLevels).filter(skill => skill.streak > 0).length}

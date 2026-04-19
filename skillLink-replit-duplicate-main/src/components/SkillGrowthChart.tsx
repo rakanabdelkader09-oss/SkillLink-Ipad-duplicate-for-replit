@@ -1,4 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+﻿import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { SkillLevels } from './SkillTreeScreen';
 
 interface SkillGrowthChartProps {
@@ -61,7 +61,7 @@ export function SkillGrowthChart({ skillLevels }: SkillGrowthChartProps) {
             content={({ active, payload }) => {
               if (active && payload && payload.length) {
                 return (
-                  <div className="bg-white p-3 rounded-xl shadow-lg border-2 border-blue-200">
+                  <div className="bg-white p-5 rounded-xl shadow-lg border-2 border-blue-200">
                     <p className="text-slate-700 mb-1">{payload[0].payload.name}</p>
                     <p className="text-blue-600">Level: {payload[0].value}</p>
                     <p className="text-slate-500 text-sm">XP: {payload[0].payload.xp}</p>
@@ -79,14 +79,14 @@ export function SkillGrowthChart({ skillLevels }: SkillGrowthChartProps) {
         </BarChart>
       </ResponsiveContainer>
 
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        <div className="bg-blue-50 rounded-xl p-3 text-center">
+      <div className="mt-4 grid grid-cols-2 gap-5">
+        <div className="bg-blue-50 rounded-xl p-5 text-center">
           <p className="text-slate-600 text-sm mb-1">Highest Skill</p>
           <p className="text-blue-700">
             {data.reduce((max, curr) => curr.level > max.level ? curr : max).name}
           </p>
         </div>
-        <div className="bg-purple-50 rounded-xl p-3 text-center">
+        <div className="bg-purple-50 rounded-xl p-5 text-center">
           <p className="text-slate-600 text-sm mb-1">Total Levels</p>
           <p className="text-purple-700">
             {data.reduce((sum, curr) => sum + curr.level, 0)}

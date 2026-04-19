@@ -1,4 +1,4 @@
-// Helper module for assigning daily quests to kids
+﻿// Helper module for assigning daily quests to kids
 
 interface Quest {
   id: number;
