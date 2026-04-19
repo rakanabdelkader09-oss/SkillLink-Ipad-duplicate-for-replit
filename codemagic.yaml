@@ -1,0 +1,30 @@
+# Codemagic Configuration for SkillLink
+workflows:
+  ios-unsigned-build:
+    name: iOS Unsigned Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    working_directory: skillLink-replit-duplicate-main
+    scripts:
+      - name: Install dependencies
+        script: | 
+          npm install
+      - name: Build web assets
+        script: |
+          npm run build
+      - name: Capacitor Sync
+        script: |
+          npx cap sync ios
+      - name: Build iOS Project
+        script: |
+          # This creates the .app file without needing an Apple Developer Certificate
+          xcodebuild build \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Debug \
+            -sdk iphoneos \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_IDENTITY=""
+    artifacts:
+      - $CM_BUILD_DIR/skillLink-replit-duplicate-main/ios/App/build/Release-iphoneos/*.app
