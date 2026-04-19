@@ -1,0 +1,45 @@
+I need to refine the branding, fix logic inconsistencies in the shop, overhaul the character system, and implement a tiered subscription model. Please provide a step-by-step implementation guide with the necessary code snippets and logic flows for the following:
+
+1. Branding & Asset Correction
+Startup/Splash Screen: Replace the current "SkillCoin" icon shown at launch with our official brand logo.
+
+Currency Logic: Ensure "SkillCoin" is correctly integrated as the primary functional currency within the Item Shop for all standard purchases.
+
+Shop Visuals: In the "Buy Robux" section of the shop, the current placeholder image is a diamond. Replace this with a Robux-specific icon to match the product.
+
+2. Character Customization Overhaul
+Completely replace the existing character customization module. I want a sleek, modern UI/UX inspired by Duolingo and Khan Academy Kids.
+
+Style: Use clean, vector-style avatars with rounded UI elements.
+
+Functionality: Users should be able to toggle through categories (Head, Body, Accessories, etc.) in a horizontal or grid-based menu.
+
+State Management: Ensure the character's appearance updates in real-time and saves across sessions.
+
+3. Subscription Page Implementation
+Design and add a highly accessible, premium subscription page styled after Revolut or Duolingo Plus.
+
+Plan A: Base Plan
+
+Price: €6.99/month
+
+Features: Unlimited Parent/Guardian accounts; 1 Child account.
+
+Plan B: Family Plan
+
+Price: €12.99/month
+
+Features: Unlimited Parent/Guardian accounts; 2 Child accounts.
+
+UI Requirements: Clear "Compare Plans" toggle, vibrant "Subscribe" buttons, and a clean list of benefits for each.
+
+4. Technical Instructions Needed
+For each of the changes above, please provide:
+
+File Structure: Which specific files or folders need to be edited.
+
+Code Logic: The logic for currency deduction and subscription gating (locking features based on the plan).
+
+UI/UX Steps: How to arrange the components to ensure a "well-designed" feel.
+
+Verification: How to test that the splash screen and shop images are loading correctly.

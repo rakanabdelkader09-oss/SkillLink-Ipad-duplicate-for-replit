@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SkillLink</string>
+    <string name="title_activity_main">SkillLink</string>
+    <string name="package_name">com.skilllink.app</string>
+    <string name="custom_url_scheme">com.skilllink.app</string>
+</resources>

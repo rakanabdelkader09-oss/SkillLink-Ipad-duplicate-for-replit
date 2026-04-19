@@ -1,0 +1,55 @@
+Use this for the core structure, bug fixes, and age-based content.
+
+Role: Senior Full-Stack Developer & UI/UX Designer.
+Task: Debug, refactor, and enhance the current application to be "investor-ready."
+
+1. Core Logic & Functional Fixes
+Bug Sweep: Identify and fix all broken buttons and non-functional logic.
+
+Navigation: All homepage icons and indicators must be functional. Any currently "dead" icons must link to a new Statistics Page showing user progress.
+
+Timer Logic: Remove timers from all sections except where essential for task tracking. For those remaining, implement an Adjustable Timer component.
+
+Notifications: Implement a local notification system that triggers a "Streak Reminder" if the user hasn't completed a task by a specific daily cutoff.
+
+2. Visual & Profile Updates
+Branding: Replace the existing "coin" logo with the [Attached Image].
+
+Avatars: Replace the character customization system. Users can now only choose from a curated set of Emojis to serve as their profile pictures.
+
+3. Dynamic Age-Based Content
+Implement a conditional filter on the Home and Courses pages. Depending on the user's age (6-7, 8-10, or 11-12), display the following specific Quests and Courses:
+
+Ages 6–7: (Quests: Set Table, Tidy Toys, Simple Snack, Sort Laundry; Courses: Drawing Basics, Simple Origami, Easy Crafts, Helping at Home).
+
+Ages 8–10: (Quests: Help Prepare Meal, Clean Room, Plan Healthy Snack, Homework Streak; Courses: DIY Projects, Story Creation, Logic Challenges, Cooking Basics).
+
+Ages 11–12: (Quests: Cook Meal Independently, Plan Next Day, Household Task Lead; Courses: Creative Projects, Communication Skills, Real-Life Scenarios, Goal Setting).
+
+4. Specialized "Paper Crafts" Section (Priority)
+This section must be the most polished part of the app:
+
+Header: Place the [Attached Video] as the main header for the Paper Crafts landing page.
+
+Course Structure: Organize Origami courses by difficulty (Easy → Intermediate → Advanced).
+
+Step-by-Step Integration: Each origami tutorial must maintain a step-by-step UI.
+
+Video Sourcing: For every step, fetch and embed a relevant YouTube tutorial snippet or thumbnail that corresponds to that specific folding instruction.
+
+Prompt 2: The "Hero Quest" Polish
+Use this separately to build the high-quality "Clean Your Room" quest.
+
+Task: Create a high-fidelity, interactive quest module for "Clean and Organize Your Room."
+
+1. UI/UX Focus
+This quest should be the "Showcase" piece for investors. Use high-quality animations, progress bars, and celebratory haptics/visuals upon completion.
+
+2. Functional Requirements
+Breakdown: Divide the quest into sub-tasks (e.g., "Clear the Floor," "Make the Bed," "Organize Desk").
+
+Verification: If possible, include a "Photo Upload" button for the user to "prove" the room is clean before the quest is marked complete.
+
+Gamification: Integrate a "Before and After" toggle or a visual "Cleanliness Meter" that fills up as sub-tasks are checked off.
+
+Timer: Include an optional "Speed Clean" countdown timer to make the task feel like a game.
