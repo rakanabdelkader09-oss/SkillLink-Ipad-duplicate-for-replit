@@ -380,19 +380,18 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
 
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
-      {/* Header video — restored */}
-      <div className="relative h-56 bg-gradient-to-br from-amber-200 to-orange-300 overflow-hidden">
-        <video
-          ref={videoRef}
-          src="/paper-crafts-header.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="absolute inset-0 w-full h-full object-cover"
-          onLoadedData={() => videoRef.current?.play()}
-        />
+     <video
+  ref={videoRef}
+  autoPlay
+  muted
+  loop
+  playsInline
+  webkit-playsinline="true"
+  preload="auto"
+  className="absolute inset-0 w-full h-full object-cover"
+>
+  <source src="/paper-crafts-header.mp4" type="video/mp4" />
+</video>
         <button
           onClick={onBack}
           className="absolute top-12 left-4 z-10 bg-black/40 text-white rounded-full p-2 backdrop-blur-sm active:opacity-70"
