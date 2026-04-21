@@ -3,7 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.skilllink.app',
   appName: 'SkillLink',
-  webDir: 'dist',
+  webDir: 'build',
   ios: {
     allowsLinkPreview: false,
     scrollEnabled: true,
