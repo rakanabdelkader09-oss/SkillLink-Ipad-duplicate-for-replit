@@ -1,3 +1,4 @@
+import headerVideo from '../public/paper-crafts-header.mp4';
 import { useState } from 'react';
 import { ArrowLeft, ChevronRight, CheckCircle, Star, Lock } from 'lucide-react';
 import { Progress } from './ui/progress';
