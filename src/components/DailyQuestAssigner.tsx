@@ -29,8 +29,6 @@ export const QUEST_POOL: Quest[] = [
   
   // Personal Care - Medium
   { id: 4, title: 'Do 10 jumping jacks', icon: '🤸', points: 15, completed: false, category: 'Personal Care', color: 'blue', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15, isTimed: true, timerSeconds: 90 },
-  { id: 5, title: 'Build a 10-piece LEGO creation', icon: '🧱', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15 },
-  { id: 6, title: 'Take a shower by yourself', icon: '🚿', points: 20, completed: false, category: 'Personal Care', color: 'blue', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20 },
   { id: 44, title: 'Stretch for 5 minutes', icon: '🧘', points: 15, completed: false, category: 'Personal Care', color: 'blue', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15, isTimed: true, timerSeconds: 300 },
   { id: 45, title: 'Go outside for 20 minutes', icon: '🌳', points: 20, completed: false, category: 'Personal Care', color: 'blue', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20, isTimed: true, timerSeconds: 1200 },
   
@@ -58,9 +56,6 @@ export const QUEST_POOL: Quest[] = [
   { id: 13, title: 'Organize your backpack', icon: '🎒', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15 },
   { id: 14, title: 'Water the plants', icon: '🌱', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15 },
   { id: 15, title: 'Set the table for dinner', icon: '🍽️', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15 },
-  { id: 50, title: 'Make your own healthy breakfast', icon: '🥣', points: 20, completed: false, category: 'Responsibility', color: 'orange', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20 },
-  { id: 51, title: 'Pack your school lunch', icon: '🥪', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15 },
-  { id: 52, title: 'Sweep the floor', icon: '🧹', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15 },
   { id: 53, title: 'Take out the trash', icon: '🗑️', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15 },
   { id: 54, title: 'Fold and put away laundry', icon: '👔', points: 20, completed: false, category: 'Responsibility', color: 'orange', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20 },
   { id: 84, title: 'Learn basic cooking skills', icon: '👨‍🍳', points: 25, completed: false, category: 'Responsibility', color: 'orange', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 25 },

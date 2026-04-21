@@ -376,17 +376,39 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
 
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
-      {/* Header - inline auto-playing muted video */}
-      <div className="relative h-56 bg-black overflow-hidden">
+      {/* Header - inline auto-playing muted video.
+          iPad/iOS Safari quirks handled:
+            - `muted` set as a boolean attribute AND on the element via ref
+              (Safari only allows autoplay when the video is *attribute*-muted)
+            - `webkit-playsinline` legacy attr for older iOS
+            - poster shown until the first frame paints (prevents black flash)
+            - .play() retried on mount in case the autoplay policy blocked it */}
+      <div className="relative h-56 bg-gradient-to-br from-amber-200 to-orange-300 overflow-hidden">
         <video
           src="/paper-crafts-header.mp4"
           autoPlay
           muted
           loop
           playsInline
-          controls={false}
           preload="auto"
+          poster="/paper-crafts-header.jpg"
           className="absolute inset-0 w-full h-full object-cover"
+          ref={(el) => {
+            if (!el) return;
+            // Force-mute on the element (Safari only allows autoplay
+            // when the property is true at the time .play() is called).
+            el.muted = true;
+            el.setAttribute('muted', '');
+            // Legacy iOS / older WebKit attributes — set imperatively
+            // because React strips unknown DOM attributes.
+            el.setAttribute('webkit-playsinline', 'true');
+            el.setAttribute('playsinline', 'true');
+            el.setAttribute('x5-playsinline', 'true');
+            const tryPlay = () => { void el.play().catch(() => {}); };
+            tryPlay();
+            el.addEventListener('loadeddata', tryPlay, { once: true });
+            el.addEventListener('canplay', tryPlay, { once: true });
+          }}
         />
         <button
           onClick={onBack}
