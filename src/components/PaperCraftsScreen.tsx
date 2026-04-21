@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ArrowLeft, ChevronRight, Play, CheckCircle, Star, Lock } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { ArrowLeft, ChevronRight, CheckCircle, Star, Lock } from 'lucide-react';
 import { Progress } from './ui/progress';
 
 interface PaperCraftsScreenProps {
@@ -19,17 +19,18 @@ interface OrigamiCourse {
   emoji: string;
   difficulty: 'easy' | 'intermediate' | 'advanced';
   steps: OrigamiStep[];
+  points: number;
   locked?: boolean;
   completed?: boolean;
 }
 
 const COURSES: OrigamiCourse[] = [
-  // Easy
   {
     id: 'paper-boat',
     title: 'Paper Boat',
     emoji: '⛵',
     difficulty: 'easy',
+    points: 20,
     completed: false,
     steps: [
       { title: 'Fold in half', description: 'Take your paper and fold it in half horizontally.', youtubeId: 'OBuP0DV7dGA', thumbnail: 'https://img.youtube.com/vi/OBuP0DV7dGA/mqdefault.jpg' },
@@ -43,6 +44,7 @@ const COURSES: OrigamiCourse[] = [
     title: 'Paper Airplane',
     emoji: '✈️',
     difficulty: 'easy',
+    points: 20,
     completed: false,
     steps: [
       { title: 'Fold lengthwise', description: 'Fold the paper in half lengthwise and unfold.', youtubeId: 'veyZNyurlwU', thumbnail: 'https://img.youtube.com/vi/veyZNyurlwU/mqdefault.jpg' },
@@ -57,6 +59,7 @@ const COURSES: OrigamiCourse[] = [
     title: 'Paper Cup',
     emoji: '🥤',
     difficulty: 'easy',
+    points: 20,
     steps: [
       { title: 'Fold diagonally', description: 'Fold the square paper diagonally to make a triangle.', youtubeId: 'kF-yGVRuuVk', thumbnail: 'https://img.youtube.com/vi/kF-yGVRuuVk/mqdefault.jpg' },
       { title: 'Fold right corner', description: 'Fold the right corner to the left edge.', youtubeId: 'kF-yGVRuuVk', thumbnail: 'https://img.youtube.com/vi/kF-yGVRuuVk/mqdefault.jpg' },
@@ -65,12 +68,12 @@ const COURSES: OrigamiCourse[] = [
       { title: 'Open the cup', description: 'Push your fingers inside and open the cup shape.', youtubeId: 'kF-yGVRuuVk', thumbnail: 'https://img.youtube.com/vi/kF-yGVRuuVk/mqdefault.jpg' },
     ],
   },
-  // Intermediate
   {
     id: 'origami-crane',
     title: 'Origami Crane',
     emoji: '🕊️',
     difficulty: 'intermediate',
+    points: 35,
     steps: [
       { title: 'Start with square base', description: 'Fold your square paper into the preliminary base.', youtubeId: 'FxgQVDjXnU4', thumbnail: 'https://img.youtube.com/vi/FxgQVDjXnU4/mqdefault.jpg' },
       { title: 'Petal fold', description: 'Perform the petal fold on the front and back.', youtubeId: 'FxgQVDjXnU4', thumbnail: 'https://img.youtube.com/vi/FxgQVDjXnU4/mqdefault.jpg' },
@@ -85,6 +88,7 @@ const COURSES: OrigamiCourse[] = [
     title: 'Jumping Frog',
     emoji: '🐸',
     difficulty: 'intermediate',
+    points: 35,
     steps: [
       { title: 'Fold and crease', description: 'Create valley and mountain folds to form the base.', youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
       { title: 'Form the front legs', description: "Create the frog's two front legs from the top section.", youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
@@ -92,12 +96,12 @@ const COURSES: OrigamiCourse[] = [
       { title: 'Make it jump!', description: 'Press the back and release — your frog jumps!', youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
     ],
   },
-  // Advanced
   {
     id: 'origami-dragon',
     title: 'Origami Dragon',
     emoji: '🐉',
     difficulty: 'advanced',
+    points: 50,
     locked: true,
     steps: [
       { title: 'Bird base', description: 'Start with an advanced bird base fold.', youtubeId: 'IGbCWXqcqik', thumbnail: 'https://img.youtube.com/vi/IGbCWXqcqik/mqdefault.jpg' },
@@ -112,6 +116,7 @@ const COURSES: OrigamiCourse[] = [
     title: 'Origami Rose',
     emoji: '🌹',
     difficulty: 'advanced',
+    points: 50,
     locked: true,
     steps: [
       { title: 'Waterbomb base', description: 'Fold a waterbomb base from your square sheet.', youtubeId: '1ByFjKWnzBY', thumbnail: 'https://img.youtube.com/vi/1ByFjKWnzBY/mqdefault.jpg' },
@@ -129,10 +134,43 @@ const DIFFICULTY_CONFIG = {
   advanced: { label: 'Advanced', color: 'bg-red-500', textColor: 'text-red-700', bgColor: 'bg-red-50 dark:bg-red-950/20', borderColor: 'border-red-200 dark:border-red-800', gradient: 'from-red-400 to-rose-500' },
 };
 
-// Opens YouTube in Safari (in-app) on iOS Capacitor instead of jumping to YouTube app
-function openYouTube(youtubeId: string) {
-  const url = `https://www.youtube.com/watch?v=${youtubeId}`;
-  window.open(url, '_system');
+function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
+  const [playing, setPlaying] = useState(false);
+  const src = `https://www.youtube.com/embed/${youtubeId}?playsinline=1&rel=0&modestbranding=1&enablejsapi=0&iv_load_policy=3&autoplay=1`;
+
+  if (!playing) {
+    return (
+      <div className="relative w-full h-44 bg-black" onClick={() => setPlaying(true)}>
+        <img
+          src={`https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`}
+          alt="Video thumbnail"
+          className="w-full h-full object-cover opacity-80"
+          onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/320x180/1e1e1e/ffffff?text=Tap+to+Play'; }}
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="bg-red-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-xl">
+            <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
+          Tap to play
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
+      <iframe
+        src={src}
+        className="absolute inset-0 w-full h-full"
+        frameBorder={0}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+        allowFullScreen
+        referrerPolicy="strict-origin-when-cross-origin"
+      />
+    </div>
+  );
 }
 
 function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: () => void }) {
@@ -154,7 +192,6 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
 
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
-      {/* Header */}
       <div className={`bg-gradient-to-br ${diff.gradient} px-6 pt-12 pb-6 rounded-b-[3rem] shadow-lg`}>
         <button onClick={onBack} className="text-white mb-4 flex items-center gap-4 active:opacity-70">
           <ArrowLeft size={20} /> Back
@@ -166,9 +203,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
             {diff.label}
           </span>
         </div>
-
-        {/* Progress */}
-        <div className="mt-4 bg-white/20 rounded-2xl p-5">
+        <div className="mt-4 bg-white/20 rounded-2xl p-4">
           <div className="flex justify-between text-white text-sm mb-2">
             <span>{completedSteps.size}/{course.steps.length} steps done</span>
             <span>{Math.round(progress)}%</span>
@@ -178,9 +213,9 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
       </div>
 
       <div className="px-6 mt-5">
-        {/* Step selector */}
-        <div className="flex gap-4 overflow-x-auto pb-2 mb-5 no-scrollbar">
-          {course.steps.map((s, i) => (
+        {/* Step pills */}
+        <div className="flex gap-3 overflow-x-auto pb-2 mb-5 no-scrollbar">
+          {course.steps.map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrentStep(i)}
@@ -197,27 +232,11 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
           ))}
         </div>
 
-        {/* Current step */}
+        {/* Video + step card */}
         <div className="bg-card border-2 border-border rounded-3xl overflow-hidden shadow-md mb-4">
-          {/* YouTube thumbnail - tapping opens in Safari via _system */}
-          <div className="relative">
-            <img
-              src={step.thumbnail}
-              alt={step.title}
-              className="w-full h-44 object-cover"
-              onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/320x180/6366f1/ffffff?text=Video+Step'; }}
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <button
-                onClick={() => openYouTube(step.youtubeId)}
-                className="bg-red-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-transform active:scale-90"
-              >
-                <Play size={24} fill="white" />
-              </button>
-            </div>
-            <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
-              Step {currentStep + 1} of {course.steps.length}
-            </div>
+          <YouTubePlayer youtubeId={step.youtubeId} key={step.youtubeId + currentStep} />
+          <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full pointer-events-none">
+            Step {currentStep + 1} of {course.steps.length}
           </div>
 
           <div className="p-5">
@@ -238,7 +257,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
               </button>
             </div>
 
-            <div className="flex gap-5">
+            <div className="flex gap-3">
               {currentStep > 0 && (
                 <button
                   onClick={() => setCurrentStep(i => i - 1)}
@@ -247,15 +266,14 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
                   ← Previous
                 </button>
               )}
-              {currentStep < course.steps.length - 1 && (
+              {currentStep < course.steps.length - 1 ? (
                 <button
                   onClick={() => { toggleStep(currentStep); setCurrentStep(i => i + 1); }}
                   className="flex-1 py-3 bg-primary rounded-2xl text-primary-foreground font-semibold text-sm active:scale-95 transition-transform"
                 >
                   Next Step →
                 </button>
-              )}
-              {currentStep === course.steps.length - 1 && (
+              ) : (
                 <button
                   onClick={() => toggleStep(currentStep)}
                   className="flex-1 py-3 bg-green-500 rounded-2xl text-white font-semibold text-sm active:scale-95 transition-transform"
@@ -267,7 +285,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
           </div>
         </div>
 
-        {/* All steps overview */}
+        {/* All steps list */}
         <div className="bg-card border-2 border-border rounded-3xl p-5 shadow-md">
           <h3 className="text-foreground font-bold mb-3">All Steps</h3>
           <div className="space-y-2">
@@ -298,6 +316,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
 
 export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
   const [selectedCourse, setSelectedCourse] = useState<OrigamiCourse | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   if (selectedCourse) {
     return <CourseStepsView course={selectedCourse} onBack={() => setSelectedCourse(null)} />;
@@ -329,9 +348,11 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
               <div className="flex-1 text-left">
                 <p className={`font-bold ${config.textColor}`}>{course.title}</p>
                 <p className="text-muted-foreground text-xs">{course.steps.length} steps</p>
-                {course.completed && (
-                  <span className="text-xs text-green-600 font-semibold">✅ Completed</span>
-                )}
+                <div className="mt-1 inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-0.5 rounded-full">
+                  <Star size={10} fill="currentColor" />
+                  <span>+{course.points} SC coins</span>
+                </div>
+                {course.completed && <span className="block mt-1 text-xs text-green-600 font-semibold">✅ Completed</span>}
               </div>
               <div className="flex items-center gap-4">
                 {course.locked ? (
@@ -359,23 +380,28 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
 
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
-      {/* Header - gradient banner replacing missing video file */}
-      <div className="relative h-56 bg-gradient-to-br from-amber-400 via-orange-400 to-rose-400 overflow-hidden">
+      {/* Header video — restored */}
+      <div className="relative h-56 bg-gradient-to-br from-amber-200 to-orange-300 overflow-hidden">
+        <video
+          ref={videoRef}
+          src="/paper-crafts-header.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover"
+          onLoadedData={() => videoRef.current?.play()}
+        />
         <button
           onClick={onBack}
-          className="absolute top-12 left-4 z-10 bg-black/30 text-white rounded-full p-2 backdrop-blur-sm active:opacity-70"
+          className="absolute top-12 left-4 z-10 bg-black/40 text-white rounded-full p-2 backdrop-blur-sm active:opacity-70"
         >
           <ArrowLeft size={20} />
         </button>
-        {/* Decorative floating emojis */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-          <span className="text-8xl opacity-20 absolute top-4 left-8 rotate-12">✂️</span>
-          <span className="text-7xl opacity-20 absolute bottom-4 right-8 -rotate-12">🗺️</span>
-          <span className="text-6xl opacity-15 absolute top-8 right-16 rotate-6">📄</span>
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent flex flex-col items-center justify-end pb-6 px-6">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col items-center justify-end pb-6 px-6 pointer-events-none">
           <div className="text-center">
-            <p className="text-4xl mb-2">🗺️✂️</p>
+            <p className="text-4xl mb-2">📜✂️</p>
             <h2 className="text-white font-bold text-2xl drop-shadow-lg">Paper Crafts</h2>
             <p className="text-white/90 text-sm">Learn origami step-by-step</p>
           </div>
@@ -383,7 +409,6 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
       </div>
 
       <div className="px-6 mt-6">
-        {/* Intro banner */}
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 rounded-3xl p-5 mb-6 shadow-lg">
           <div className="flex items-center gap-5">
             <div className="text-4xl">🎁</div>
@@ -393,7 +418,6 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
             </div>
           </div>
         </div>
-
         {renderSection('Beginner', '🌱', easy, 'easy')}
         {renderSection('Intermediate', '⚡', intermediate, 'intermediate')}
         {renderSection('Master', '🏆', advanced, 'advanced')}
