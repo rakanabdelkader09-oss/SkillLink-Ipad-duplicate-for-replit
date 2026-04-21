@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { ArrowLeft, ChevronRight, Play, CheckCircle, Star, Lock } from 'lucide-react';
 import { Progress } from './ui/progress';
 
@@ -87,7 +87,7 @@ const COURSES: OrigamiCourse[] = [
     difficulty: 'intermediate',
     steps: [
       { title: 'Fold and crease', description: 'Create valley and mountain folds to form the base.', youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
-      { title: 'Form the front legs', description: 'Create the frog\'s two front legs from the top section.', youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
+      { title: 'Form the front legs', description: "Create the frog's two front legs from the top section.", youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
       { title: 'Form the back legs', description: 'Fold the bottom section to create the back legs.', youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
       { title: 'Make it jump!', description: 'Press the back and release — your frog jumps!', youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
     ],
@@ -128,6 +128,12 @@ const DIFFICULTY_CONFIG = {
   intermediate: { label: 'Intermediate', color: 'bg-yellow-500', textColor: 'text-yellow-700', bgColor: 'bg-yellow-50 dark:bg-yellow-950/20', borderColor: 'border-yellow-200 dark:border-yellow-800', gradient: 'from-yellow-400 to-orange-400' },
   advanced: { label: 'Advanced', color: 'bg-red-500', textColor: 'text-red-700', bgColor: 'bg-red-50 dark:bg-red-950/20', borderColor: 'border-red-200 dark:border-red-800', gradient: 'from-red-400 to-rose-500' },
 };
+
+// Opens YouTube in Safari (in-app) on iOS Capacitor instead of jumping to YouTube app
+function openYouTube(youtubeId: string) {
+  const url = `https://www.youtube.com/watch?v=${youtubeId}`;
+  window.open(url, '_system');
+}
 
 function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
@@ -193,7 +199,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
 
         {/* Current step */}
         <div className="bg-card border-2 border-border rounded-3xl overflow-hidden shadow-md mb-4">
-          {/* YouTube thumbnail */}
+          {/* YouTube thumbnail - tapping opens in Safari via _system */}
           <div className="relative">
             <img
               src={step.thumbnail}
@@ -202,14 +208,12 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
               onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/320x180/6366f1/ffffff?text=Video+Step'; }}
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <a
-                href={`https://www.youtube.com/watch?v=${step.youtubeId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-red-600 hover:bg-red-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-transform active:scale-90"
+              <button
+                onClick={() => openYouTube(step.youtubeId)}
+                className="bg-red-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-transform active:scale-90"
               >
                 <Play size={24} fill="white" />
-              </a>
+              </button>
             </div>
             <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
               Step {currentStep + 1} of {course.steps.length}
@@ -355,23 +359,21 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
 
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
-      {/* Header with video */}
-      <div className="relative">
+      {/* Header - gradient banner replacing missing video file */}
+      <div className="relative h-56 bg-gradient-to-br from-amber-400 via-orange-400 to-rose-400 overflow-hidden">
         <button
           onClick={onBack}
-          className="absolute top-12 left-4 z-10 bg-black/40 text-white rounded-full p-2 backdrop-blur-sm active:opacity-70"
+          className="absolute top-12 left-4 z-10 bg-black/30 text-white rounded-full p-2 backdrop-blur-sm active:opacity-70"
         >
           <ArrowLeft size={20} />
         </button>
-        <video
-          className="w-full h-56 object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          src="/paper-crafts-header.mp4"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col items-center justify-end pb-6 px-6">
+        {/* Decorative floating emojis */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+          <span className="text-8xl opacity-20 absolute top-4 left-8 rotate-12">✂️</span>
+          <span className="text-7xl opacity-20 absolute bottom-4 right-8 -rotate-12">🗺️</span>
+          <span className="text-6xl opacity-15 absolute top-8 right-16 rotate-6">📄</span>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent flex flex-col items-center justify-end pb-6 px-6">
           <div className="text-center">
             <p className="text-4xl mb-2">🗺️✂️</p>
             <h2 className="text-white font-bold text-2xl drop-shadow-lg">Paper Crafts</h2>

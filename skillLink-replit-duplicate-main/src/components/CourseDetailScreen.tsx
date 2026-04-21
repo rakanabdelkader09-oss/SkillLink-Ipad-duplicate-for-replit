@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { ArrowLeft, Play, CheckCircle, Lock, Star, X, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
@@ -440,14 +440,13 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
               onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/320x180/a855f7/ffffff?text=Watch+Video'; }}
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <a
-                href={`https://www.youtube.com/watch?v=${ytId}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button onClick={() => window.open(`https://www.youtube.com/watch?v=${ytId}`, `_system`)}
+                
+                
                 className="bg-red-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg active:scale-90 transition-transform"
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
-              </a>
+              </button>
             </div>
           </div>
           <p className="text-gray-400 text-xs text-center mb-5 italic">{step.videoLabel}</p>
