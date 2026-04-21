@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowLeft, ChevronRight, CheckCircle, Star, Lock } from 'lucide-react';
 import { Progress } from './ui/progress';
+import { SkillCoin } from './CurrencyIcons';
 
 function ytEmbedUrl(id: string) {
   return `https://www.youtube.com/embed/${id}?playsinline=1&rel=0&modestbranding=1`;
@@ -175,7 +176,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
           </span>
           {/* SC Coin reward badge — matches the quests detail screen styling */}
           <span className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">
-            <span>🪙</span>
+            <SkillCoin size={14} />
             <span>Worth {course.points} SC coins</span>
           </span>
         </div>
@@ -342,7 +343,7 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
                 <p className="text-muted-foreground text-xs">{course.steps.length} steps</p>
                 {/* SC Coin reward — same currency styling as Quests */}
                 <div className="mt-1 inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-0.5 rounded-full">
-                  <span>🪙</span>
+                  <SkillCoin size={14} />
                   <span>+{course.points} SC coins</span>
                 </div>
                 {course.completed && (
