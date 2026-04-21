@@ -165,7 +165,6 @@ function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
       </div>
     </div>
   );
-}
 
   return (
     <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
@@ -179,7 +178,6 @@ function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
       />
     </div>
   );
-}
 
 function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
