@@ -222,6 +222,10 @@ function getYouTubeId(videoUrl: string): string {
   return videoUrl.split('/embed/')[1]?.split('?')[0] || '';
 }
 
+function ytEmbedUrl(id: string) {
+  return `https://www.youtube.com/embed/${id}?playsinline=1&rel=0&modestbranding=1`;
+}
+
 export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps) {
   const course = courseData[courseId] || courseData['ls-1'];
   const [lessons, setLessons] = useState<Lesson[]>(course.lessons);
@@ -431,23 +435,19 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
         <div className="flex-1 overflow-y-auto px-6 py-5">
           <h3 className="text-2xl font-black text-gray-800 mb-4">{step.heading}</h3>
 
-          {/* Video Player - iOS compatible thumbnail + YouTube link */}
+          {/* In-app YouTube player with full-screen support */}
           <div className="rounded-3xl overflow-hidden border-2 border-purple-100 shadow-lg mb-4 bg-black relative">
-            <img
-              src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
-              alt={step.videoLabel}
-              className="w-full h-44 object-cover"
-              onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/320x180/a855f7/ffffff?text=Watch+Video'; }}
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <a
-                href={`https://www.youtube.com/watch?v=${ytId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-red-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg active:scale-90 transition-transform"
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
-              </a>
+            <div className="relative w-full" style={{ aspectRatio: '16 / 9' }}>
+              <iframe
+                key={ytId + activeStep}
+                src={ytEmbedUrl(ytId)}
+                title={step.videoLabel}
+                className="absolute inset-0 w-full h-full"
+                frameBorder={0}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
             </div>
           </div>
           <p className="text-gray-400 text-xs text-center mb-5 italic">{step.videoLabel}</p>

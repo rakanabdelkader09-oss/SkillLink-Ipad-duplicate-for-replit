@@ -149,7 +149,7 @@ export function HomeScreen({ onNavigate, userProfile, userPoints, skillLevels, w
           </div>
           <div className="flex-1 text-left">
             <p className="text-white font-black text-base">Unlock Premium ✨</p>
-            <p className="text-purple-100 text-xs">Family Plan from €6.99/mo — Cancel anytime</p>
+            <p className="text-purple-100 text-xs">Base Plan from €6.99/mo — Cancel anytime</p>
           </div>
           <div className="bg-white text-purple-600 font-black text-xs px-3 py-1.5 rounded-full">
             See Plans

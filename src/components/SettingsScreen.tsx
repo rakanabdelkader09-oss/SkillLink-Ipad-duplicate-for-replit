@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useState, useEffect } from "react";
 import {
   ArrowLeft,
   Sun,
@@ -50,7 +50,49 @@ export function SettingsScreen({
   const [showAddFriendDialog, setShowAddFriendDialog] = useState(false);
   const [showSignOutDialog, setShowSignOutDialog] = useState(false);
   const [friendUsername, setFriendUsername] = useState("");
-  const [notifications, setNotifications] = useState(true);
+  const [notifications, setNotifications] = useState<boolean>(() => {
+    const saved = localStorage.getItem("skilllink-notifications");
+    return saved === null ? true : saved === "true";
+  });
+  const [showParentalDialog, setShowParentalDialog] = useState(false);
+
+  type ParentalControls = {
+    screenTimeLimit: boolean;
+    contentFilter: boolean;
+    purchaseApproval: boolean;
+    socialFeatures: boolean;
+    dailyTimeMinutes: number;
+  };
+  const defaultParental: ParentalControls = {
+    screenTimeLimit: true,
+    contentFilter: true,
+    purchaseApproval: true,
+    socialFeatures: false,
+    dailyTimeMinutes: 60,
+  };
+  const [parental, setParental] = useState<ParentalControls>(() => {
+    try {
+      const raw = localStorage.getItem("skilllink-parental-controls");
+      return raw ? { ...defaultParental, ...JSON.parse(raw) } : defaultParental;
+    } catch {
+      return defaultParental;
+    }
+  });
+  const [parentalSaved, setParentalSaved] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("skilllink-notifications", String(notifications));
+  }, [notifications]);
+
+  const updateParental = <K extends keyof ParentalControls>(key: K, value: ParentalControls[K]) => {
+    setParental((prev) => {
+      const next = { ...prev, [key]: value };
+      localStorage.setItem("skilllink-parental-controls", JSON.stringify(next));
+      return next;
+    });
+    setParentalSaved(true);
+    window.setTimeout(() => setParentalSaved(false), 1200);
+  };
 
   const colorThemes = [
     { name: "Blue", value: "blue", color: "bg-blue-500" },
@@ -208,7 +250,13 @@ export function SettingsScreen({
           <div className="bg-card rounded-3xl p-6 shadow-md">
             <h3 className="text-card-foreground mb-4">🔒 {t.privacySecurity}</h3>
 
-            <div className="flex items-center justify-between p-6 rounded-2xl hover:bg-muted cursor-pointer transition-colors">
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => setShowParentalDialog(true)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setShowParentalDialog(true); }}
+              className="flex items-center justify-between p-6 rounded-2xl hover:bg-muted cursor-pointer transition-colors"
+            >
               <div className="flex items-center gap-4">
                 <Shield className="w-6 h-6 text-red-500" />
                 <div>
@@ -415,6 +463,93 @@ export function SettingsScreen({
               className="bg-primary text-primary-foreground hover:bg-primary/90"
             >
               Send Request
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Parental Controls Dialog */}
+      <Dialog open={showParentalDialog} onOpenChange={setShowParentalDialog}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>🔒 {t.parentalControls}</DialogTitle>
+            <DialogDescription>
+              These settings are saved automatically and apply to your child's account.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-3 py-2">
+            <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/50">
+              <div className="pr-4">
+                <p className="text-foreground font-semibold">Daily screen-time limit</p>
+                <p className="text-muted-foreground text-sm">Stop the app once the limit is reached</p>
+              </div>
+              <Switch
+                checked={parental.screenTimeLimit}
+                onCheckedChange={(v) => updateParental("screenTimeLimit", v)}
+              />
+            </div>
+
+            {parental.screenTimeLimit && (
+              <div className="p-4 rounded-2xl bg-muted/30 border border-border">
+                <Label htmlFor="daily-mins" className="text-sm">Minutes per day</Label>
+                <div className="flex items-center gap-3 mt-2">
+                  <input
+                    id="daily-mins"
+                    type="range"
+                    min={15}
+                    max={240}
+                    step={15}
+                    value={parental.dailyTimeMinutes}
+                    onChange={(e) => updateParental("dailyTimeMinutes", Number(e.target.value))}
+                    className="flex-1 accent-primary"
+                  />
+                  <span className="text-foreground font-bold w-16 text-right">{parental.dailyTimeMinutes} min</span>
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/50">
+              <div className="pr-4">
+                <p className="text-foreground font-semibold">Age-appropriate content filter</p>
+                <p className="text-muted-foreground text-sm">Hide quests and courses outside the age range</p>
+              </div>
+              <Switch
+                checked={parental.contentFilter}
+                onCheckedChange={(v) => updateParental("contentFilter", v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/50">
+              <div className="pr-4">
+                <p className="text-foreground font-semibold">Require approval for purchases</p>
+                <p className="text-muted-foreground text-sm">All shop purchases need a parent's OK</p>
+              </div>
+              <Switch
+                checked={parental.purchaseApproval}
+                onCheckedChange={(v) => updateParental("purchaseApproval", v)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/50">
+              <div className="pr-4">
+                <p className="text-foreground font-semibold">Allow social features</p>
+                <p className="text-muted-foreground text-sm">Friends, leaderboard and messaging</p>
+              </div>
+              <Switch
+                checked={parental.socialFeatures}
+                onCheckedChange={(v) => updateParental("socialFeatures", v)}
+              />
+            </div>
+
+            <div className="text-center text-sm text-muted-foreground h-5" aria-live="polite">
+              {parentalSaved ? "✓ Saved" : ""}
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button onClick={() => setShowParentalDialog(false)} className="bg-primary text-primary-foreground hover:bg-primary/90">
+              Done
             </Button>
           </DialogFooter>
         </DialogContent>

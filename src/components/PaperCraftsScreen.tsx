@@ -1,6 +1,10 @@
 import { useState } from 'react';
-import { ArrowLeft, ChevronRight, Play, CheckCircle, Star, Lock } from 'lucide-react';
+import { ArrowLeft, ChevronRight, CheckCircle, Star, Lock } from 'lucide-react';
 import { Progress } from './ui/progress';
+
+function ytEmbedUrl(id: string) {
+  return `https://www.youtube.com/embed/${id}?playsinline=1&rel=0&modestbranding=1`;
+}
 
 interface PaperCraftsScreenProps {
   onBack: () => void;
@@ -129,11 +133,6 @@ const DIFFICULTY_CONFIG = {
   advanced: { label: 'Advanced', color: 'bg-red-500', textColor: 'text-red-700', bgColor: 'bg-red-50 dark:bg-red-950/20', borderColor: 'border-red-200 dark:border-red-800', gradient: 'from-red-400 to-rose-500' },
 };
 
-// Opens YouTube in Safari (in-app) on iOS Capacitor instead of jumping to YouTube app
-function openYouTube(youtubeId: string) {
-  const url = `https://www.youtube.com/watch?v=${youtubeId}`;
-  window.open(url, '_system');
-}
 
 function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
@@ -199,23 +198,21 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
 
         {/* Current step */}
         <div className="bg-card border-2 border-border rounded-3xl overflow-hidden shadow-md mb-4">
-          {/* YouTube thumbnail - tapping opens in Safari via _system */}
-          <div className="relative">
-            <img
-              src={step.thumbnail}
-              alt={step.title}
-              className="w-full h-44 object-cover"
-              onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/320x180/6366f1/ffffff?text=Video+Step'; }}
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <button
-                onClick={() => openYouTube(step.youtubeId)}
-                className="bg-red-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-transform active:scale-90"
-              >
-                <Play size={24} fill="white" />
-              </button>
+          {/* In-app YouTube player */}
+          <div className="relative bg-black">
+            <div className="relative w-full" style={{ aspectRatio: '16 / 9' }}>
+              <iframe
+                key={step.youtubeId + currentStep}
+                src={ytEmbedUrl(step.youtubeId)}
+                title={step.title}
+                className="absolute inset-0 w-full h-full"
+                frameBorder={0}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
             </div>
-            <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
+            <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full pointer-events-none">
               Step {currentStep + 1} of {course.steps.length}
             </div>
           </div>
@@ -359,23 +356,28 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
 
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
-      {/* Header - gradient banner replacing missing video file */}
-      <div className="relative h-56 bg-gradient-to-br from-amber-400 via-orange-400 to-rose-400 overflow-hidden">
+      {/* Header - inline auto-playing muted video */}
+      <div className="relative h-56 bg-black overflow-hidden">
+        <video
+          src="/paper-crafts-header.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls={false}
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         <button
           onClick={onBack}
-          className="absolute top-12 left-4 z-10 bg-black/30 text-white rounded-full p-2 backdrop-blur-sm active:opacity-70"
+          aria-label="Back"
+          className="absolute top-12 left-4 z-10 bg-black/40 text-white rounded-full p-2 backdrop-blur-sm active:opacity-70"
         >
           <ArrowLeft size={20} />
         </button>
-        {/* Decorative floating emojis */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-          <span className="text-8xl opacity-20 absolute top-4 left-8 rotate-12">✂️</span>
-          <span className="text-7xl opacity-20 absolute bottom-4 right-8 -rotate-12">🗺️</span>
-          <span className="text-6xl opacity-15 absolute top-8 right-16 rotate-6">📄</span>
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent flex flex-col items-center justify-end pb-6 px-6">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col items-center justify-end pb-6 px-6 pointer-events-none">
           <div className="text-center">
-            <p className="text-4xl mb-2">🗺️✂️</p>
+            <p className="text-4xl mb-2">📜✂️</p>
             <h2 className="text-white font-bold text-2xl drop-shadow-lg">Paper Crafts</h2>
             <p className="text-white/90 text-sm">Learn origami step-by-step</p>
           </div>
