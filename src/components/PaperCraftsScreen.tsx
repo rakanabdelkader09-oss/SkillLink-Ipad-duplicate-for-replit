@@ -2,48 +2,41 @@ import { useState } from 'react';
 import { ArrowLeft, ChevronRight, CheckCircle, Star, Lock } from 'lucide-react';
 import { Progress } from './ui/progress';
 import { SkillCoin } from './CurrencyIcons';
- 
+
 function ytEmbedUrl(id: string) {
-  return `https://www.youtube.com/embed/${id}?playsinline=1&rel=0&modestbranding=1`;
+  // playsinline=1 is the critical part to keep video in the app on iPhone/iPad
+  return `https://www.youtube.com/embed/${id}?playsinline=1&rel=0&modestbranding=1&enablejsapi=1`;
 }
- 
+
 interface PaperCraftsScreenProps {
   onBack: () => void;
 }
- 
+
 interface OrigamiStep {
   title: string;
   description: string;
   youtubeId: string;
   thumbnail: string;
 }
- 
+
 interface OrigamiCourse {
   id: string;
   title: string;
   emoji: string;
   difficulty: 'easy' | 'intermediate' | 'advanced';
   steps: OrigamiStep[];
-  /** SC Coin reward for completing every step. Same currency as Quests. */
   points: number;
   locked?: boolean;
   completed?: boolean;
 }
- 
-// Reward defaults per difficulty so cards show consistent SC Coin values.
-const REWARD_BY_DIFFICULTY: Record<OrigamiCourse['difficulty'], number> = {
-  easy: 20,
-  intermediate: 35,
-  advanced: 50,
-};
- 
+
 const COURSES: OrigamiCourse[] = [
-  // Easy
   {
     id: 'paper-boat',
     title: 'Paper Boat',
     emoji: '⛵',
-    difficulty: 'easy', points: 20,
+    difficulty: 'easy',
+    points: 20,
     completed: false,
     steps: [
       { title: 'Fold in half', description: 'Take your paper and fold it in half horizontally.', youtubeId: 'OBuP0DV7dGA', thumbnail: 'https://img.youtube.com/vi/OBuP0DV7dGA/mqdefault.jpg' },
@@ -56,7 +49,8 @@ const COURSES: OrigamiCourse[] = [
     id: 'paper-airplane',
     title: 'Paper Airplane',
     emoji: '✈️',
-    difficulty: 'easy', points: 20,
+    difficulty: 'easy',
+    points: 20,
     completed: false,
     steps: [
       { title: 'Fold lengthwise', description: 'Fold the paper in half lengthwise and unfold.', youtubeId: 'veyZNyurlwU', thumbnail: 'https://img.youtube.com/vi/veyZNyurlwU/mqdefault.jpg' },
@@ -70,7 +64,8 @@ const COURSES: OrigamiCourse[] = [
     id: 'paper-cup',
     title: 'Paper Cup',
     emoji: '🥤',
-    difficulty: 'easy', points: 20,
+    difficulty: 'easy',
+    points: 20,
     steps: [
       { title: 'Fold diagonally', description: 'Fold the square paper diagonally to make a triangle.', youtubeId: 'kF-yGVRuuVk', thumbnail: 'https://img.youtube.com/vi/kF-yGVRuuVk/mqdefault.jpg' },
       { title: 'Fold right corner', description: 'Fold the right corner to the left edge.', youtubeId: 'kF-yGVRuuVk', thumbnail: 'https://img.youtube.com/vi/kF-yGVRuuVk/mqdefault.jpg' },
@@ -79,12 +74,12 @@ const COURSES: OrigamiCourse[] = [
       { title: 'Open the cup', description: 'Push your fingers inside and open the cup shape.', youtubeId: 'kF-yGVRuuVk', thumbnail: 'https://img.youtube.com/vi/kF-yGVRuuVk/mqdefault.jpg' },
     ],
   },
-  // Intermediate
   {
     id: 'origami-crane',
     title: 'Origami Crane',
     emoji: '🕊️',
-    difficulty: 'intermediate', points: 35,
+    difficulty: 'intermediate',
+    points: 35,
     steps: [
       { title: 'Start with square base', description: 'Fold your square paper into the preliminary base.', youtubeId: 'FxgQVDjXnU4', thumbnail: 'https://img.youtube.com/vi/FxgQVDjXnU4/mqdefault.jpg' },
       { title: 'Petal fold', description: 'Perform the petal fold on the front and back.', youtubeId: 'FxgQVDjXnU4', thumbnail: 'https://img.youtube.com/vi/FxgQVDjXnU4/mqdefault.jpg' },
@@ -98,7 +93,8 @@ const COURSES: OrigamiCourse[] = [
     id: 'origami-frog',
     title: 'Jumping Frog',
     emoji: '🐸',
-    difficulty: 'intermediate', points: 35,
+    difficulty: 'intermediate',
+    points: 35,
     steps: [
       { title: 'Fold and crease', description: 'Create valley and mountain folds to form the base.', youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
       { title: 'Form the front legs', description: "Create the frog's two front legs from the top section.", youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
@@ -106,12 +102,12 @@ const COURSES: OrigamiCourse[] = [
       { title: 'Make it jump!', description: 'Press the back and release — your frog jumps!', youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
     ],
   },
-  // Advanced
   {
     id: 'origami-dragon',
     title: 'Origami Dragon',
     emoji: '🐉',
-    difficulty: 'advanced', points: 50,
+    difficulty: 'advanced',
+    points: 50,
     locked: true,
     steps: [
       { title: 'Bird base', description: 'Start with an advanced bird base fold.', youtubeId: 'IGbCWXqcqik', thumbnail: 'https://img.youtube.com/vi/IGbCWXqcqik/mqdefault.jpg' },
@@ -125,7 +121,8 @@ const COURSES: OrigamiCourse[] = [
     id: 'origami-rose',
     title: 'Origami Rose',
     emoji: '🌹',
-    difficulty: 'advanced', points: 50,
+    difficulty: 'advanced',
+    points: 50,
     locked: true,
     steps: [
       { title: 'Waterbomb base', description: 'Fold a waterbomb base from your square sheet.', youtubeId: '1ByFjKWnzBY', thumbnail: 'https://img.youtube.com/vi/1ByFjKWnzBY/mqdefault.jpg' },
@@ -136,18 +133,17 @@ const COURSES: OrigamiCourse[] = [
     ],
   },
 ];
- 
+
 const DIFFICULTY_CONFIG = {
   easy: { label: 'Easy', color: 'bg-green-500', textColor: 'text-green-700', bgColor: 'bg-green-50 dark:bg-green-950/20', borderColor: 'border-green-200 dark:border-green-800', gradient: 'from-green-400 to-emerald-500' },
   intermediate: { label: 'Intermediate', color: 'bg-yellow-500', textColor: 'text-yellow-700', bgColor: 'bg-yellow-50 dark:bg-yellow-950/20', borderColor: 'border-yellow-200 dark:border-yellow-800', gradient: 'from-yellow-400 to-orange-400' },
   advanced: { label: 'Advanced', color: 'bg-red-500', textColor: 'text-red-700', bgColor: 'bg-red-50 dark:bg-red-950/20', borderColor: 'border-red-200 dark:border-red-800', gradient: 'from-red-400 to-rose-500' },
 };
- 
- 
+
 function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
- 
+
   const toggleStep = (index: number) => {
     setCompletedSteps(prev => {
       const next = new Set(prev);
@@ -156,14 +152,13 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
       return next;
     });
   };
- 
+
   const progress = (completedSteps.size / course.steps.length) * 100;
   const step = course.steps[currentStep];
   const diff = DIFFICULTY_CONFIG[course.difficulty];
- 
+
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
-      {/* Header */}
       <div className={`bg-gradient-to-br ${diff.gradient} px-6 pt-12 pb-6 rounded-b-[3rem] shadow-lg`}>
         <button onClick={onBack} className="text-white mb-4 flex items-center gap-4 active:opacity-70">
           <ArrowLeft size={20} /> Back
@@ -179,8 +174,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
             <span>Worth {course.points} SC coins</span>
           </span>
         </div>
- 
-        {/* Progress */}
+
         <div className="mt-4 bg-white/20 rounded-2xl p-5">
           <div className="flex justify-between text-white text-sm mb-2">
             <span>{completedSteps.size}/{course.steps.length} steps done</span>
@@ -189,9 +183,8 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
           <Progress value={progress} className="h-2 bg-white/30" />
         </div>
       </div>
- 
+
       <div className="px-6 mt-5">
-        {/* Step selector */}
         <div className="flex gap-4 overflow-x-auto pb-2 mb-5 no-scrollbar">
           {course.steps.map((s, i) => (
             <button
@@ -209,10 +202,8 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
             </button>
           ))}
         </div>
- 
-        {/* Current step */}
+
         <div className="bg-card border-2 border-border rounded-3xl overflow-hidden shadow-md mb-4">
-          {/* In-app YouTube player */}
           <div className="relative bg-black">
             <div className="relative w-full" style={{ aspectRatio: '16 / 9' }}>
               <iframe
@@ -223,14 +214,10 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
                 frameBorder={0}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                 allowFullScreen
-                referrerPolicy="strict-origin-when-cross-origin"
               />
             </div>
-            <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full pointer-events-none">
-              Step {currentStep + 1} of {course.steps.length}
-            </div>
           </div>
- 
+
           <div className="p-5">
             <div className="flex items-start justify-between gap-5 mb-3">
               <div>
@@ -248,7 +235,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
                 {completedSteps.has(currentStep) ? <CheckCircle size={20} /> : <span className="text-lg">○</span>}
               </button>
             </div>
- 
+
             <div className="flex gap-5">
               {currentStep > 0 && (
                 <button
@@ -277,47 +264,22 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
             </div>
           </div>
         </div>
- 
-        {/* All steps overview */}
-        <div className="bg-card border-2 border-border rounded-3xl p-5 shadow-md">
-          <h3 className="text-foreground font-bold mb-3">All Steps</h3>
-          <div className="space-y-2">
-            {course.steps.map((s, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentStep(i)}
-                className={`w-full flex items-center gap-3 p-3 rounded-2xl text-left transition-all ${
-                  i === currentStep ? 'bg-primary/10 border border-primary' : 'bg-muted/50 hover:bg-muted'
-                }`}
-              >
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                  completedSteps.has(i) ? 'bg-green-500 text-white' : i === currentStep ? 'bg-primary text-primary-foreground' : 'bg-border text-muted-foreground'
-                }`}>
-                  {completedSteps.has(i) ? '✓' : i + 1}
-                </div>
-                <span className={`text-sm font-medium ${completedSteps.has(i) ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
-                  {s.title}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );
 }
- 
+
 export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
   const [selectedCourse, setSelectedCourse] = useState<OrigamiCourse | null>(null);
- 
+
   if (selectedCourse) {
     return <CourseStepsView course={selectedCourse} onBack={() => setSelectedCourse(null)} />;
   }
- 
+
   const easy = COURSES.filter(c => c.difficulty === 'easy');
   const intermediate = COURSES.filter(c => c.difficulty === 'intermediate');
   const advanced = COURSES.filter(c => c.difficulty === 'advanced');
- 
+
   const renderSection = (title: string, emoji: string, courses: OrigamiCourse[], diff: keyof typeof DIFFICULTY_CONFIG) => {
     const config = DIFFICULTY_CONFIG[diff];
     return (
@@ -339,30 +301,16 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
               </div>
               <div className="flex-1 text-left">
                 <p className={`font-bold ${config.textColor}`}>{course.title}</p>
-                <p className="text-muted-foreground text-xs">{course.steps.length} steps</p>
                 <div className="mt-1 inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-0.5 rounded-full">
                   <SkillCoin size={14} />
                   <span>+{course.points} SC coins</span>
                 </div>
-                {course.completed && (
-                  <span className="block mt-1 text-xs text-green-600 font-semibold">✅ Completed</span>
-                )}
               </div>
               <div className="flex items-center gap-4">
                 {course.locked ? (
-                  <div className="flex flex-col items-center gap-1">
-                    <Lock size={18} className="text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">Locked</span>
-                  </div>
+                  <Lock size={18} className="text-muted-foreground" />
                 ) : (
-                  <>
-                    <div className="flex">
-                      {[...Array(diff === 'easy' ? 1 : diff === 'intermediate' ? 2 : 3)].map((_, i) => (
-                        <Star key={i} size={14} className={config.textColor} fill="currentColor" />
-                      ))}
-                    </div>
-                    <ChevronRight size={20} className="text-muted-foreground" />
-                  </>
+                  <ChevronRight size={20} className="text-muted-foreground" />
                 )}
               </div>
             </button>
@@ -371,34 +319,41 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
       </div>
     );
   };
- 
+
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
+      {/* HEADER WITH ROBUST IPAD AUTOPLAY FIX */}
       <div className="relative h-56 bg-gradient-to-br from-amber-200 to-orange-300 overflow-hidden">
         <video
+          key="paper-crafts-header-video"
           src="/paper-crafts-header.mp4"
           autoPlay
           muted
           loop
           playsInline
+          webkit-playsinline="true"
           preload="auto"
           className="absolute inset-0 w-full h-full object-cover"
           ref={(el) => {
             if (!el) return;
             el.muted = true;
+            // Force attributes for older WebKit versions
             el.setAttribute('muted', '');
             el.setAttribute('webkit-playsinline', 'true');
             el.setAttribute('playsinline', 'true');
-            el.setAttribute('x5-playsinline', 'true');
-            const tryPlay = () => { void el.play().catch(() => {}); };
-            tryPlay();
-            el.addEventListener('loadeddata', tryPlay, { once: true });
-            el.addEventListener('canplay', tryPlay, { once: true });
+            // Force play loop
+            const playPromise = el.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(() => {
+                // Autoplay was prevented, try again on first interaction
+                const retry = () => { el.play(); document.removeEventListener('click', retry); };
+                document.addEventListener('click', retry);
+              });
+            }
           }}
         />
         <button
           onClick={onBack}
-          aria-label="Back"
           className="absolute top-12 left-4 z-10 bg-black/40 text-white rounded-full p-2 backdrop-blur-sm active:opacity-70"
         >
           <ArrowLeft size={20} />
@@ -411,18 +366,18 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
           </div>
         </div>
       </div>
- 
+
       <div className="px-6 mt-6">
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 rounded-3xl p-5 mb-6 shadow-lg">
           <div className="flex items-center gap-5">
             <div className="text-4xl">🎁</div>
             <div>
               <h3 className="text-white font-bold">Start with Easy!</h3>
-              <p className="text-amber-100 text-sm">Progress from Easy → Intermediate → Advanced</p>
+              <p className="text-amber-100 text-sm">Earn SC coins for every course</p>
             </div>
           </div>
         </div>
- 
+
         {renderSection('Beginner', '🌱', easy, 'easy')}
         {renderSection('Intermediate', '⚡', intermediate, 'intermediate')}
         {renderSection('Master', '🏆', advanced, 'advanced')}
@@ -430,4 +385,3 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
     </div>
   );
 }
- 
