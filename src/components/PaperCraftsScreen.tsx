@@ -2,22 +2,22 @@ import { useState } from 'react';
 import { ArrowLeft, ChevronRight, CheckCircle, Star, Lock } from 'lucide-react';
 import { Progress } from './ui/progress';
 import { SkillCoin } from './CurrencyIcons';
-
+ 
 function ytEmbedUrl(id: string) {
   return `https://www.youtube.com/embed/${id}?playsinline=1&rel=0&modestbranding=1`;
 }
-
+ 
 interface PaperCraftsScreenProps {
   onBack: () => void;
 }
-
+ 
 interface OrigamiStep {
   title: string;
   description: string;
   youtubeId: string;
   thumbnail: string;
 }
-
+ 
 interface OrigamiCourse {
   id: string;
   title: string;
@@ -29,14 +29,14 @@ interface OrigamiCourse {
   locked?: boolean;
   completed?: boolean;
 }
-
+ 
 // Reward defaults per difficulty so cards show consistent SC Coin values.
 const REWARD_BY_DIFFICULTY: Record<OrigamiCourse['difficulty'], number> = {
   easy: 20,
   intermediate: 35,
   advanced: 50,
 };
-
+ 
 const COURSES: OrigamiCourse[] = [
   // Easy
   {
@@ -136,18 +136,18 @@ const COURSES: OrigamiCourse[] = [
     ],
   },
 ];
-
+ 
 const DIFFICULTY_CONFIG = {
   easy: { label: 'Easy', color: 'bg-green-500', textColor: 'text-green-700', bgColor: 'bg-green-50 dark:bg-green-950/20', borderColor: 'border-green-200 dark:border-green-800', gradient: 'from-green-400 to-emerald-500' },
   intermediate: { label: 'Intermediate', color: 'bg-yellow-500', textColor: 'text-yellow-700', bgColor: 'bg-yellow-50 dark:bg-yellow-950/20', borderColor: 'border-yellow-200 dark:border-yellow-800', gradient: 'from-yellow-400 to-orange-400' },
   advanced: { label: 'Advanced', color: 'bg-red-500', textColor: 'text-red-700', bgColor: 'bg-red-50 dark:bg-red-950/20', borderColor: 'border-red-200 dark:border-red-800', gradient: 'from-red-400 to-rose-500' },
 };
-
-
+ 
+ 
 function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
-
+ 
   const toggleStep = (index: number) => {
     setCompletedSteps(prev => {
       const next = new Set(prev);
@@ -156,11 +156,11 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
       return next;
     });
   };
-
+ 
   const progress = (completedSteps.size / course.steps.length) * 100;
   const step = course.steps[currentStep];
   const diff = DIFFICULTY_CONFIG[course.difficulty];
-
+ 
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
       {/* Header */}
@@ -174,13 +174,12 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
           <span className={`inline-block ${diff.color} text-white text-xs font-bold px-3 py-1 rounded-full mr-2`}>
             {diff.label}
           </span>
-          {/* SC Coin reward badge — matches the quests detail screen styling */}
           <span className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">
             <SkillCoin size={14} />
             <span>Worth {course.points} SC coins</span>
           </span>
         </div>
-
+ 
         {/* Progress */}
         <div className="mt-4 bg-white/20 rounded-2xl p-5">
           <div className="flex justify-between text-white text-sm mb-2">
@@ -190,7 +189,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
           <Progress value={progress} className="h-2 bg-white/30" />
         </div>
       </div>
-
+ 
       <div className="px-6 mt-5">
         {/* Step selector */}
         <div className="flex gap-4 overflow-x-auto pb-2 mb-5 no-scrollbar">
@@ -210,7 +209,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
             </button>
           ))}
         </div>
-
+ 
         {/* Current step */}
         <div className="bg-card border-2 border-border rounded-3xl overflow-hidden shadow-md mb-4">
           {/* In-app YouTube player */}
@@ -231,7 +230,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
               Step {currentStep + 1} of {course.steps.length}
             </div>
           </div>
-
+ 
           <div className="p-5">
             <div className="flex items-start justify-between gap-5 mb-3">
               <div>
@@ -249,7 +248,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
                 {completedSteps.has(currentStep) ? <CheckCircle size={20} /> : <span className="text-lg">○</span>}
               </button>
             </div>
-
+ 
             <div className="flex gap-5">
               {currentStep > 0 && (
                 <button
@@ -278,7 +277,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
             </div>
           </div>
         </div>
-
+ 
         {/* All steps overview */}
         <div className="bg-card border-2 border-border rounded-3xl p-5 shadow-md">
           <h3 className="text-foreground font-bold mb-3">All Steps</h3>
@@ -307,18 +306,18 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
     </div>
   );
 }
-
+ 
 export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
   const [selectedCourse, setSelectedCourse] = useState<OrigamiCourse | null>(null);
-
+ 
   if (selectedCourse) {
     return <CourseStepsView course={selectedCourse} onBack={() => setSelectedCourse(null)} />;
   }
-
+ 
   const easy = COURSES.filter(c => c.difficulty === 'easy');
   const intermediate = COURSES.filter(c => c.difficulty === 'intermediate');
   const advanced = COURSES.filter(c => c.difficulty === 'advanced');
-
+ 
   const renderSection = (title: string, emoji: string, courses: OrigamiCourse[], diff: keyof typeof DIFFICULTY_CONFIG) => {
     const config = DIFFICULTY_CONFIG[diff];
     return (
@@ -341,7 +340,6 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
               <div className="flex-1 text-left">
                 <p className={`font-bold ${config.textColor}`}>{course.title}</p>
                 <p className="text-muted-foreground text-xs">{course.steps.length} steps</p>
-                {/* SC Coin reward — same currency styling as Quests */}
                 <div className="mt-1 inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-0.5 rounded-full">
                   <SkillCoin size={14} />
                   <span>+{course.points} SC coins</span>
@@ -373,16 +371,9 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
       </div>
     );
   };
-
+ 
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
-      {/* Header - inline auto-playing muted video.
-          iPad/iOS Safari quirks handled:
-            - `muted` set as a boolean attribute AND on the element via ref
-              (Safari only allows autoplay when the video is *attribute*-muted)
-            - `webkit-playsinline` legacy attr for older iOS
-            - poster shown until the first frame paints (prevents black flash)
-            - .play() retried on mount in case the autoplay policy blocked it */}
       <div className="relative h-56 bg-gradient-to-br from-amber-200 to-orange-300 overflow-hidden">
         <video
           src="/paper-crafts-header.mp4"
@@ -391,16 +382,11 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
           loop
           playsInline
           preload="auto"
-          poster="/paper-crafts-header.jpg"
           className="absolute inset-0 w-full h-full object-cover"
           ref={(el) => {
             if (!el) return;
-            // Force-mute on the element (Safari only allows autoplay
-            // when the property is true at the time .play() is called).
             el.muted = true;
             el.setAttribute('muted', '');
-            // Legacy iOS / older WebKit attributes — set imperatively
-            // because React strips unknown DOM attributes.
             el.setAttribute('webkit-playsinline', 'true');
             el.setAttribute('playsinline', 'true');
             el.setAttribute('x5-playsinline', 'true');
@@ -425,9 +411,8 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
           </div>
         </div>
       </div>
-
+ 
       <div className="px-6 mt-6">
-        {/* Intro banner */}
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 rounded-3xl p-5 mb-6 shadow-lg">
           <div className="flex items-center gap-5">
             <div className="text-4xl">🎁</div>
@@ -437,7 +422,7 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
             </div>
           </div>
         </div>
-
+ 
         {renderSection('Beginner', '🌱', easy, 'easy')}
         {renderSection('Intermediate', '⚡', intermediate, 'intermediate')}
         {renderSection('Master', '🏆', advanced, 'advanced')}
@@ -445,3 +430,4 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
     </div>
   );
 }
+ 
