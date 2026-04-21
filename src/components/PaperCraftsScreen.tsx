@@ -321,10 +321,9 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
 
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
-      {/* HEADER WITH ROBUST SIDELOADED IPA FIX */}
       <div className="relative h-56 bg-gradient-to-br from-amber-200 to-orange-300 overflow-hidden">
         <video
-          key="paper-crafts-header-final-v3"
+          key="paper-crafts-header-final-v4"
           autoPlay
           muted
           loop
@@ -334,30 +333,22 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
           className="absolute inset-0 w-full h-full object-cover"
           ref={(el) => {
             if (!el) return;
-            // 1. Force muted state both as prop and attribute
             el.muted = true;
             el.defaultMuted = true;
             el.setAttribute('muted', '');
-            
-            // 2. Set all possible inline playback flags for iOS 16 WKWebView
             el.setAttribute('playsinline', 'true');
             el.setAttribute('webkit-playsinline', 'true');
-            el.setAttribute('x5-playsinline', 'true');
             
-            // 3. Try to force playback on a loop
             const forcePlay = () => {
               el.play().catch(() => {
-                // If blocked, wait for first user touch and try again
+                // If it fails, try again on interaction
                 const retry = () => { el.play(); window.removeEventListener('touchstart', retry); };
                 window.addEventListener('touchstart', retry);
               });
             };
-
             forcePlay();
-            el.addEventListener('loadeddata', forcePlay);
           }}
         >
-          {/* Ensure the filename is exactly matching your GitHub public folder */}
           <source src="/paper-crafts-header.mp4" type="video/mp4" />
         </video>
         
