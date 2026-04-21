@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { ArrowLeft, Play, CheckCircle, Lock, Star, X, ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
@@ -34,7 +34,7 @@ interface Lesson {
 const courseData: Record<string, any> = {
   'ls-1': {
     title: 'Tying Your Shoes',
-    emoji: 'ðŸ‘Ÿ',
+    emoji: '👟',
     description: 'Learn the bunny ears method to tie your shoes all by yourself!',
     duration: '5 min',
     points: 25,
@@ -80,13 +80,13 @@ const courseData: Record<string, any> = {
             heading: 'Make the First Loop',
             videoUrl: 'https://www.youtube.com/embed/s2sGVdkPBZA',
             videoLabel: 'Making bunny ear loops',
-            instructions: 'Take one lace and fold it into a loop â€” this is the first "bunny ear". Hold it between your thumb and finger.',
+            instructions: 'Take one lace and fold it into a loop - this is the first "bunny ear". Hold it between your thumb and finger.',
           },
           {
             heading: 'Make the Second Loop',
             videoUrl: 'https://www.youtube.com/embed/s2sGVdkPBZA',
             videoLabel: 'Second bunny ear loop',
-            instructions: 'Do the same with the other lace â€” make a second loop. Now you have two bunny ears!',
+            instructions: 'Do the same with the other lace - make a second loop. Now you have two bunny ears!',
           },
           {
             heading: 'Cross and Pull Through',
@@ -105,7 +105,7 @@ const courseData: Record<string, any> = {
   },
   'cr-1': {
     title: 'Drawing Basics',
-    emoji: 'âœï¸',
+    emoji: '✏️',
     description: 'Discover the joy of drawing! Learn to draw simple shapes, animals, and characters step by step.',
     duration: '12 min',
     points: 45,
@@ -132,7 +132,7 @@ const courseData: Record<string, any> = {
             heading: 'Draw Circles',
             videoUrl: 'https://www.youtube.com/embed/ZlBFyMfPHlw',
             videoLabel: 'Drawing perfect circles',
-            instructions: 'Draw a circle slowly, keeping your hand steady. Try making 5 circles of different sizes. It is okay if they are wobbly â€” practice makes perfect!',
+            instructions: 'Draw a circle slowly, keeping your hand steady. Try making 5 circles of different sizes. It is okay if they are wobbly - practice makes perfect!',
           },
         ],
         quiz: [
@@ -151,7 +151,7 @@ const courseData: Record<string, any> = {
             heading: 'Start with the Head',
             videoUrl: 'https://www.youtube.com/embed/cqwYi64dFzw',
             videoLabel: 'Drawing a cat step by step',
-            instructions: 'Draw a big circle for the cat\'s head. Make it nice and round â€” this is the base for our cat!',
+            instructions: 'Draw a big circle for the cat\'s head. Make it nice and round - this is the base for our cat!',
           },
           {
             heading: 'Add Ears and Face',
@@ -163,7 +163,7 @@ const courseData: Record<string, any> = {
             heading: 'Finish with Whiskers',
             videoUrl: 'https://www.youtube.com/embed/cqwYi64dFzw',
             videoLabel: 'Cat whiskers and details',
-            instructions: 'Draw 3 lines on each side of the nose for whiskers. Add dots at the end of each whisker. Your cat is done â€” give it a name!',
+            instructions: 'Draw 3 lines on each side of the nose for whiskers. Add dots at the end of each whisker. Your cat is done - give it a name!',
           },
         ],
         quiz: [
@@ -176,7 +176,7 @@ const courseData: Record<string, any> = {
   },
   'co-1': {
     title: 'Simple Cooking',
-    emoji: 'ðŸ³',
+    emoji: '🍳',
     description: 'Learn to make simple, yummy meals safely with a grown-up nearby.',
     duration: '15 min',
     points: 50,
@@ -209,7 +209,7 @@ const courseData: Record<string, any> = {
         quiz: [
           { question: 'What should you always do before touching food?', options: ['Put on an apron', 'Wash your hands', 'Put on gloves', 'Count to 10'], correct: 1 },
           { question: 'How long should you wash your hands?', options: ['5 seconds', '10 seconds', '20 seconds', '1 minute'], correct: 2 },
-          { question: 'Who should always be nearby when you cook?', options: ['A friend', 'Your pet', 'An adult', 'Nobody â€” be independent!'], correct: 2 },
+          { question: 'Who should always be nearby when you cook?', options: ['A friend', 'Your pet', 'An adult', 'Nobody - be independent!'], correct: 2 },
         ],
       },
     ],
@@ -217,6 +217,10 @@ const courseData: Record<string, any> = {
 };
 
 type LessonPhase = 'steps' | 'quiz' | 'results';
+
+function getYouTubeId(videoUrl: string): string {
+  return videoUrl.split('/embed/')[1]?.split('?')[0] || '';
+}
 
 export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps) {
   const course = courseData[courseId] || courseData['ls-1'];
@@ -263,8 +267,6 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
 
   const submitQuizAnswer = () => {
     if (selectedAnswer === null || !activeLesson) return;
-    const correct = activeLesson.quiz[currentQuestion].correct;
-    const isCorrect = selectedAnswer === correct;
     const newAnswers = [...quizAnswers, selectedAnswer];
     setQuizAnswers(newAnswers);
 
@@ -294,11 +296,9 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
     setQuizScore(0);
   };
 
-  // â”€â”€â”€ LESSON MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (activeLesson) {
     const steps = activeLesson.steps;
     const quiz = activeLesson.quiz;
-    const totalPhases = steps.length; // steps only for progress bar (quiz is a gate)
 
     // Quiz phase
     if (phase === 'quiz') {
@@ -310,7 +310,7 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
               <X size={20} /> Close
             </button>
             <div className="flex items-center gap-4 mb-1">
-              <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full">ðŸ“ Lesson Quiz</span>
+              <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full">📝 Lesson Quiz</span>
             </div>
             <h2 className="text-white text-xl font-bold">{activeLesson.title}</h2>
             <div className="mt-3 bg-white/20 rounded-full h-2">
@@ -345,7 +345,7 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
               disabled={selectedAnswer === null}
               className="w-full mt-6 py-5 rounded-2xl text-lg font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white disabled:opacity-40"
             >
-              {currentQuestion < quiz.length - 1 ? 'Next Question â†’' : 'Finish Quiz â†’'}
+              {currentQuestion < quiz.length - 1 ? 'Next Question →' : 'Finish Quiz →'}
             </Button>
           </div>
         </div>
@@ -361,15 +361,14 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
               <X size={20} /> Close
             </button>
             <div className="text-center text-white">
-              <div className="text-7xl mb-4">{quizPassed ? 'ðŸ†' : 'ðŸ˜…'}</div>
+              <div className="text-7xl mb-4">{quizPassed ? '🏆' : '😅'}</div>
               <h2 className="text-3xl font-black mb-2">{quizPassed ? 'Passed!' : 'Not quite!'}</h2>
               <p className="text-white/80 text-lg mb-1">You scored <span className="font-black text-yellow-300">{quizScore}%</span></p>
-              <p className="text-white/60 text-sm">{quizPassed ? 'You need 80% or more â€” great work!' : 'You need 80% or more to pass. Try again!'}</p>
+              <p className="text-white/60 text-sm">{quizPassed ? 'You need 80% or more - great work!' : 'You need 80% or more to pass. Try again!'}</p>
             </div>
           </div>
 
           <div className="flex-1 flex flex-col items-center justify-center px-6 gap-4">
-            {/* Score breakdown */}
             <div className="w-full bg-gray-50 rounded-3xl p-5 border-2 border-gray-100">
               <p className="text-gray-500 font-semibold text-sm mb-3">Quiz Breakdown</p>
               {quiz.map((q, i) => {
@@ -378,7 +377,7 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
                 return (
                   <div key={i} className={`flex items-center gap-3 p-3 rounded-2xl mb-2 ${isCorrect ? 'bg-green-50' : 'bg-red-50'}`}>
                     <span className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-bold ${isCorrect ? 'bg-green-500' : 'bg-red-400'}`}>
-                      {isCorrect ? 'âœ“' : 'âœ•'}
+                      {isCorrect ? '✓' : '✕'}
                     </span>
                     <span className="text-gray-700 text-sm flex-1">{q.question}</span>
                   </div>
@@ -398,7 +397,7 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
                 onClick={retryQuiz}
                 className="w-full py-5 rounded-2xl text-lg font-black bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-xl"
               >
-                Retry Quiz ðŸ”„
+                Retry Quiz 🔄
               </Button>
             )}
           </div>
@@ -409,6 +408,7 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
     // Steps phase
     const step = steps[activeStep];
     const stepProgressPct = ((activeStep + 1) / steps.length) * 100;
+    const ytId = getYouTubeId(step.videoUrl);
 
     return (
       <div className="h-full bg-white flex flex-col overflow-hidden">
@@ -429,18 +429,26 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto px-6 py-5">
-          {/* Step heading */}
           <h3 className="text-2xl font-black text-gray-800 mb-4">{step.heading}</h3>
 
-          {/* Video Player */}
-          <div className="rounded-3xl overflow-hidden border-2 border-purple-100 shadow-lg mb-4 bg-black aspect-video">
-            <iframe
-              src={step.videoUrl}
-              title={step.videoLabel}
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
+          {/* Video Player - iOS compatible thumbnail + YouTube link */}
+          <div className="rounded-3xl overflow-hidden border-2 border-purple-100 shadow-lg mb-4 bg-black relative">
+            <img
+              src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
+              alt={step.videoLabel}
+              className="w-full h-44 object-cover"
+              onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/320x180/a855f7/ffffff?text=Watch+Video'; }}
             />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <a
+                href={`https://www.youtube.com/watch?v=${ytId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-red-600 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg active:scale-90 transition-transform"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+              </a>
+            </div>
           </div>
           <p className="text-gray-400 text-xs text-center mb-5 italic">{step.videoLabel}</p>
 
@@ -468,14 +476,14 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
             onClick={goNextStep}
             className="w-full py-5 rounded-2xl text-lg font-bold bg-gradient-to-r from-purple-500 to-pink-500 text-white mb-6"
           >
-            {activeStep < steps.length - 1 ? 'Next Step â†’' : 'Take Quiz ðŸ“'}
+            {activeStep < steps.length - 1 ? 'Next Step →' : 'Take Quiz 📋'}
           </Button>
         </div>
       </div>
     );
   }
 
-  // â”€â”€â”€ COURSE OVERVIEW â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // Course Overview
   return (
     <div className="h-full bg-gradient-to-b from-purple-50 to-white pb-20 overflow-y-auto">
       {/* Header */}
@@ -496,12 +504,12 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
       {/* How it works */}
       <div className="px-6 mt-5">
         <div className="bg-indigo-50 border-2 border-indigo-100 rounded-3xl p-6">
-          <p className="text-indigo-700 font-bold text-sm mb-2">ðŸ“‹ How it works</p>
+          <p className="text-indigo-700 font-bold text-sm mb-2">📋 How it works</p>
           <div className="flex items-center gap-4 text-indigo-600 text-xs">
             <span className="bg-indigo-200 rounded-full px-2 py-0.5 font-semibold">Step Videos</span>
-            <span>â†’</span>
+            <span>→</span>
             <span className="bg-purple-200 rounded-full px-2 py-0.5 font-semibold">Lesson Quiz</span>
-            <span>â†’</span>
+            <span>→</span>
             <span className="bg-green-200 rounded-full px-2 py-0.5 font-semibold">Next Lesson</span>
           </div>
           <p className="text-indigo-500 text-xs mt-2">Pass the quiz (80%+) to unlock the next lesson!</p>
@@ -535,7 +543,7 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
       {completedLessons === lessons.length && (
         <div className="px-6 mt-4">
           <div className="bg-green-50 border-2 border-green-200 rounded-3xl p-5 text-center">
-            <div className="text-4xl mb-2">ðŸ†</div>
+            <div className="text-4xl mb-2">🏆</div>
             <p className="text-green-700 font-bold text-lg">Course Complete!</p>
             <p className="text-green-600 text-sm">You earned {course.points} SC coins!</p>
           </div>
@@ -576,7 +584,7 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
                   <p className={`font-semibold ${lesson.completed ? 'text-green-700' : isUnlocked ? 'text-gray-800' : 'text-gray-400'}`}>
                     Lesson {lesson.id}: {lesson.title}
                   </p>
-                  <p className="text-gray-400 text-sm">{lesson.duration} â€¢ {lesson.steps.length} steps + quiz</p>
+                  <p className="text-gray-400 text-sm">{lesson.duration} • {lesson.steps.length} steps + quiz</p>
                 </div>
                 {lesson.completed && <Star size={20} className="text-yellow-400 flex-shrink-0" fill="#facc15" />}
                 {isUnlocked && !lesson.completed && <ChevronRight size={20} className="text-purple-400 flex-shrink-0" />}
@@ -588,4 +596,3 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
     </div>
   );
 }
-
