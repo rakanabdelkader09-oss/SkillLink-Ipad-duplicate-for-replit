@@ -9,7 +9,6 @@ const config: CapacitorConfig = {
     scrollEnabled: true,
     allowsInlineMediaPlayback: true,
     mediaTypesRequiringUserActionForPlayback: '',
-    limitsNavigationsToAppBoundDomains: false,
   },
   server: {
     allowNavigation: [
@@ -18,7 +17,6 @@ const config: CapacitorConfig = {
       'youtube.com',
       'img.youtube.com',
       '*.youtube-nocookie.com',
-      'youtu.be',
     ],
   },
 };
