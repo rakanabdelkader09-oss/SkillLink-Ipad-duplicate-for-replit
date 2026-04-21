@@ -140,7 +140,7 @@ function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
 
   if (!playing) {
     return (
-      <div className="relative w-full h-44 bg-black" onClick={() => setPlaying(true)}>
+      <div className="relative w-full h-44 bg-black" onClick={() => window.open(`https://www.youtube.com/watch?v=${youtubeId}`, "_blank")}
         <img
           src={`https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`}
           alt="Video thumbnail"
