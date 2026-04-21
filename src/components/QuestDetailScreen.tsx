@@ -144,8 +144,10 @@ export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSub
         </div>
 
         <div className="px-6 mt-6">
-          {/* Timer */}
-          <DynamicTimer defaultSeconds={quest.timerSeconds || 120} />
+          {/* Timer — only shown for time-based quests (e.g. Speed Drawing) */}
+          {quest.isTimed && (
+            <DynamicTimer defaultSeconds={quest.timerSeconds || 120} />
+          )}
 
           {/* Upload */}
           <div className="bg-white border-2 border-blue-200 rounded-3xl p-6 mb-4 shadow-md">
@@ -244,8 +246,10 @@ export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSub
       </div>
 
       <div className="px-6 mt-6">
-        {/* Timer */}
-        <DynamicTimer defaultSeconds={quest.timerSeconds || 120} />
+        {/* Timer — only shown for time-based quests (e.g. Speed Drawing) */}
+        {quest.isTimed && (
+          <DynamicTimer defaultSeconds={quest.timerSeconds || 120} />
+        )}
 
         {/* Instructions */}
         <div className="bg-white border-2 border-blue-200 rounded-3xl p-6 shadow-md mb-4">

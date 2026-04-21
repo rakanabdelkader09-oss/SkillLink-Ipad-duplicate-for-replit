@@ -30,6 +30,7 @@ import { BottomNav } from "./components/BottomNav";
 import { StatisticsScreen } from "./components/StatisticsScreen";
 import { PaperCraftsScreen } from "./components/PaperCraftsScreen";
 import { CleanRoomQuestScreen } from "./components/CleanRoomQuestScreen";
+import { getQuestById } from "./components/DailyQuestAssigner";
 
 type Screen =
   | "onboarding"
@@ -807,7 +808,44 @@ export default function App() {
       },
     };
 
-    return questDataMap[questId] || questDataMap[1];
+    // ALWAYS use the canonical pool entry as the source of truth for
+    // title/icon/points so the detail screen matches the card the user
+    // tapped. Curated instructions/tips from the map are layered on top
+    // when available; otherwise a generic step list is generated.
+    const canonical = getQuestById(questId);
+    const curated = questDataMap[questId];
+
+    if (canonical) {
+      const colorMap: Record<string, string> = {
+        blue: "from-blue-400 to-blue-500",
+        orange: "from-orange-400 to-orange-500",
+        purple: "from-purple-400 to-purple-500",
+        pink: "from-pink-400 to-pink-500",
+        green: "from-green-400 to-green-500",
+      };
+      return {
+        title: canonical.title,
+        icon: canonical.icon,
+        points: canonical.points,
+        instructions: curated?.instructions ?? [
+          "Read the quest details above",
+          "Get any items you need ready",
+          "Complete the activity step by step",
+          "Take your time and enjoy it",
+          "Mark the quest as done when finished",
+        ],
+        tips: curated?.tips ?? "You've got this — give it your best!",
+        color: colorMap[canonical.color] ?? "from-purple-400 to-purple-500",
+        difficulty: canonical.difficulty,
+        category: canonical.category,
+        xp: canonical.xp,
+        isTeamQuest: curated?.isTeamQuest ?? false,
+        isTimed: canonical.isTimed ?? false,
+        timerSeconds: canonical.timerSeconds,
+      };
+    }
+
+    return curated || questDataMap[1];
   };
 
   const handleGetStarted = () => {
@@ -879,7 +917,10 @@ export default function App() {
   };
 
   const handleQuestSelect = (questId: number) => {
-    if (questId === 15 || questId === 16) {
+    // Only the "Clean and organize your room" quest (id 16) opens the
+    // dedicated clean-room mini-experience. Every other quest opens its
+    // own detail page based on its unique id.
+    if (questId === 16) {
       setScreenHistory([...screenHistory, currentScreen]);
       setCurrentScreen("clean-room-quest");
       return;

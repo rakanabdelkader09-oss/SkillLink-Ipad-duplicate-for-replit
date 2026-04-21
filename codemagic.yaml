@@ -1,39 +1,70 @@
+# Codemagic CI/CD configuration for SkillLink — Kids Learning
+# ------------------------------------------------------------
+# This pipeline builds an unsigned iOS .ipa from the React + Vite +
+# Capacitor source. It runs from the repository root (no
+# working_directory) and uses `build/` as the web bundle output, which
+# matches both `vite.config.ts` (build.outDir = "build") and
+# `capacitor.config.ts` (webDir = "build").
+#
+# Required runtime assets (already shipped in `public/`):
+#   - paper-crafts-header.mp4  (Paper Crafts header background video)
+#   - SC Coin icon used inline as the 🪙 emoji glyph
+#
+# App metadata: SkillLink / com.skilllink.app
 workflows:
   ios-unsigned-build:
-    name: SkillLink IPA Build
+    name: SkillLink iOS Unsigned IPA
     instance_type: mac_mini_m2
     max_build_duration: 60
-    working_directory: skillLink-replit-duplicate-main
+    environment:
+      node: 20.x
+      xcode: latest
+      vars:
+        XCODE_WORKSPACE: ios/App/App.xcworkspace
+        XCODE_SCHEME: App
+        BUNDLE_ID: com.skilllink.app
+        APP_NAME: SkillLink
     scripts:
-      - name: Install dependencies
+      # 1. Install JS dependencies for the web layer
+      - name: Install npm dependencies
         script: |
-          npm install
-          npm install @vitejs/plugin-react-swc --save-dev
-      - name: Build web assets
+          npm ci || npm install
+
+      # 2. Build the production web bundle into ./build (matches webDir)
+      - name: Build web bundle
         script: |
-          npm run build || npx vite build
-      - name: Initialize & Sync iOS
+          npm run build
+
+      # 3. Make sure the iOS native shell exists, then sync the web
+      #    bundle (HTML/CSS/JS + public assets like
+      #    paper-crafts-header.mp4 and the SC coin icon) into it.
+      - name: Initialise & sync iOS shell
         script: |
-          npx cap init "SkillLink" "com.skilllink.app" --web-dir=dist
-          npx cap add ios || true
+          if [ ! -d ios ]; then
+            npx cap add ios
+          fi
           npx cap sync ios
-      - name: Build Unsigned App
+
+      # 4. Build an unsigned .app archive — no signing keys required.
+      - name: Build unsigned .app
         script: |
           xcodebuild build \
-            -workspace ios/App/App.xcworkspace \
-            -scheme App \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
             -configuration Release \
             -sdk iphoneos \
-            -derivedDataPath build \
+            -derivedDataPath build_ios \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
             PROVISIONING_PROFILE=""
-      - name: Package IPA
+
+      # 5. Repackage the .app into an unsigned .ipa for distribution.
+      - name: Package unsigned IPA
         script: |
-          mkdir -p build/ipa/Payload
-          cp -r build/Build/Products/Release-iphoneos/App.app build/ipa/Payload/
-          cd build/ipa
-          zip -r SkillLink_Unsigned.ipa Payload
+          mkdir -p build_ios/ipa/Payload
+          cp -r build_ios/Build/Products/Release-iphoneos/App.app build_ios/ipa/Payload/
+          (cd build_ios/ipa && zip -r SkillLink_Unsigned.ipa Payload)
     artifacts:
-      - build/ipa/*.ipa
+      - build_ios/ipa/*.ipa
+      - build_ios/Build/Products/Release-iphoneos/*.app

@@ -1,6 +1,6 @@
 ﻿// Helper module for assigning daily quests to kids
 
-interface Quest {
+export interface Quest {
   id: number;
   title: string;
   icon: string;
@@ -12,28 +12,32 @@ interface Quest {
   maxAge: number;
   difficulty: 'easy' | 'medium' | 'hard';
   xp: number;
+  /** When true, the quest detail screen shows a timer. Only for time-based tasks. */
+  isTimed?: boolean;
+  /** Default timer seconds when isTimed is true. */
+  timerSeconds?: number;
 }
 
 // All available quests by category and difficulty
-const QUEST_POOL: Quest[] = [
+export const QUEST_POOL: Quest[] = [
   // Personal Care - Easy
   { id: 1, title: 'Brush your teeth', icon: '🪥', points: 10, completed: false, category: 'Personal Care', color: 'blue', minAge: 6, maxAge: 8, difficulty: 'easy', xp: 10 },
   { id: 2, title: 'Wash your hands', icon: '🧼', points: 10, completed: false, category: 'Personal Care', color: 'blue', minAge: 6, maxAge: 7, difficulty: 'easy', xp: 10 },
-  { id: 3, title: 'Do 5 jumping jacks', icon: '🤸', points: 10, completed: false, category: 'Personal Care', color: 'blue', minAge: 6, maxAge: 7, difficulty: 'easy', xp: 10 },
+  { id: 3, title: 'Do 5 jumping jacks', icon: '🤸', points: 10, completed: false, category: 'Personal Care', color: 'blue', minAge: 6, maxAge: 7, difficulty: 'easy', xp: 10, isTimed: true, timerSeconds: 60 },
   { id: 42, title: 'Comb your hair', icon: '💇', points: 10, completed: false, category: 'Personal Care', color: 'blue', minAge: 6, maxAge: 8, difficulty: 'easy', xp: 10 },
   { id: 43, title: 'Put on clean clothes', icon: '👕', points: 10, completed: false, category: 'Personal Care', color: 'blue', minAge: 6, maxAge: 7, difficulty: 'easy', xp: 10 },
   
   // Personal Care - Medium
-  { id: 4, title: 'Do 10 jumping jacks', icon: '🤸', points: 15, completed: false, category: 'Personal Care', color: 'blue', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15 },
-  { id: 5, title: 'Drink 4 glasses of water', icon: '💧', points: 15, completed: false, category: 'Personal Care', color: 'blue', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15 },
+  { id: 4, title: 'Do 10 jumping jacks', icon: '🤸', points: 15, completed: false, category: 'Personal Care', color: 'blue', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15, isTimed: true, timerSeconds: 90 },
+  { id: 5, title: 'Build a 10-piece LEGO creation', icon: '🧱', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15 },
   { id: 6, title: 'Take a shower by yourself', icon: '🚿', points: 20, completed: false, category: 'Personal Care', color: 'blue', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20 },
-  { id: 44, title: 'Stretch for 5 minutes', icon: '🧘', points: 15, completed: false, category: 'Personal Care', color: 'blue', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15 },
-  { id: 45, title: 'Go outside for 20 minutes', icon: '🌳', points: 20, completed: false, category: 'Personal Care', color: 'blue', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20 },
+  { id: 44, title: 'Stretch for 5 minutes', icon: '🧘', points: 15, completed: false, category: 'Personal Care', color: 'blue', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15, isTimed: true, timerSeconds: 300 },
+  { id: 45, title: 'Go outside for 20 minutes', icon: '🌳', points: 20, completed: false, category: 'Personal Care', color: 'blue', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20, isTimed: true, timerSeconds: 1200 },
   
   // Personal Care - Hard
-  { id: 7, title: 'Do 20 jumping jacks and 10 push-ups', icon: '💪', points: 25, completed: false, category: 'Personal Care', color: 'blue', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 25 },
+  { id: 7, title: 'Do 20 jumping jacks and 10 push-ups', icon: '💪', points: 25, completed: false, category: 'Personal Care', color: 'blue', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 25, isTimed: true, timerSeconds: 180 },
   { id: 8, title: 'Create a personal hygiene checklist', icon: '📋', points: 25, completed: false, category: 'Personal Care', color: 'blue', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 25 },
-  { id: 46, title: 'Exercise for 30 minutes', icon: '🏃', points: 30, completed: false, category: 'Personal Care', color: 'blue', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 30 },
+  { id: 46, title: 'Exercise for 30 minutes', icon: '🏃', points: 30, completed: false, category: 'Personal Care', color: 'blue', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 30, isTimed: true, timerSeconds: 1800 },
   
   // Responsibility - Easy
   { id: 9, title: 'Make your bed', icon: '🛏️', points: 10, completed: false, category: 'Responsibility', color: 'orange', minAge: 6, maxAge: 7, difficulty: 'easy', xp: 10 },
@@ -85,7 +89,7 @@ const QUEST_POOL: Quest[] = [
   { id: 60, title: 'Spell 5 simple words', icon: '🔤', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 6, maxAge: 8, difficulty: 'easy', xp: 15 },
   
   // Learning - Medium
-  { id: 21, title: 'Read for 15 minutes', icon: '📖', points: 20, completed: false, category: 'Learning', color: 'purple', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20 },
+  { id: 21, title: 'Read for 15 minutes', icon: '📖', points: 20, completed: false, category: 'Learning', color: 'purple', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20, isTimed: true, timerSeconds: 900 },
   { id: 22, title: 'Practice 10 math problems', icon: '🔢', points: 25, completed: false, category: 'Learning', color: 'purple', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 25 },
   { id: 23, title: 'Learn 5 new vocabulary words', icon: '📝', points: 20, completed: false, category: 'Learning', color: 'purple', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20 },
   { id: 61, title: 'Do homework without being asked', icon: '📚', points: 25, completed: false, category: 'Learning', color: 'purple', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 25 },
@@ -93,7 +97,7 @@ const QUEST_POOL: Quest[] = [
   { id: 63, title: 'Watch an educational video', icon: '📺', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 15 },
   
   // Learning - Hard
-  { id: 24, title: 'Read for 30 minutes', icon: '📖', points: 30, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 30 },
+  { id: 24, title: 'Read for 30 minutes', icon: '📖', points: 30, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 30, isTimed: true, timerSeconds: 1800 },
   { id: 25, title: 'Complete 20 math problems', icon: '🔢', points: 35, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 35 },
   { id: 64, title: 'Write a book report', icon: '📝', points: 40, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 40 },
   { id: 65, title: 'Research and present a topic', icon: '🔬', points: 35, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 35 },
@@ -102,7 +106,7 @@ const QUEST_POOL: Quest[] = [
   // Creativity - Easy
   { id: 26, title: 'Color a picture', icon: '🖍️', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 6, maxAge: 7, difficulty: 'easy', xp: 15 },
   { id: 27, title: 'Sing your favorite song', icon: '🎵', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 6, maxAge: 7, difficulty: 'easy', xp: 15 },
-  { id: 28, title: 'Build something with blocks', icon: '🧱', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 6, maxAge: 8, difficulty: 'easy', xp: 15 },
+  { id: 28, title: 'Fold a paper plane', icon: '✈️', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 6, maxAge: 8, difficulty: 'easy', xp: 15 },
   { id: 67, title: 'Dance to your favorite song', icon: '💃', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 6, maxAge: 8, difficulty: 'easy', xp: 15 },
   { id: 68, title: 'Make a card for someone', icon: '💌', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 6, maxAge: 8, difficulty: 'easy', xp: 15 },
   
@@ -110,14 +114,16 @@ const QUEST_POOL: Quest[] = [
   { id: 29, title: 'Draw your favorite animal', icon: '🎨', points: 20, completed: false, category: 'Creativity', color: 'pink', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20 },
   { id: 30, title: 'Write a short poem', icon: '✍️', points: 25, completed: false, category: 'Creativity', color: 'pink', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 25 },
   { id: 31, title: 'Make a craft project', icon: '✂️', points: 25, completed: false, category: 'Creativity', color: 'pink', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 25 },
-  { id: 69, title: 'Practice a musical instrument for 15 minutes', icon: '🎸', points: 20, completed: false, category: 'Creativity', color: 'pink', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20 },
+  { id: 69, title: 'Practice a musical instrument for 15 minutes', icon: '🎸', points: 20, completed: false, category: 'Creativity', color: 'pink', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20, isTimed: true, timerSeconds: 900 },
+  { id: 110, title: 'Speed Drawing — Draw an animal in 60 seconds', icon: '⚡', points: 20, completed: false, category: 'Creativity', color: 'pink', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 20, isTimed: true, timerSeconds: 60 },
+  { id: 111, title: 'Complete a full drawing', icon: '🖼️', points: 20, completed: false, category: 'Creativity', color: 'pink', minAge: 6, maxAge: 10, difficulty: 'easy', xp: 20 },
   { id: 70, title: 'Create a comic strip', icon: '📖', points: 25, completed: false, category: 'Creativity', color: 'pink', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 25 },
   { id: 71, title: 'Design and build something with recycled materials', icon: '♻️', points: 25, completed: false, category: 'Creativity', color: 'pink', minAge: 8, maxAge: 10, difficulty: 'medium', xp: 25 },
   
   // Creativity - Hard
   { id: 32, title: 'Write a short story (200+ words)', icon: '✍️', points: 35, completed: false, category: 'Creativity', color: 'pink', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 35 },
   { id: 33, title: 'Create an original art piece', icon: '🎨', points: 35, completed: false, category: 'Creativity', color: 'pink', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 35 },
-  { id: 72, title: 'Practice an instrument for 30 minutes', icon: '🎹', points: 30, completed: false, category: 'Creativity', color: 'pink', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 30 },
+  { id: 72, title: 'Practice an instrument for 30 minutes', icon: '🎹', points: 30, completed: false, category: 'Creativity', color: 'pink', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 30, isTimed: true, timerSeconds: 1800 },
   { id: 73, title: 'Choreograph a dance routine', icon: '💃', points: 35, completed: false, category: 'Creativity', color: 'pink', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 35 },
   { id: 74, title: 'Create a video or animation', icon: '🎬', points: 40, completed: false, category: 'Creativity', color: 'pink', minAge: 11, maxAge: 12, difficulty: 'hard', xp: 40 },
   
@@ -210,4 +216,13 @@ export function getAllAgeAppropriateQuests(userAge: number): Quest[] {
   return QUEST_POOL.filter(
     quest => userAge >= quest.minAge && userAge <= quest.maxAge
   );
+}
+
+/**
+ * Look up a single quest by its unique ID — the canonical source of truth
+ * for quest content. Used by the quest detail screen to ensure clicking
+ * a quest card always opens its own page (no cross-linked routing).
+ */
+export function getQuestById(id: number): Quest | undefined {
+  return QUEST_POOL.find(q => q.id === id);
 }

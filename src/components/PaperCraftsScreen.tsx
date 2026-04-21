@@ -23,9 +23,18 @@ interface OrigamiCourse {
   emoji: string;
   difficulty: 'easy' | 'intermediate' | 'advanced';
   steps: OrigamiStep[];
+  /** SC Coin reward for completing every step. Same currency as Quests. */
+  points: number;
   locked?: boolean;
   completed?: boolean;
 }
+
+// Reward defaults per difficulty so cards show consistent SC Coin values.
+const REWARD_BY_DIFFICULTY: Record<OrigamiCourse['difficulty'], number> = {
+  easy: 20,
+  intermediate: 35,
+  advanced: 50,
+};
 
 const COURSES: OrigamiCourse[] = [
   // Easy
@@ -33,7 +42,7 @@ const COURSES: OrigamiCourse[] = [
     id: 'paper-boat',
     title: 'Paper Boat',
     emoji: '⛵',
-    difficulty: 'easy',
+    difficulty: 'easy', points: 20,
     completed: false,
     steps: [
       { title: 'Fold in half', description: 'Take your paper and fold it in half horizontally.', youtubeId: 'OBuP0DV7dGA', thumbnail: 'https://img.youtube.com/vi/OBuP0DV7dGA/mqdefault.jpg' },
@@ -46,7 +55,7 @@ const COURSES: OrigamiCourse[] = [
     id: 'paper-airplane',
     title: 'Paper Airplane',
     emoji: '✈️',
-    difficulty: 'easy',
+    difficulty: 'easy', points: 20,
     completed: false,
     steps: [
       { title: 'Fold lengthwise', description: 'Fold the paper in half lengthwise and unfold.', youtubeId: 'veyZNyurlwU', thumbnail: 'https://img.youtube.com/vi/veyZNyurlwU/mqdefault.jpg' },
@@ -60,7 +69,7 @@ const COURSES: OrigamiCourse[] = [
     id: 'paper-cup',
     title: 'Paper Cup',
     emoji: '🥤',
-    difficulty: 'easy',
+    difficulty: 'easy', points: 20,
     steps: [
       { title: 'Fold diagonally', description: 'Fold the square paper diagonally to make a triangle.', youtubeId: 'kF-yGVRuuVk', thumbnail: 'https://img.youtube.com/vi/kF-yGVRuuVk/mqdefault.jpg' },
       { title: 'Fold right corner', description: 'Fold the right corner to the left edge.', youtubeId: 'kF-yGVRuuVk', thumbnail: 'https://img.youtube.com/vi/kF-yGVRuuVk/mqdefault.jpg' },
@@ -74,7 +83,7 @@ const COURSES: OrigamiCourse[] = [
     id: 'origami-crane',
     title: 'Origami Crane',
     emoji: '🕊️',
-    difficulty: 'intermediate',
+    difficulty: 'intermediate', points: 35,
     steps: [
       { title: 'Start with square base', description: 'Fold your square paper into the preliminary base.', youtubeId: 'FxgQVDjXnU4', thumbnail: 'https://img.youtube.com/vi/FxgQVDjXnU4/mqdefault.jpg' },
       { title: 'Petal fold', description: 'Perform the petal fold on the front and back.', youtubeId: 'FxgQVDjXnU4', thumbnail: 'https://img.youtube.com/vi/FxgQVDjXnU4/mqdefault.jpg' },
@@ -88,7 +97,7 @@ const COURSES: OrigamiCourse[] = [
     id: 'origami-frog',
     title: 'Jumping Frog',
     emoji: '🐸',
-    difficulty: 'intermediate',
+    difficulty: 'intermediate', points: 35,
     steps: [
       { title: 'Fold and crease', description: 'Create valley and mountain folds to form the base.', youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
       { title: 'Form the front legs', description: "Create the frog's two front legs from the top section.", youtubeId: '2HLwnynrMFQ', thumbnail: 'https://img.youtube.com/vi/2HLwnynrMFQ/mqdefault.jpg' },
@@ -101,7 +110,7 @@ const COURSES: OrigamiCourse[] = [
     id: 'origami-dragon',
     title: 'Origami Dragon',
     emoji: '🐉',
-    difficulty: 'advanced',
+    difficulty: 'advanced', points: 50,
     locked: true,
     steps: [
       { title: 'Bird base', description: 'Start with an advanced bird base fold.', youtubeId: 'IGbCWXqcqik', thumbnail: 'https://img.youtube.com/vi/IGbCWXqcqik/mqdefault.jpg' },
@@ -115,7 +124,7 @@ const COURSES: OrigamiCourse[] = [
     id: 'origami-rose',
     title: 'Origami Rose',
     emoji: '🌹',
-    difficulty: 'advanced',
+    difficulty: 'advanced', points: 50,
     locked: true,
     steps: [
       { title: 'Waterbomb base', description: 'Fold a waterbomb base from your square sheet.', youtubeId: '1ByFjKWnzBY', thumbnail: 'https://img.youtube.com/vi/1ByFjKWnzBY/mqdefault.jpg' },
@@ -161,8 +170,13 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
         <div className="text-center">
           <div className="text-6xl mb-2">{course.emoji}</div>
           <h2 className="text-white font-bold text-xl mb-1">{course.title}</h2>
-          <span className={`inline-block ${diff.color} text-white text-xs font-bold px-3 py-1 rounded-full`}>
+          <span className={`inline-block ${diff.color} text-white text-xs font-bold px-3 py-1 rounded-full mr-2`}>
             {diff.label}
+          </span>
+          {/* SC Coin reward badge — matches the quests detail screen styling */}
+          <span className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">
+            <span>🪙</span>
+            <span>Worth {course.points} SC coins</span>
           </span>
         </div>
 
@@ -326,8 +340,13 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
               <div className="flex-1 text-left">
                 <p className={`font-bold ${config.textColor}`}>{course.title}</p>
                 <p className="text-muted-foreground text-xs">{course.steps.length} steps</p>
+                {/* SC Coin reward — same currency styling as Quests */}
+                <div className="mt-1 inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-0.5 rounded-full">
+                  <span>🪙</span>
+                  <span>+{course.points} SC coins</span>
+                </div>
                 {course.completed && (
-                  <span className="text-xs text-green-600 font-semibold">✅ Completed</span>
+                  <span className="block mt-1 text-xs text-green-600 font-semibold">✅ Completed</span>
                 )}
               </div>
               <div className="flex items-center gap-4">

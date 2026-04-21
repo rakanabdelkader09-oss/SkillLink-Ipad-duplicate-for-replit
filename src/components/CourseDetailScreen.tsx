@@ -3,6 +3,7 @@ import { ArrowLeft, Play, CheckCircle, Lock, Star, X, ChevronRight } from 'lucid
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
+import { getCourseById } from './CourseListScreen';
 
 interface CourseDetailScreenProps {
   courseId: string;
@@ -226,8 +227,63 @@ function ytEmbedUrl(id: string) {
   return `https://www.youtube.com/embed/${id}?playsinline=1&rel=0&modestbranding=1`;
 }
 
+// Build a generic placeholder course for IDs that don't yet have curated
+// content, so every course card opens its own page (never a fallback to
+// "Tying Your Shoes"). Title/emoji/points come from the canonical
+// course catalog defined in CourseListScreen.
+function buildGenericCourse(courseId: string) {
+  const summary = getCourseById(courseId);
+  if (!summary) return null;
+  const lessonCount = Math.max(1, summary.lessons);
+  const lessons: Lesson[] = Array.from({ length: lessonCount }).map((_, i) => ({
+    id: i + 1,
+    title: `Lesson ${i + 1}`,
+    duration: '3 min',
+    completed: i < summary.completed,
+    steps: [
+      {
+        heading: `Introduction to ${summary.title}`,
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        videoLabel: `${summary.title} — overview`,
+        instructions: `Watch the video and learn the basics of "${summary.title}". Take your time and follow along step by step.`,
+      },
+      {
+        heading: 'Try it yourself',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        videoLabel: `${summary.title} — practice`,
+        instructions: `Now it's your turn! Practice what you learned about ${summary.title.toLowerCase()}. Ask a grown-up for help if you need it.`,
+      },
+    ],
+    quiz: [
+      {
+        question: `What did you just learn about?`,
+        options: [summary.title, 'How to fly', 'Cooking pasta', 'Riding a horse'],
+        correct: 0,
+      },
+      {
+        question: 'What should you do if you need help?',
+        options: ['Give up', 'Ask a grown-up', 'Skip the lesson', 'Hide'],
+        correct: 1,
+      },
+      {
+        question: 'How can you get better at a new skill?',
+        options: ['Never try', 'Only watch others', 'Practice often', 'Eat candy'],
+        correct: 2,
+      },
+    ],
+  }));
+  return {
+    title: summary.title,
+    emoji: summary.emoji,
+    description: `Learn all about "${summary.title}" with fun, easy-to-follow lessons.`,
+    duration: summary.duration,
+    points: summary.points,
+    lessons,
+  };
+}
+
 export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps) {
-  const course = courseData[courseId] || courseData['ls-1'];
+  const course = courseData[courseId] || buildGenericCourse(courseId) || courseData['ls-1'];
   const [lessons, setLessons] = useState<Lesson[]>(course.lessons);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [activeStep, setActiveStep] = useState(0);

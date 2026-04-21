@@ -7,15 +7,28 @@ interface CourseListScreenProps {
   onCourseSelect: (courseId: string) => void;
 }
 
-export function CourseListScreen({ category, onBack, onCourseSelect }: CourseListScreenProps) {
-  const categoryInfo: Record<string, { name: string; color: string; emoji: string }> = {
-    'life-skills': { name: 'Life Skills', color: 'from-[#2563eb] to-[#1d4ed8]', emoji: '🎯' },
-    'creativity': { name: 'Creativity', color: 'from-purple-400 to-purple-500', emoji: '🎨' },
-    'healthy-habits': { name: 'Healthy Habits', color: 'from-green-400 to-green-500', emoji: '💪' },
-    'social-skills': { name: 'Social Skills', color: 'from-pink-400 to-pink-500', emoji: '🤝' },
-  };
+// Exported so other screens (e.g. CourseDetailScreen) can use the same
+// catalog as the source of truth — guarantees the title/emoji/points on
+// the detail page always match the card the user tapped.
+export const COURSE_CATEGORY_INFO: Record<string, { name: string; color: string; emoji: string }> = {
+  'life-skills': { name: 'Life Skills', color: 'from-[#2563eb] to-[#1d4ed8]', emoji: '🎯' },
+  'creativity': { name: 'Creativity', color: 'from-purple-400 to-purple-500', emoji: '🎨' },
+  'healthy-habits': { name: 'Healthy Habits', color: 'from-green-400 to-green-500', emoji: '💪' },
+  'social-skills': { name: 'Social Skills', color: 'from-pink-400 to-pink-500', emoji: '🤝' },
+};
 
-  const coursesData: Record<string, Array<any>> = {
+export interface CourseSummary {
+  id: string;
+  title: string;
+  emoji: string;
+  duration: string;
+  points: number;
+  lessons: number;
+  completed: number;
+  category: string;
+}
+
+const RAW_COURSES: Record<string, Array<Omit<CourseSummary, 'category'>>> = {
     'life-skills': [
       { id: 'ls-1', title: 'Tying Your Shoes', emoji: '👟', duration: '5 min', points: 25, lessons: 3, completed: 0 },
       { id: 'ls-2', title: 'Making Your Bed', emoji: '🛏️', duration: '4 min', points: 20, lessons: 2, completed: 2 },
@@ -40,10 +53,31 @@ export function CourseListScreen({ category, onBack, onCourseSelect }: CourseLis
       { id: 'ss-3', title: 'Saying Thank You', emoji: '🙏', duration: '5 min', points: 25, lessons: 3, completed: 0 },
       { id: 'ss-4', title: 'Listening Skills', emoji: '👂', duration: '7 min', points: 30, lessons: 3, completed: 0 },
     ],
-  };
+};
 
-  const info = categoryInfo[category] || categoryInfo['life-skills'];
-  const courses = coursesData[category] || coursesData['life-skills'];
+// Tag every course with its parent category so detail screens can derive
+// header colour/emoji without requiring it as a separate prop.
+export const COURSES_BY_CATEGORY: Record<string, CourseSummary[]> = Object.fromEntries(
+  Object.entries(RAW_COURSES).map(([cat, list]) => [
+    cat,
+    list.map(c => ({ ...c, category: cat })),
+  ]),
+);
+
+const ALL_COURSES: CourseSummary[] = Object.values(COURSES_BY_CATEGORY).flat();
+
+/**
+ * Look up a single course by its unique id. Returns undefined if not
+ * found. Used by CourseDetailScreen to make sure the page header always
+ * matches the card the user tapped.
+ */
+export function getCourseById(courseId: string): CourseSummary | undefined {
+  return ALL_COURSES.find(c => c.id === courseId);
+}
+
+export function CourseListScreen({ category, onBack, onCourseSelect }: CourseListScreenProps) {
+  const info = COURSE_CATEGORY_INFO[category] || COURSE_CATEGORY_INFO['life-skills'];
+  const courses = COURSES_BY_CATEGORY[category] || COURSES_BY_CATEGORY['life-skills'];
 
   return (
     <div className="h-full bg-gradient-to-b from-blue-50 to-white pb-20 overflow-y-auto">
