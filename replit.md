@@ -101,3 +101,5 @@ npm run dev
 - Changed dev server port from 3000 → 5000 and host to `0.0.0.0`
 - Added `allowedHosts: true` to Vite server config for Replit's proxied iframe
 - Updated `package.json` dev/preview scripts with explicit port and host flags
+- Moved Google Fonts `@import` to the top of `src/index.css` (CSS spec requires `@import` before other rules)
+- Deployment configured as `static` with `npm run build` → `build/`
