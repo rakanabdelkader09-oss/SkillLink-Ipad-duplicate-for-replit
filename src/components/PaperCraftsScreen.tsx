@@ -4,7 +4,6 @@ import { Progress } from './ui/progress';
 import { SkillCoin } from './CurrencyIcons';
 
 function ytEmbedUrl(id: string) {
-  // playsinline=1 is the critical part to keep video in the app on iPhone/iPad
   return `https://www.youtube.com/embed/${id}?playsinline=1&rel=0&modestbranding=1&enablejsapi=1`;
 }
 
@@ -322,11 +321,10 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
 
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
-      {/* HEADER WITH ROBUST IPAD AUTOPLAY FIX */}
+      {/* HEADER WITH ROBUST SIDELOADED IPA FIX */}
       <div className="relative h-56 bg-gradient-to-br from-amber-200 to-orange-300 overflow-hidden">
         <video
-          key="paper-crafts-header-video"
-          src="/paper-crafts-header.mp4"
+          key="paper-crafts-header-final-v3"
           autoPlay
           muted
           loop
@@ -336,22 +334,33 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
           className="absolute inset-0 w-full h-full object-cover"
           ref={(el) => {
             if (!el) return;
+            // 1. Force muted state both as prop and attribute
             el.muted = true;
-            // Force attributes for older WebKit versions
+            el.defaultMuted = true;
             el.setAttribute('muted', '');
-            el.setAttribute('webkit-playsinline', 'true');
+            
+            // 2. Set all possible inline playback flags for iOS 16 WKWebView
             el.setAttribute('playsinline', 'true');
-            // Force play loop
-            const playPromise = el.play();
-            if (playPromise !== undefined) {
-              playPromise.catch(() => {
-                // Autoplay was prevented, try again on first interaction
-                const retry = () => { el.play(); document.removeEventListener('click', retry); };
-                document.addEventListener('click', retry);
+            el.setAttribute('webkit-playsinline', 'true');
+            el.setAttribute('x5-playsinline', 'true');
+            
+            // 3. Try to force playback on a loop
+            const forcePlay = () => {
+              el.play().catch(() => {
+                // If blocked, wait for first user touch and try again
+                const retry = () => { el.play(); window.removeEventListener('touchstart', retry); };
+                window.addEventListener('touchstart', retry);
               });
-            }
+            };
+
+            forcePlay();
+            el.addEventListener('loadeddata', forcePlay);
           }}
-        />
+        >
+          {/* Ensure the filename is exactly matching your GitHub public folder */}
+          <source src="/paper-crafts-header.mp4" type="video/mp4" />
+        </video>
+        
         <button
           onClick={onBack}
           className="absolute top-12 left-4 z-10 bg-black/40 text-white rounded-full p-2 backdrop-blur-sm active:opacity-70"
