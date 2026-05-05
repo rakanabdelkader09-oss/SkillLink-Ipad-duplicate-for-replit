@@ -479,6 +479,256 @@ app.post('/api/users/:userId/xp', async (req, res) => {
   }
 });
 
+// ──────────────────────────────────────────────
+// Auth — signup / login
+// ──────────────────────────────────────────────
+app.post('/api/auth/signup', async (req, res) => {
+  const { username_handle, password, display_name, age, user_type, avatar, device_id } = req.body as {
+    username_handle: string;
+    password: string;
+    display_name?: string;
+    age?: number;
+    user_type?: string;
+    avatar?: string;
+    device_id?: string;
+  };
+
+  if (!username_handle || !password) {
+    return res.status(400).json({ error: 'username and password required' });
+  }
+
+  try {
+    // Check handle not taken
+    const existing = await pool.query(
+      'SELECT id FROM users WHERE LOWER(username_handle) = LOWER($1)',
+      [username_handle]
+    );
+    if (existing.rows.length > 0) {
+      return res.status(409).json({ error: 'Username already taken. Try another.' });
+    }
+
+    const devId = device_id || crypto.randomUUID();
+    const result = await pool.query(
+      `INSERT INTO users
+         (device_id, username_handle, password_hash, username, display_name, avatar, age, user_type, sc_coins)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,50)
+       ON CONFLICT (device_id) DO UPDATE
+         SET username_handle = $2,
+             password_hash   = $3,
+             username        = $4,
+             display_name    = $5,
+             avatar          = $6,
+             age             = $7,
+             user_type       = $8
+       RETURNING *`,
+      [
+        devId,
+        username_handle,
+        password,
+        display_name || username_handle,
+        display_name || username_handle,
+        avatar || 'lion',
+        age || 8,
+        user_type || 'kid',
+      ]
+    );
+
+    return res.status(201).json({ user: result.rows[0] });
+  } catch (err) {
+    console.error('signup error', err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+  const { username_handle, password } = req.body as {
+    username_handle: string;
+    password: string;
+  };
+
+  if (!username_handle || !password) {
+    return res.status(400).json({ error: 'username and password required' });
+  }
+
+  try {
+    const result = await pool.query(
+      'SELECT * FROM users WHERE LOWER(username_handle) = LOWER($1)',
+      [username_handle]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: 'Account not found. Check your username.' });
+    }
+
+    const user = result.rows[0];
+    if (user.password_hash !== password) {
+      return res.status(401).json({ error: 'Wrong password. Try again.' });
+    }
+
+    // Update last_active
+    await pool.query('UPDATE users SET last_active = NOW() WHERE id = $1', [user.id]);
+
+    return res.json({ user });
+  } catch (err) {
+    console.error('login error', err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// ──────────────────────────────────────────────
+// User search (by handle prefix)
+// ──────────────────────────────────────────────
+app.get('/api/users/search', async (req, res) => {
+  const { q, exclude_id } = req.query as { q?: string; exclude_id?: string };
+  if (!q || (q as string).length < 2) {
+    return res.status(400).json({ error: 'Query must be at least 2 characters' });
+  }
+
+  try {
+    const result = await pool.query(
+      `SELECT id, display_name, username_handle, avatar, sc_coins, level
+       FROM users
+       WHERE LOWER(username_handle) LIKE LOWER($1)
+         AND ($2::int IS NULL OR id != $2::int)
+         AND username_handle IS NOT NULL
+       LIMIT 10`,
+      [`${q}%`, exclude_id ? parseInt(exclude_id as string) : null]
+    );
+    return res.json({ users: result.rows });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// ──────────────────────────────────────────────
+// Friends
+// ──────────────────────────────────────────────
+app.get('/api/friends/:userId', async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  if (isNaN(userId)) return res.status(400).json({ error: 'Invalid userId' });
+
+  try {
+    const result = await pool.query(
+      `SELECT
+         f.id, f.status, f.created_at,
+         CASE WHEN f.requester_id = $1 THEN f.addressee_id ELSE f.requester_id END AS friend_id,
+         CASE WHEN f.requester_id = $1 THEN 'sent' ELSE 'received' END AS direction,
+         u.display_name, u.username_handle, u.avatar, u.sc_coins, u.level, u.xp
+       FROM friends f
+       JOIN users u ON u.id = (CASE WHEN f.requester_id = $1 THEN f.addressee_id ELSE f.requester_id END)
+       WHERE f.requester_id = $1 OR f.addressee_id = $1
+       ORDER BY f.status, f.created_at DESC`,
+      [userId]
+    );
+    return res.json({ friends: result.rows });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.post('/api/friends/request', async (req, res) => {
+  const { requester_id, addressee_handle } = req.body as {
+    requester_id: number;
+    addressee_handle: string;
+  };
+
+  if (!requester_id || !addressee_handle) {
+    return res.status(400).json({ error: 'requester_id and addressee_handle required' });
+  }
+
+  try {
+    const target = await pool.query(
+      'SELECT id FROM users WHERE LOWER(username_handle) = LOWER($1)',
+      [addressee_handle]
+    );
+    if (target.rows.length === 0) {
+      return res.status(404).json({ error: `No user found with username "${addressee_handle}"` });
+    }
+    const addresseeId = target.rows[0].id;
+    if (addresseeId === requester_id) {
+      return res.status(400).json({ error: "You can't add yourself!" });
+    }
+
+    const result = await pool.query(
+      `INSERT INTO friends (requester_id, addressee_id, status)
+       VALUES ($1, $2, 'pending')
+       ON CONFLICT (requester_id, addressee_id) DO UPDATE SET status = 'pending'
+       RETURNING *`,
+      [requester_id, addresseeId]
+    );
+    return res.status(201).json({ friend: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.patch('/api/friends/:friendRowId', async (req, res) => {
+  const id = parseInt(req.params.friendRowId);
+  const { status } = req.body as { status: 'accepted' | 'declined' };
+  if (isNaN(id) || !['accepted', 'declined'].includes(status)) {
+    return res.status(400).json({ error: 'Invalid params' });
+  }
+  try {
+    const result = await pool.query(
+      'UPDATE friends SET status = $2 WHERE id = $1 RETURNING *',
+      [id, status]
+    );
+    return res.json({ friend: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.delete('/api/friends/:friendRowId', async (req, res) => {
+  const id = parseInt(req.params.friendRowId);
+  if (isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
+  try {
+    await pool.query('DELETE FROM friends WHERE id = $1', [id]);
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// ──────────────────────────────────────────────
+// Completed quest IDs for a user
+// ──────────────────────────────────────────────
+app.get('/api/users/:userId/completed-quest-ids', async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  if (isNaN(userId)) return res.status(400).json({ error: 'Invalid userId' });
+  try {
+    const result = await pool.query(
+      `SELECT DISTINCT quest_id FROM quest_completions
+       WHERE user_id = $1 AND status IN ('completed','approved')`,
+      [userId]
+    );
+    return res.json({ quest_ids: result.rows.map((r: any) => r.quest_id) });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.get('/api/users/:userId/completed-course-ids', async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  if (isNaN(userId)) return res.status(400).json({ error: 'Invalid userId' });
+  try {
+    const result = await pool.query(
+      `SELECT course_id FROM course_progress WHERE user_id = $1 AND completed = true`,
+      [userId]
+    );
+    return res.json({ course_ids: result.rows.map((r: any) => r.course_id) });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
 const PORT = 3001;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`SkillLink API running on port ${PORT}`);

@@ -10,6 +10,7 @@ interface QuestDetailScreenProps {
   onSoloSubmit?: (questId: number, videoFile: File | null) => void;
   questData?: any;
   language?: string;
+  alreadyCompleted?: boolean;
 }
 
 
@@ -102,7 +103,7 @@ function DynamicTimer({ defaultSeconds = 120 }: { defaultSeconds?: number }) {
   );
 }
 
-export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSubmit, questData: propQuestData }: QuestDetailScreenProps) {
+export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSubmit, questData: propQuestData, alreadyCompleted }: QuestDetailScreenProps) {
   const [completionMode, setCompletionMode] = useState<'select' | 'solo' | 'challenge' | 'complete'>('select');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -212,6 +213,33 @@ export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSub
             <p className="text-yellow-600 text-sm mt-1">You'll get your coins once approved!</p>
           </div>
           <Button onClick={onBack} className="bg-blue-500 text-white px-12 py-4 rounded-full shadow-lg text-lg">
+            Back to Quests
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Already completed banner
+  if (alreadyCompleted) {
+    return (
+      <div className="h-full bg-gradient-to-b from-green-50 to-white pb-20 overflow-y-auto">
+        <div className={`bg-gradient-to-r ${quest.color} px-6 pt-12 pb-8 rounded-b-[3rem] shadow-lg`}>
+          <button onClick={onBack} className="text-white mb-4 flex items-center gap-4">
+            <ArrowLeft size={20} /> Back
+          </button>
+          <div className="text-center">
+            <div className="text-7xl mb-4">{quest.icon}</div>
+            <h2 className="text-white font-bold text-2xl mb-2">{quest.title}</h2>
+          </div>
+        </div>
+        <div className="px-6 mt-8 flex flex-col items-center gap-4">
+          <div className="bg-green-50 border-2 border-green-300 rounded-3xl p-8 w-full text-center shadow-md">
+            <div className="text-5xl mb-4">🏆</div>
+            <p className="text-green-700 font-bold text-xl mb-2">Quest Already Completed!</p>
+            <p className="text-green-600 text-sm">You already finished this quest. Come back tomorrow for new ones!</p>
+          </div>
+          <Button onClick={onBack} className="bg-blue-500 text-white px-10 py-4 rounded-full shadow-lg text-lg">
             Back to Quests
           </Button>
         </div>

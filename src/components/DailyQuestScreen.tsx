@@ -13,6 +13,7 @@ interface DailyQuestScreenProps {
   assignedQuests?: any[];
   onQuestsRefresh?: (quests: any[]) => void;
   language?: Language;
+  completedQuestIds?: number[];
 }
 
 interface Quest {
@@ -28,21 +29,25 @@ interface Quest {
   difficulty: 'easy' | 'medium' | 'hard';
 }
 
-export function DailyQuestScreen({ onQuestSelect, userProfile, assignedQuests: propAssignedQuests, onQuestsRefresh, language = 'en' }: DailyQuestScreenProps) {
+export function DailyQuestScreen({ onQuestSelect, userProfile, assignedQuests: propAssignedQuests, onQuestsRefresh, language = 'en', completedQuestIds = [] }: DailyQuestScreenProps) {
   const t = useTranslation(language);
   const [lastRefreshDate, setLastRefreshDate] = useState<Date>(new Date());
   
-  // Use ALL age-appropriate quests instead of just assigned ones
-  // This allows kids to choose which quests to complete
-  const initialQuests = getAllAgeAppropriateQuests(userProfile?.age || 9);
+  const initialQuests = getAllAgeAppropriateQuests(userProfile?.age || 9).map(q => ({
+    ...q,
+    completed: completedQuestIds.includes(q.id),
+  }));
   
   const [allQuests, setAllQuests] = useState<Quest[]>(initialQuests);
 
-  // Use all age-appropriate quests (kids can choose which ones to do)
   const quests = allQuests;
 
   const toggleQuest = (id: number) => {
-    setAllQuests(allQuests.map(q => q.id === id ? { ...q, completed: !q.completed } : q));
+    setAllQuests(prev => prev.map(q => {
+      if (q.id !== id) return q;
+      if (q.completed) return q;
+      return { ...q, completed: true };
+    }));
   };
 
   const completedCount = quests.filter(q => q.completed).length;

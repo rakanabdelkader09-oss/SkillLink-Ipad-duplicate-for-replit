@@ -218,3 +218,84 @@ export function getOrCreateDeviceId(): string {
   }
   return id;
 }
+
+// ── Auth ───────────────────────────────────────────────────────────────────
+
+export function authSignup(params: {
+  username_handle: string;
+  password: string;
+  display_name?: string;
+  age?: number;
+  user_type?: string;
+  avatar?: string;
+  device_id?: string;
+}) {
+  return request<{ user: DBUser }>('/auth/signup', {
+    method: 'POST',
+    body: JSON.stringify(params),
+  });
+}
+
+export function authLogin(params: { username_handle: string; password: string }) {
+  return request<{ user: DBUser }>('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(params),
+  });
+}
+
+// ── User search ────────────────────────────────────────────────────────────
+
+export function searchUsers(q: string, excludeId?: number) {
+  const qs = excludeId ? `&exclude_id=${excludeId}` : '';
+  return request<{ users: Array<{ id: number; display_name: string; username_handle: string; avatar: string; sc_coins: number; level: number }> }>(
+    `/users/search?q=${encodeURIComponent(q)}${qs}`
+  );
+}
+
+// ── Friends ────────────────────────────────────────────────────────────────
+
+export interface FriendRow {
+  id: number;
+  status: 'pending' | 'accepted' | 'declined';
+  direction: 'sent' | 'received';
+  friend_id: number;
+  display_name: string;
+  username_handle: string;
+  avatar: string;
+  sc_coins: number;
+  level: number;
+  xp: number;
+  created_at: string;
+}
+
+export function getFriends(userId: number) {
+  return request<{ friends: FriendRow[] }>(`/friends/${userId}`);
+}
+
+export function sendFriendRequest(requesterId: number, addresseeHandle: string) {
+  return request<{ friend: any }>('/friends/request', {
+    method: 'POST',
+    body: JSON.stringify({ requester_id: requesterId, addressee_handle: addresseeHandle }),
+  });
+}
+
+export function respondToFriendRequest(friendRowId: number, status: 'accepted' | 'declined') {
+  return request<{ friend: any }>(`/friends/${friendRowId}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  });
+}
+
+export function removeFriend(friendRowId: number) {
+  return request<{ ok: boolean }>(`/friends/${friendRowId}`, { method: 'DELETE' });
+}
+
+// ── Completed IDs ──────────────────────────────────────────────────────────
+
+export function getCompletedQuestIds(userId: number) {
+  return request<{ quest_ids: number[] }>(`/users/${userId}/completed-quest-ids`);
+}
+
+export function getCompletedCourseIds(userId: number) {
+  return request<{ course_ids: string[] }>(`/users/${userId}/completed-course-ids`);
+}

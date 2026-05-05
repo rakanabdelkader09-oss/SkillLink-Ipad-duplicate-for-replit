@@ -17,9 +17,11 @@ A full-stack kids learning/gamification app for ages 6–12. Features gamified q
 - Both servers started together by `npm run dev` (via `concurrently`)
 
 ### Auth / Identity
-- No login required — device identified by UUID in `localStorage` (`skilllink-device-id`)
-- On every app load, `syncUser()` is called with the device UUID → gets or creates a user row
-- On `handleAuth()` (profile setup), the row is updated with name/age/avatar/user_type
+- Real signup/login: `POST /api/auth/signup` and `POST /api/auth/login` (username+password stored in DB)
+- Signup requires a unique `username_handle` (3–20 chars, letters/numbers/underscore)
+- Login looks up by `username_handle` and verifies `password_hash` (plaintext for demo)
+- On successful auth, the DB `user` row is returned; `dbUserId` flows through to App state
+- Fallback: device UUID in `localStorage` (`skilllink-device-id`) via `syncUser()` for anonymous users
 
 ## Project Structure
 ```
@@ -43,12 +45,13 @@ A full-stack kids learning/gamification app for ages 6–12. Features gamified q
 ## Database Schema (PostgreSQL)
 | Table | Purpose |
 |-------|---------|
-| `users` | Profiles, sc_coins, xp, level, streak |
+| `users` | Profiles, sc_coins, xp, level, streak, `username_handle` (unique), `password_hash` |
 | `quest_completions` | Quest history with status (completed / pending_approval / approved / rejected) |
 | `coin_transactions` | Full audit log of every SC Coin change |
 | `course_progress` | Per-user per-course step_index + completion flag |
 | `parental_controls` | Screen time, content filter, quest approval toggle per child |
 | `leaderboard_snapshots` | Daily snapshots (optional, for trend charts) |
+| `friends` | requester_id, addressee_id, status (pending/accepted/declined) |
 
 ## API Routes (`/api/*`)
 | Method | Path | Purpose |

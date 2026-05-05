@@ -8,6 +8,8 @@ import { getCourseById } from './CourseListScreen';
 interface CourseDetailScreenProps {
   courseId: string;
   onBack: () => void;
+  onCourseComplete?: (courseId: string, points: number) => void;
+  alreadyCompleted?: boolean;
 }
 
 interface QuizQuestion {
@@ -282,12 +284,13 @@ function buildGenericCourse(courseId: string) {
   };
 }
 
-export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps) {
+export function CourseDetailScreen({ courseId, onBack, onCourseComplete, alreadyCompleted }: CourseDetailScreenProps) {
   const course = courseData[courseId] || buildGenericCourse(courseId) || courseData['ls-1'];
   const [lessons, setLessons] = useState<Lesson[]>(course.lessons);
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [activeStep, setActiveStep] = useState(0);
   const [phase, setPhase] = useState<LessonPhase>('steps');
+  const [courseRewarded, setCourseRewarded] = useState(false);
 
   // Quiz state
   const [quizAnswers, setQuizAnswers] = useState<(number | null)[]>([]);
@@ -344,7 +347,15 @@ export function CourseDetailScreen({ courseId, onBack }: CourseDetailScreenProps
 
   const completeLesson = () => {
     if (!activeLesson) return;
-    setLessons(prev => prev.map(l => l.id === activeLesson.id ? { ...l, completed: true } : l));
+    setLessons(prev => {
+      const updated = prev.map(l => l.id === activeLesson.id ? { ...l, completed: true } : l);
+      const allDone = updated.every(l => l.completed);
+      if (allDone && !courseRewarded && !alreadyCompleted) {
+        setCourseRewarded(true);
+        onCourseComplete?.(courseId, course.points);
+      }
+      return updated;
+    });
     setActiveLesson(null);
   };
 

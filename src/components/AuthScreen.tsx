@@ -1,8 +1,9 @@
-﻿import { Button } from './ui/button';
+import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { Baby, User, Sparkles } from 'lucide-react';
+import { Baby, User, Sparkles, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { UserProfile } from './ProfileSetupScreen';
+import { authSignup, authLogin, getOrCreateDeviceId } from '../lib/api';
 
 interface AuthScreenProps {
   onAuth: (userType: 'kid' | 'parent' | 'creator', profile: UserProfile, isNewUser: boolean) => void;
@@ -13,9 +14,11 @@ type AuthMode = 'select' | 'signup' | 'login';
 export function AuthScreen({ onAuth }: AuthScreenProps) {
   const [authMode, setAuthMode] = useState<AuthMode>('select');
   const [selectedType, setSelectedType] = useState<'kid' | 'parent' | 'creator' | null>(null);
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   // Sign Up form state
   const [signupName, setSignupName] = useState('');
+  const [signupUsername, setSignupUsername] = useState('');
   const [signupAge, setSignupAge] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
@@ -35,98 +38,81 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
     setError('');
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     setError('');
 
-    // Validation
-    if (!signupName.trim()) {
-      setError('Please enter your name');
+    if (!signupName.trim()) { setError('Please enter your display name'); return; }
+    if (!signupUsername.trim()) { setError('Please choose a username'); return; }
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(signupUsername)) {
+      setError('Username: 3–20 chars, letters/numbers/underscore only');
       return;
     }
-
-    if (!signupAge || parseInt(signupAge) <= 0) {
-      setError('Please enter a valid age');
-      return;
-    }
-
+    if (!signupAge || parseInt(signupAge) <= 0) { setError('Please enter a valid age'); return; }
     if (selectedType === 'kid' && (parseInt(signupAge) < 6 || parseInt(signupAge) > 12)) {
-      setError('Kids must be between 6-12 years old');
-      return;
+      setError('Kids must be between 6–12 years old'); return;
     }
-
-    if (selectedType === 'parent' && parseInt(signupAge) < 18) {
-      setError('Parents must be 18 or older');
-      return;
+    if (selectedType !== 'kid' && parseInt(signupAge) < 18) {
+      setError('Must be 18 or older'); return;
     }
-
-    if (selectedType === 'creator' && parseInt(signupAge) < 18) {
-      setError('Creators must be 18 or older');
-      return;
-    }
-
-    if (!signupPassword || signupPassword.length < 4) {
-      setError('Password must be at least 4 characters');
-      return;
-    }
-
-    if (signupPassword !== signupConfirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
+    if (!signupPassword || signupPassword.length < 4) { setError('Password must be at least 4 characters'); return; }
+    if (signupPassword !== signupConfirmPassword) { setError('Passwords do not match'); return; }
     if (selectedType === 'parent') {
-      if (!signupParentName.trim()) {
-        setError('Please enter your full name');
-        return;
-      }
-      if (!signupChildCount || parseInt(signupChildCount) <= 0) {
-        setError('Please enter number of children');
-        return;
-      }
+      if (!signupParentName.trim()) { setError('Please enter your full name'); return; }
+      if (!signupChildCount || parseInt(signupChildCount) <= 0) { setError('Please enter number of children'); return; }
     }
 
-    // Create user profile
-    const profile: UserProfile = {
-      name: signupName,
-      age: parseInt(signupAge),
-      avatar: selectedType === 'kid' ? '👦' : selectedType === 'creator' ? '✨' : '👨',
-      ...(selectedType === 'parent' && {
-        parentName: signupParentName,
-        childCount: parseInt(signupChildCount)
-      })
-    };
+    setIsLoading(true);
+    try {
+      const deviceId = getOrCreateDeviceId();
+      const { user } = await authSignup({
+        username_handle: signupUsername,
+        password: signupPassword,
+        display_name: signupName,
+        age: parseInt(signupAge),
+        user_type: selectedType!,
+        avatar: selectedType === 'kid' ? 'lion' : selectedType === 'creator' ? 'fox' : 'bear',
+        device_id: deviceId,
+      });
 
-    // In a real app, this would save to database
-    // For now, we'll just call onAuth with the profile
-    onAuth(selectedType!, profile, true);
+      const profile: UserProfile & { dbUserId?: number; username_handle?: string } = {
+        name: user.display_name || signupName,
+        age: user.age || parseInt(signupAge),
+        avatar: user.avatar || 'lion',
+        dbUserId: user.id,
+        username_handle: user.username_handle,
+        ...(selectedType === 'parent' && { parentName: signupParentName, childCount: parseInt(signupChildCount) }),
+      };
+      onAuth(selectedType!, profile, true);
+    } catch (err: any) {
+      setError(err?.message || 'Signup failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setError('');
+    if (!loginUsername.trim()) { setError('Please enter your username'); return; }
+    if (!loginPassword) { setError('Please enter your password'); return; }
 
-    if (!loginUsername.trim()) {
-      setError('Please enter your username or email');
-      return;
+    setIsLoading(true);
+    try {
+      const { user } = await authLogin({ username_handle: loginUsername, password: loginPassword });
+
+      const profile: UserProfile & { dbUserId?: number; username_handle?: string } = {
+        name: user.display_name || loginUsername,
+        age: user.age || (selectedType === 'kid' ? 9 : 35),
+        avatar: user.avatar || 'lion',
+        dbUserId: user.id,
+        username_handle: user.username_handle,
+        ...(selectedType === 'parent' && { parentName: user.display_name, childCount: 1 }),
+      };
+      onAuth((user.user_type as 'kid' | 'parent' | 'creator') || selectedType!, profile, false);
+    } catch (err: any) {
+      setError(err?.message || 'Login failed. Check your username and password.');
+    } finally {
+      setIsLoading(false);
     }
-
-    if (!loginPassword) {
-      setError('Please enter your password');
-      return;
-    }
-
-    // Mock authentication - in a real app, this would verify credentials
-    // For demo purposes, we'll create a mock profile
-    const mockProfile: UserProfile = {
-      name: loginUsername,
-      age: selectedType === 'kid' ? 9 : 35,
-      avatar: selectedType === 'kid' ? '👦' : selectedType === 'creator' ? '✨' : '👨',
-      ...(selectedType === 'parent' && {
-        parentName: loginUsername,
-        childCount: 2
-      })
-    };
-
-    onAuth(selectedType!, mockProfile, false);
   };
 
   const handleBack = () => {
@@ -136,6 +122,7 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
       setError('');
       // Clear form fields
       setSignupName('');
+      setSignupUsername('');
       setSignupAge('');
       setSignupPassword('');
       setSignupConfirmPassword('');
@@ -262,6 +249,16 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
               </div>
 
               <div>
+                <label className="text-slate-700 mb-2 block">Username <span className="text-slate-400 text-sm">(used to log in &amp; add friends)</span></label>
+                <Input
+                  value={signupUsername}
+                  onChange={(e) => setSignupUsername(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}
+                  placeholder="coolkid_123"
+                  className="h-14 rounded-2xl bg-white border-2 border-blue-200 focus:border-blue-400 px-4"
+                />
+              </div>
+
+              <div>
                 <label className="text-slate-700 mb-2 block">Age</label>
                 <Input
                   type="number"
@@ -321,8 +318,10 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
 
               <Button
                 onClick={handleSignUp}
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white h-14 rounded-2xl shadow-lg mt-6"
+                disabled={isLoading}
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white h-14 rounded-2xl shadow-lg mt-6 flex items-center justify-center gap-2"
               >
+                {isLoading && <Loader2 size={18} className="animate-spin" />}
                 Create Account
               </Button>
 
@@ -393,8 +392,10 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
 
             <Button
               onClick={handleLogin}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white h-14 rounded-2xl shadow-lg"
+              disabled={isLoading}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white h-14 rounded-2xl shadow-lg flex items-center justify-center gap-2"
             >
+              {isLoading && <Loader2 size={18} className="animate-spin" />}
               Login
             </Button>
 

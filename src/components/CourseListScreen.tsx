@@ -84,11 +84,11 @@ const RAW_COURSES: Record<string, Array<Omit<CourseSummary, 'category'>>> = {
     { id: 'ps-5', title: 'Learning from Mistakes',  emoji: '📚', duration: '8 min',  points: 30, lessons: 4, completed: 0 },
   ],
   'communication': [
-    { id: 'co-1', title: 'Speaking Clearly',         emoji: '🗣️', duration: '8 min',  points: 28, lessons: 3, completed: 0 },
-    { id: 'co-2', title: 'Active Listening',          emoji: '👂', duration: '10 min', points: 35, lessons: 4, completed: 0 },
-    { id: 'co-3', title: 'Asking Good Questions',     emoji: '❓', duration: '7 min',  points: 25, lessons: 3, completed: 0 },
-    { id: 'co-4', title: 'Body Language',             emoji: '🤸', duration: '9 min',  points: 30, lessons: 4, completed: 0 },
-    { id: 'co-5', title: 'Saying Sorry & Forgiving',  emoji: '🕊️', duration: '8 min',  points: 32, lessons: 4, completed: 0 },
+    { id: 'cm-1', title: 'Speaking Clearly',         emoji: '🗣️', duration: '8 min',  points: 28, lessons: 3, completed: 0 },
+    { id: 'cm-2', title: 'Active Listening',          emoji: '👂', duration: '10 min', points: 35, lessons: 4, completed: 0 },
+    { id: 'cm-3', title: 'Asking Good Questions',     emoji: '❓', duration: '7 min',  points: 25, lessons: 3, completed: 0 },
+    { id: 'cm-4', title: 'Body Language',             emoji: '🤸', duration: '9 min',  points: 30, lessons: 4, completed: 0 },
+    { id: 'cm-5', title: 'Saying Sorry & Forgiving',  emoji: '🕊️', duration: '8 min',  points: 32, lessons: 4, completed: 0 },
   ],
 };
 

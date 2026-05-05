@@ -37,6 +37,9 @@ import {
   spendCoins,
   completeQuest,
   awardCoins,
+  updateCourseProgress,
+  getCompletedQuestIds,
+  getCompletedCourseIds,
 } from "./lib/api";
 
 type Screen =
@@ -109,6 +112,9 @@ export default function App() {
   );
   const [dailyQuests, setDailyQuests] = useState<any[]>([]);
   const [videoSubmissions, setVideoSubmissions] = useState<VideoSubmission[]>([]);
+  const [completedQuestIds, setCompletedQuestIds] = useState<number[]>([]);
+  const [completedCourseIds, setCompletedCourseIds] = useState<string[]>([]);
+  const [userHandle, setUserHandle] = useState<string | null>(null);
 
   // Creator State
   const [creatorCourses, setCreatorCourses] = useState<CreatorCourse[]>([]);
@@ -875,6 +881,17 @@ export default function App() {
     setCurrentScreen("auth");
   };
 
+  const loadCompletedIds = async (uid: number) => {
+    try {
+      const [{ quest_ids }, { course_ids }] = await Promise.all([
+        getCompletedQuestIds(uid),
+        getCompletedCourseIds(uid),
+      ]);
+      setCompletedQuestIds(quest_ids);
+      setCompletedCourseIds(course_ids);
+    } catch {}
+  };
+
   const handleAuth = (
     type: "kid" | "parent" | "creator",
     profile: UserProfile,
@@ -883,20 +900,33 @@ export default function App() {
     setUserType(type);
     setUserProfile(profile);
 
-    // Sync full profile to DB now that we have name / age / avatar
-    syncUser({
-      device_id: deviceId,
-      username: profile.name,
-      display_name: profile.name,
-      avatar: (profile as any).avatar || 'lion',
-      age: profile.age,
-      user_type: type,
-    })
-      .then(({ user }) => {
-        setUserId(user.id);
-        setUserPoints(user.sc_coins);
+    const p = profile as any;
+
+    if (p.username_handle) setUserHandle(p.username_handle);
+
+    if (p.dbUserId) {
+      // Came from real auth API — user already in DB
+      setUserId(p.dbUserId);
+      setUserPoints(50);
+      loadCompletedIds(p.dbUserId);
+    } else {
+      // Fallback: sync by device_id
+      syncUser({
+        device_id: deviceId,
+        username: profile.name,
+        display_name: profile.name,
+        avatar: p.avatar || 'lion',
+        age: profile.age,
+        user_type: type,
       })
-      .catch(console.error);
+        .then(({ user }) => {
+          setUserId(user.id);
+          setUserPoints(user.sc_coins);
+          if (user.username_handle) setUserHandle(user.username_handle);
+          loadCompletedIds(user.id);
+        })
+        .catch(console.error);
+    }
 
     // Navigate to appropriate screen based on user type
     if (type === "parent") {
@@ -980,6 +1010,9 @@ export default function App() {
   };
 
   const handleSoloSubmit = (questId: number, videoFile: File | null) => {
+    // Prevent duplicate completion
+    if (completedQuestIds.includes(questId)) return;
+
     const qd = getQuestData(questId, userProfile?.age);
 
     const submission: VideoSubmission = {
@@ -997,6 +1030,7 @@ export default function App() {
     };
 
     setVideoSubmissions((prev) => [...prev, submission]);
+    setCompletedQuestIds((prev) => [...prev, questId]);
 
     // Persist to DB and award coins
     if (userId && qd) {
@@ -1007,6 +1041,21 @@ export default function App() {
         points_earned: qd.points,
         status: "completed",
       })
+        .then(({ sc_coins }) => {
+          if (sc_coins !== null) setUserPoints(sc_coins);
+        })
+        .catch(console.error);
+    }
+  };
+
+  const handleCourseComplete = (courseId: string, points: number) => {
+    if (completedCourseIds.includes(courseId)) return;
+    setCompletedCourseIds((prev) => [...prev, courseId]);
+    setUserPoints((prev) => prev + points);
+    if (userId) {
+      updateCourseProgress(userId, courseId, 'structured', 0, true)
+        .catch(console.error);
+      awardCoins(userId, points, `Course complete: ${courseId}`)
         .then(({ sc_coins }) => {
           if (sc_coins !== null) setUserPoints(sc_coins);
         })
@@ -1149,6 +1198,7 @@ export default function App() {
             assignedQuests={dailyQuests}
             onQuestsRefresh={setDailyQuests}
             language={language as any}
+            completedQuestIds={completedQuestIds}
           />
         );
       case "quest-detail":
@@ -1158,11 +1208,9 @@ export default function App() {
             onBack={handleBack}
             onStartChallenge={handleStartChallenge}
             onSoloSubmit={handleSoloSubmit}
-            questData={getQuestData(
-              selectedQuestId,
-              userProfile?.age,
-            )}
+            questData={getQuestData(selectedQuestId, userProfile?.age)}
             language={language as any}
+            alreadyCompleted={completedQuestIds.includes(selectedQuestId)}
           />
         );
       case "challenge-mode":
@@ -1259,11 +1307,15 @@ export default function App() {
           <CourseDetailScreen
             courseId={selectedCourseId}
             onBack={handleBack}
+            onCourseComplete={handleCourseComplete}
+            alreadyCompleted={completedCourseIds.includes(selectedCourseId)}
           />
         );
       case "settings":
         return (
-          <SettingsScreen            onNavigate={handleNavigate}            onBack={handleBack}
+          <SettingsScreen
+            onNavigate={handleNavigate}
+            onBack={handleBack}
             onSignOut={handleSignOut}
             theme={theme}
             onThemeChange={setTheme}
@@ -1272,6 +1324,8 @@ export default function App() {
             language={language}
             onLanguageChange={setLanguage}
             userType={userType}
+            userId={userId}
+            userHandle={userHandle}
           />
         );
       case "creator":
