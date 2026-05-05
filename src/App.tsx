@@ -31,6 +31,13 @@ import { StatisticsScreen } from "./components/StatisticsScreen";
 import { PaperCraftsScreen } from "./components/PaperCraftsScreen";
 import { CleanRoomQuestScreen } from "./components/CleanRoomQuestScreen";
 import { getQuestById } from "./components/DailyQuestAssigner";
+import {
+  getOrCreateDeviceId,
+  syncUser,
+  spendCoins,
+  completeQuest,
+  awardCoins,
+} from "./lib/api";
 
 type Screen =
   | "onboarding"
@@ -86,7 +93,9 @@ export default function App() {
   const [userType, setUserType] = useState<UserType>(null);
   const [userProfile, setUserProfile] =
     useState<UserProfile | null>(null);
-  const [userPoints, setUserPoints] = useState<number>(1247);
+  const [userId, setUserId] = useState<number | null>(null);
+  const [deviceId] = useState<string>(() => getOrCreateDeviceId());
+  const [userPoints, setUserPoints] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] =
     useState<string>("");
   const [selectedCourseId, setSelectedCourseId] =
@@ -191,6 +200,20 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("skilllink-language", language);
   }, [language]);
+
+  // Sync user with backend on mount (returns existing coins for returning users)
+  useEffect(() => {
+    syncUser({ device_id: deviceId })
+      .then(({ user }) => {
+        setUserId(user.id);
+        setUserPoints(user.sc_coins);
+      })
+      .catch(() => {
+        // Server not ready yet — start with 50 coins as fallback
+        setUserPoints(50);
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Weekly Event
   const currentWeekEvent = getCurrentWeekEvent();
@@ -860,6 +883,21 @@ export default function App() {
     setUserType(type);
     setUserProfile(profile);
 
+    // Sync full profile to DB now that we have name / age / avatar
+    syncUser({
+      device_id: deviceId,
+      username: profile.name,
+      display_name: profile.name,
+      avatar: (profile as any).avatar || 'lion',
+      age: profile.age,
+      user_type: type,
+    })
+      .then(({ user }) => {
+        setUserId(user.id);
+        setUserPoints(user.sc_coins);
+      })
+      .catch(console.error);
+
     // Navigate to appropriate screen based on user type
     if (type === "parent") {
       setCurrentScreen("parent");
@@ -872,6 +910,11 @@ export default function App() {
 
   const handleShopPurchase = (item: any) => {
     setUserPoints((prev) => prev - item.price);
+    if (userId) {
+      spendCoins(userId, item.price, `Shop: ${item.name || 'item'}`)
+        .then(({ sc_coins }) => setUserPoints(sc_coins))
+        .catch(console.error);
+    }
   };
 
   const handleSignOut = () => {
@@ -937,30 +980,38 @@ export default function App() {
   };
 
   const handleSoloSubmit = (questId: number, videoFile: File | null) => {
-    // In a real app, this would upload the video and save the submission
-    console.log("Solo quest submitted:", {
-      questId,
-      videoFile,
-      childName: userProfile?.name,
-      submittedAt: new Date().toISOString(),
-    });
+    const qd = getQuestData(questId, userProfile?.age);
 
-    // Create a solo submission (without challengeWith)
     const submission: VideoSubmission = {
       id: `sub-${Date.now()}`,
       questId: questId,
-      questTitle: getQuestData(questId, userProfile?.age)?.title || "Quest",
-      questIcon: getQuestData(questId, userProfile?.age)?.icon || "🎯",
-      questPoints: getQuestData(questId, userProfile?.age)?.points || 10,
+      questTitle: qd?.title || "Quest",
+      questIcon: qd?.icon || "🎯",
+      questPoints: qd?.points || 10,
       childName: userProfile?.name || "Child",
-      challengedWith: [], // Empty array for solo submissions
+      challengedWith: [],
       videoFileName: videoFile?.name || "video.mp4",
       videoFile: videoFile || undefined,
       submittedAt: new Date().toISOString(),
       status: "pending",
     };
 
-    setVideoSubmissions([...videoSubmissions, submission]);
+    setVideoSubmissions((prev) => [...prev, submission]);
+
+    // Persist to DB and award coins
+    if (userId && qd) {
+      completeQuest(userId, {
+        quest_id: questId,
+        quest_title: qd.title,
+        quest_icon: qd.icon,
+        points_earned: qd.points,
+        status: "completed",
+      })
+        .then(({ sc_coins }) => {
+          if (sc_coins !== null) setUserPoints(sc_coins);
+        })
+        .catch(console.error);
+    }
   };
 
   const handleSubmitVideo = (
@@ -1279,7 +1330,23 @@ export default function App() {
         return (
           <CleanRoomQuestScreen
             onBack={handleBack}
-            onComplete={(pts) => { setUserPoints(prev => prev + pts); handleBack(); }}
+            onComplete={(pts) => {
+              setUserPoints((prev) => prev + pts);
+              if (userId) {
+                completeQuest(userId, {
+                  quest_id: 16,
+                  quest_title: "Clean and organize your room",
+                  quest_icon: "🧹",
+                  points_earned: pts,
+                  status: "completed",
+                })
+                  .then(({ sc_coins }) => {
+                    if (sc_coins !== null) setUserPoints(sc_coins);
+                  })
+                  .catch(console.error);
+              }
+              handleBack();
+            }}
           />
         );
       default:

@@ -1,105 +1,134 @@
 # SkillLink - Kids Learning App
 
 ## Overview
-A React + Vite single-page application (SkillLink) — a kids learning/gamification app for ages 6–12, featuring gamified quests, origami paper crafts, skill courses, badges, leaderboard, and a parent dashboard.
+A full-stack kids learning/gamification app for ages 6–12. Features gamified quests, origami paper crafts, skill courses, badges, leaderboard, and a parent dashboard. Backed by a PostgreSQL database with an Express REST API.
+
+## Architecture
+
+### Frontend
+- React 18 + TypeScript + Vite 5 (dev server on port 5000)
+- Tailwind CSS v4, Radix UI, Recharts, Lucide React
+- All state in `src/App.tsx`; navigation via `currentScreen` string switch
+
+### Backend
+- Express + TypeScript API server (port 3001, run via `tsx`)
+- PostgreSQL (Replit built-in) accessed via `pg` Pool
+- Vite proxies `/api/*` → `http://localhost:3001`
+- Both servers started together by `npm run dev` (via `concurrently`)
+
+### Auth / Identity
+- No login required — device identified by UUID in `localStorage` (`skilllink-device-id`)
+- On every app load, `syncUser()` is called with the device UUID → gets or creates a user row
+- On `handleAuth()` (profile setup), the row is updated with name/age/avatar/user_type
 
 ## Project Structure
-- Root `package.json` and `vite.config.ts` — main config for Replit
-- `src/` — all application source code
-  - `src/components/` — all screen components
-  - `src/assets/` — images and static assets (including `skillcoin-new.png`)
-  - `src/App.tsx` — main app component and routing
-  - `src/main.tsx` — entry point
-  - `src/index.css` — global styles
-- `public/paper-crafts-header.mp4` — video header for Paper Crafts section
+```
+/
+├── server/
+│   ├── db.ts           — pg Pool singleton
+│   └── index.ts        — Express API (all routes inline)
+├── src/
+│   ├── lib/
+│   │   └── api.ts      — typed fetch wrappers for all API endpoints
+│   ├── components/     — all screen components
+│   ├── App.tsx         — main app + routing + state
+│   ├── main.tsx        — entry point
+│   └── index.css       — global styles
+├── public/
+│   └── paper-crafts-header.mp4
+├── vite.config.ts      — proxy /api → 3001, port 5000
+└── package.json        — "dev" runs concurrently (tsx server + vite)
+```
 
-## Tech Stack
-- React 18 + TypeScript
-- Vite 6 (bundler/dev server)
-- Tailwind CSS v4 (via `@tailwindcss/vite`)
-- Radix UI components
-- Recharts, Lucide React, Sonner
+## Database Schema (PostgreSQL)
+| Table | Purpose |
+|-------|---------|
+| `users` | Profiles, sc_coins, xp, level, streak |
+| `quest_completions` | Quest history with status (completed / pending_approval / approved / rejected) |
+| `coin_transactions` | Full audit log of every SC Coin change |
+| `course_progress` | Per-user per-course step_index + completion flag |
+| `parental_controls` | Screen time, content filter, quest approval toggle per child |
+| `leaderboard_snapshots` | Daily snapshots (optional, for trend charts) |
+
+## API Routes (`/api/*`)
+| Method | Path | Purpose |
+|--------|------|---------|
+| GET | `/health` | Liveness check |
+| POST | `/users/sync` | Get-or-create user by device_id |
+| GET | `/users/:id` | Fetch user row |
+| POST | `/users/:id/coins` | Award or spend SC Coins (atomic) |
+| GET | `/users/:id/transactions` | Coin transaction history |
+| GET | `/users/:id/quests` | Quest completion history |
+| POST | `/users/:id/quests` | Record quest completion + award coins |
+| PATCH | `/quests/:id/status` | Parent approves / rejects pending quest |
+| GET | `/quests/pending` | All pending submissions (for parent dashboard) |
+| GET | `/users/:id/courses` | Course progress list |
+| PUT | `/users/:id/courses/:courseId` | Upsert course progress |
+| GET | `/parental-controls` | Fetch controls for a parent |
+| PUT | `/parental-controls` | Upsert parental control settings |
+| GET | `/leaderboard` | Top 20 kids by SC Coins |
+| POST | `/users/:id/xp` | Add XP and recalculate level |
 
 ## Running the App
-The app runs on port 5000 via the "Start application" workflow.
 ```bash
-npm run dev
+npm run dev          # starts both API (3001) and Vite (5000) together
+npm run dev:api      # API only
+npm run dev:vite     # Vite only
+npm run build        # Vite production build → build/
 ```
 
 ## Key Screens & Features
 
 ### HomeScreen
-- All stat cards (Points, Streak, Badges) are clickable and navigate to Statistics/Badges screens
-- Streak Reminder banner shows after 5pm if no quests completed that day
-- Quick action tiles: Quests, Courses, Skill Tree, **Statistics** (replaces old dead icon)
-- Premium subscription banner
+- Stats cards (Points, Streak, Badges) are clickable → Statistics/Badges screens
+- Streak Reminder banner after 5pm if no quests done that day
+- Quick action tiles: Quests, Courses, Skill Tree, Statistics
 
-### StatisticsScreen (new)
-- Full progress dashboard with weekly activity bar chart
-- Skill breakdown with progress bars
-- Summary cards (quests done, avg level, total XP, best streak)
-- Recent achievements list
-- Navigation: accessible from HomeScreen stats cards and Statistics quick action
+### StatisticsScreen
+- Weekly activity bar chart, skill breakdown, summary cards, recent achievements
 
-### ProfileSetupScreen (updated)
-- Two-step avatar setup: Info (name + age) → Emoji Avatar Picker
-- 30 curated emoji avatars for kids, 20 for parents
-- Selected emoji used as profile picture throughout app
+### PaperCraftsScreen
+- Video header (`paper-crafts-header.mp4`) with iPad autoplay fix
+- 7 origami tutorials by difficulty (Easy / Intermediate / Advanced)
+- SC Coin badge uses `<SkillCoin>` component (not Star icon)
 
-### PaperCraftsScreen (new — priority section)
-- Video header using `public/paper-crafts-header.mp4`
-- 7 origami tutorials organized by difficulty: Easy (3) → Intermediate (2) → Advanced (2, locked)
-- Step-by-step UI with YouTube thumbnail embeds and direct YouTube links
-- Step selector chips, progress tracking, and individual step completion
-- Back navigation to PaperCrafts course list
+### CleanRoomQuestScreen (Hero Quest — quest id 16)
+- 7 interactive sub-tasks, Cleanliness Meter, Speed Clean Timer (+15 bonus)
+- On complete: calls `/api/users/:id/quests` to persist and award coins
 
-### CleanRoomQuestScreen (new — Hero Quest)
-- 7 interactive sub-tasks with per-task point values (total 45 pts)
-- Animated Cleanliness Meter filling as tasks are checked
-- Optional Speed Clean Timer (10 min countdown) with +15 bonus pts
-- Photo upload proof button (Camera capture)
-- Celebration screen with star rating and total points earned
+### DailyQuestScreen
+- Age-based quest pool from `DailyQuestAssigner`
+- Quest 16 ("Clean and organize your room") → CleanRoomQuestScreen
 
-### CoursesScreen (updated)
-- Age-based recommended courses (6–7, 8–10, 11–12) shown at top
-- Paper Crafts featured prominently as a category
-- Full category list with Paper Crafts, Creativity, Teamwork, etc.
-
-### DailyQuestScreen (updated)
-- Age-based quest pool from DailyQuestAssigner
-- Spec-required quests added: Set Table, Tidy Toys, Simple Snack, Sort Laundry (ages 6-7),
-  Help Prepare Meal, Plan Healthy Snack, Homework Streak (ages 8-10),
-  Cook Meal Independently, Plan Next Day, Household Task Lead (ages 11-12)
-- Quest 15 or 16 ("Clean and organize your room") routes to CleanRoomQuestScreen
-
-### CurrencyIcons (updated)
-- SkillCoin now uses the new attached gold coin image (`skillcoin-new.png`)
-
-### ProfilePhotoScreen (`profile` route)
-- Simple photo upload + 12 profile picture border designs
+### ParentDashboardScreen
+- Views child profile, video submissions, and pending quest approvals
+- Parental controls (screen time, content filter, purchase approval) saved to DB
 
 ### ShopScreen
-- Profile picture border designs purchasable with SkillCoins
+- Purchases deduct SC Coins via `spendCoins()` → `/api/users/:id/coins`
 
-### CourseDetailScreen
-- Full step-by-step lesson architecture with YouTube embeds and quiz gates
+### LeaderboardScreen
+- Live data from `/api/leaderboard`
 
-### SubscriptionScreen
-- Base Plan: €6.99/mo (1 child) | Family Plan: €12.99/mo
+### ProfileSetupScreen
+- Two-step: Info (name + age) → Emoji Avatar Picker (30 kid / 20 parent emojis)
 
 ## Navigation Routes
 - `home`, `quests`, `quest-detail`, `challenge-mode`
 - `badges`, `badge-detail`, `leaderboard`, `messages`
 - `profile`, `shop`, `skill-tree`, `settings`
 - `courses`, `course-list`, `course-detail`
-- `statistics` (new), `paper-crafts` (new), `clean-room-quest` (new)
+- `statistics`, `paper-crafts`, `clean-room-quest`
 - `parent`, `child-profile`, `video-reviews`
 - `creator`, `creator-course-create/edit/analytics`
 - `subscription`
 
-## Migration Notes (Vercel → Replit)
-- Changed dev server port from 3000 → 5000 and host to `0.0.0.0`
-- Added `allowedHosts: true` to Vite server config for Replit's proxied iframe
-- Updated `package.json` dev/preview scripts with explicit port and host flags
-- Moved Google Fonts `@import` to the top of `src/index.css` (CSS spec requires `@import` before other rules)
-- Deployment configured as `static` with `npm run build` → `build/`
+## SC Coin Flow
+1. App loads → `syncUser()` → `setUserPoints(user.sc_coins)` (DB is authoritative)
+2. Quest complete → `completeQuest()` → DB awards coins → `setUserPoints(sc_coins)`
+3. Shop purchase → `spendCoins()` → DB deducts coins → `setUserPoints(sc_coins)`
+4. All changes logged in `coin_transactions` table
+
+## Capacitor (iOS)
+- appId: `com.skilllink.app`, webDir: `build`
+- `codemagic.yaml` at repo root: npm ci → npm build → cap sync → unsigned xcodebuild → IPA
