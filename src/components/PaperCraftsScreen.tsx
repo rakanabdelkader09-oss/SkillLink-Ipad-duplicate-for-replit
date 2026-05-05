@@ -1,6 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, ChevronRight, CheckCircle, Star, Lock } from 'lucide-react';
 import { Progress } from './ui/progress';
+import { SkillCoin } from './CurrencyIcons';
 
 interface PaperCraftsScreenProps {
   onBack: () => void;
@@ -165,19 +166,7 @@ function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
       </div>
     </div>
   );
-
-  return (
-    <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
-      <iframe
-        src={src}
-        className="absolute inset-0 w-full h-full"
-        frameBorder={0}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-        allowFullScreen
-        referrerPolicy="strict-origin-when-cross-origin"
-      />
-    </div>
-  );
+}
 
 function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
@@ -324,6 +313,19 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
   const [selectedCourse, setSelectedCourse] = useState<OrigamiCourse | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    el.muted = true;
+    el.setAttribute('muted', '');
+    el.setAttribute('webkit-playsinline', 'true');
+    el.setAttribute('playsinline', 'true');
+    const tryPlay = () => { void el.play().catch(() => {}); };
+    tryPlay();
+    el.addEventListener('loadeddata', tryPlay, { once: true });
+    el.addEventListener('canplay', tryPlay, { once: true });
+  }, []);
+
   if (selectedCourse) {
     return <CourseStepsView course={selectedCourse} onBack={() => setSelectedCourse(null)} />;
   }
@@ -355,7 +357,7 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
                 <p className={`font-bold ${config.textColor}`}>{course.title}</p>
                 <p className="text-muted-foreground text-xs">{course.steps.length} steps</p>
                 <div className="mt-1 inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-0.5 rounded-full">
-                  <Star size={10} fill="currentColor" />
+                  <SkillCoin size={14} />
                   <span>+{course.points} SC coins</span>
                 </div>
                 {course.completed && <span className="block mt-1 text-xs text-green-600 font-semibold">✅ Completed</span>}
@@ -386,20 +388,21 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
 
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
-     <video
-  ref={videoRef}
-  autoPlay
-  muted
-  loop
-  playsInline
-  webkit-playsinline="true"
-  preload="auto"
-  className="absolute inset-0 w-full h-full object-cover"
->
-  <source src="/paper-crafts-header.mp4" type="video/mp4" />
-</video>
+      {/* ── Header: background video with gradient overlay ── */}
+      <div className="relative h-56 bg-gradient-to-br from-amber-200 to-orange-300 overflow-hidden">
+        <video
+          ref={videoRef}
+          src="/paper-crafts-header.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         <button
           onClick={onBack}
+          aria-label="Back"
           className="absolute top-12 left-4 z-10 bg-black/40 text-white rounded-full p-2 backdrop-blur-sm active:opacity-70"
         >
           <ArrowLeft size={20} />
@@ -413,6 +416,7 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
         </div>
       </div>
 
+      {/* ── Course list ── */}
       <div className="px-6 mt-6">
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 rounded-3xl p-5 mb-6 shadow-lg">
           <div className="flex items-center gap-5">
