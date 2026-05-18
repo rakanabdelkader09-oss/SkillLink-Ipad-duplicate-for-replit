@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from "react";
+﻿import { useState } from "react";
 import {
   ArrowLeft,
   Sun,
@@ -6,31 +6,16 @@ import {
   Palette,
   Globe,
   LogOut,
-  UserPlus,
   Bell,
   Shield,
   HelpCircle,
   ChevronRight,
   Check,
-  Search,
-  Loader2,
-  UserCheck,
-  X,
-  Swords,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Switch } from "./ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "./ui/dialog";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import { useTranslation, Language } from "./translations";
-import { getFriends, sendFriendRequest, respondToFriendRequest, removeFriend, FriendRow } from "../lib/api";
-
-const AVATAR_EMOJI: Record<string, string> = {
-  lion: '🦁', fox: '🦊', bear: '🐻', owl: '🦉', rabbit: '🐰',
-  penguin: '🐧', tiger: '🐯', elephant: '🐘', unicorn: '🦄', dragon: '🐲',
-};
-
 interface SettingsScreenProps {
   onBack: () => void;
   onSignOut: () => void;
@@ -62,34 +47,12 @@ export function SettingsScreen({
   const [showThemeDialog, setShowThemeDialog] = useState(false);
   const [showColorDialog, setShowColorDialog] = useState(false);
   const [showLanguageDialog, setShowLanguageDialog] = useState(false);
-  const [showAddFriendDialog, setShowAddFriendDialog] = useState(false);
   const [showSignOutDialog, setShowSignOutDialog] = useState(false);
-  const [friendUsername, setFriendUsername] = useState("");
-  const [friendSearchLoading, setFriendSearchLoading] = useState(false);
-  const [friendRequestMsg, setFriendRequestMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
-  const [friends, setFriends] = useState<FriendRow[]>([]);
-  const [friendsLoading, setFriendsLoading] = useState(false);
   const [notifications, setNotifications] = useState<boolean>(() => {
     const saved = localStorage.getItem("skilllink-notifications");
     return saved === null ? true : saved === "true";
   });
   const [showParentalDialog, setShowParentalDialog] = useState(false);
-
-  const loadFriends = useCallback(async () => {
-    if (!userId) return;
-    setFriendsLoading(true);
-    try {
-      const { friends: rows } = await getFriends(userId);
-      setFriends(rows);
-    } catch {
-    } finally {
-      setFriendsLoading(false);
-    }
-  }, [userId]);
-
-  useEffect(() => {
-    if (userType === 'kid' && userId) loadFriends();
-  }, [userType, userId, loadFriends]);
 
   type ParentalControls = {
     screenTimeLimit: boolean;
@@ -150,36 +113,6 @@ export function SettingsScreen({
     { name: "Svenska", value: "sv", flag: "🇸🇪" },
     { name: "Nederlands", value: "nl", flag: "🇳🇱" },
   ];
-
-  const handleAddFriend = async () => {
-    if (!userId || !friendUsername.trim()) return;
-    setFriendSearchLoading(true);
-    setFriendRequestMsg(null);
-    try {
-      await sendFriendRequest(userId, friendUsername.trim());
-      setFriendRequestMsg({ type: 'ok', text: `Friend request sent to @${friendUsername}! 🎉` });
-      setFriendUsername('');
-      loadFriends();
-    } catch (err: any) {
-      setFriendRequestMsg({ type: 'err', text: err?.message || 'Could not send request.' });
-    } finally {
-      setFriendSearchLoading(false);
-    }
-  };
-
-  const handleRespondToRequest = async (friendRowId: number, status: 'accepted' | 'declined') => {
-    try {
-      await respondToFriendRequest(friendRowId, status);
-      loadFriends();
-    } catch {}
-  };
-
-  const handleRemoveFriend = async (friendRowId: number) => {
-    try {
-      await removeFriend(friendRowId);
-      loadFriends();
-    } catch {}
-  };
 
   const handleSignOut = () => {
     setShowSignOutDialog(false);
@@ -261,113 +194,6 @@ export function SettingsScreen({
             <ChevronRight className="w-5 h-5 text-muted-foreground" />
           </div>
         </div>
-
-        {/* Social Section - Only for kids */}
-        {userType === "kid" && (
-          <div className="bg-card rounded-3xl p-6 shadow-md">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-card-foreground">👥 {t.social}</h3>
-              <Button
-                size="sm"
-                onClick={() => { setShowAddFriendDialog(true); setFriendRequestMsg(null); }}
-                className="bg-green-500 hover:bg-green-600 text-white rounded-2xl flex items-center gap-1 text-sm"
-              >
-                <UserPlus className="w-4 h-4" /> Add Friend
-              </Button>
-            </div>
-
-            {userHandle && (
-              <div className="bg-muted/50 rounded-2xl px-4 py-3 mb-4 text-sm text-muted-foreground">
-                Your handle: <span className="font-bold text-foreground">@{userHandle}</span>
-                <span className="ml-2 text-xs">— share this with friends!</span>
-              </div>
-            )}
-
-            {friendsLoading ? (
-              <div className="flex justify-center py-6"><Loader2 className="animate-spin text-primary" size={24} /></div>
-            ) : (
-              <>
-                {/* Pending incoming requests */}
-                {friends.filter(f => f.status === 'pending' && f.direction === 'received').length > 0 && (
-                  <div className="mb-4">
-                    <p className="text-sm font-semibold text-orange-600 mb-2">⏳ Friend Requests</p>
-                    <div className="space-y-2">
-                      {friends.filter(f => f.status === 'pending' && f.direction === 'received').map(f => (
-                        <div key={f.id} className="flex items-center gap-3 bg-orange-50 border-2 border-orange-200 rounded-2xl p-3">
-                          <span className="text-2xl">{AVATAR_EMOJI[f.avatar] || '👤'}</span>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-semibold text-gray-800 text-sm truncate">{f.display_name}</p>
-                            <p className="text-gray-400 text-xs">@{f.username_handle}</p>
-                          </div>
-                          <button
-                            onClick={() => handleRespondToRequest(f.id, 'accepted')}
-                            className="bg-green-500 text-white text-xs px-3 py-1.5 rounded-xl font-bold"
-                          >Accept</button>
-                          <button
-                            onClick={() => handleRespondToRequest(f.id, 'declined')}
-                            className="bg-gray-200 text-gray-600 text-xs px-3 py-1.5 rounded-xl font-bold"
-                          >Decline</button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Sent pending */}
-                {friends.filter(f => f.status === 'pending' && f.direction === 'sent').length > 0 && (
-                  <div className="mb-4">
-                    <p className="text-sm font-semibold text-blue-500 mb-2">📨 Sent Requests</p>
-                    <div className="space-y-2">
-                      {friends.filter(f => f.status === 'pending' && f.direction === 'sent').map(f => (
-                        <div key={f.id} className="flex items-center gap-3 bg-blue-50 border-2 border-blue-100 rounded-2xl p-3">
-                          <span className="text-2xl">{AVATAR_EMOJI[f.avatar] || '👤'}</span>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-semibold text-gray-800 text-sm truncate">{f.display_name}</p>
-                            <p className="text-gray-400 text-xs">@{f.username_handle} · Pending…</p>
-                          </div>
-                          <button
-                            onClick={() => handleRemoveFriend(f.id)}
-                            className="text-gray-400 hover:text-red-400 transition-colors"
-                          ><X size={16} /></button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Accepted friends */}
-                {friends.filter(f => f.status === 'accepted').length > 0 ? (
-                  <div>
-                    <p className="text-sm font-semibold text-green-600 mb-2">✅ Friends ({friends.filter(f => f.status === 'accepted').length})</p>
-                    <div className="space-y-2">
-                      {friends.filter(f => f.status === 'accepted').map(f => (
-                        <div key={f.id} className="flex items-center gap-3 bg-white border-2 border-green-100 rounded-2xl p-3 shadow-sm">
-                          <span className="text-2xl">{AVATAR_EMOJI[f.avatar] || '👤'}</span>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-bold text-gray-800 text-sm truncate">{f.display_name}</p>
-                            <p className="text-gray-400 text-xs">Lvl {f.level ?? 1} · {f.sc_coins ?? 0} 🪙</p>
-                          </div>
-                          <button
-                            onClick={() => handleRemoveFriend(f.id)}
-                            title="Remove friend"
-                            className="text-gray-300 hover:text-red-400 transition-colors ml-1"
-                          ><X size={14} /></button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  friends.filter(f => f.status === 'pending').length === 0 && (
-                    <div className="text-center py-6 text-muted-foreground">
-                      <p className="text-3xl mb-2">🤝</p>
-                      <p className="text-sm">No friends yet! Tap <strong>Add Friend</strong> to connect.</p>
-                    </div>
-                  )
-                )}
-              </>
-            )}
-          </div>
-        )}
 
         {/* Notifications Section */}
         <div className="bg-card rounded-3xl p-6 shadow-md">
@@ -563,65 +389,6 @@ export function SettingsScreen({
               </button>
             ))}
           </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Add Friend Dialog */}
-      <Dialog open={showAddFriendDialog} onOpenChange={(open) => { setShowAddFriendDialog(open); if (!open) { setFriendUsername(''); setFriendRequestMsg(null); } }}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>➕ Add a Friend</DialogTitle>
-            <DialogDescription>
-              Enter your friend's exact username (e.g. coolkid_123)
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            {!userId && (
-              <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-4 text-orange-700 text-sm">
-                You need to be logged in with a username to add friends.
-              </div>
-            )}
-            <div>
-              <Label htmlFor="friend-username">Friend's Username</Label>
-              <div className="flex gap-2 mt-2">
-                <Input
-                  id="friend-username"
-                  placeholder="e.g. coolkid_123"
-                  value={friendUsername}
-                  onChange={(e) => setFriendUsername(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}
-                  onKeyDown={(e) => e.key === 'Enter' && handleAddFriend()}
-                  className="flex-1 h-12 rounded-2xl border-2"
-                  disabled={!userId}
-                />
-                <Button
-                  onClick={handleAddFriend}
-                  disabled={!friendUsername.trim() || friendSearchLoading || !userId}
-                  className="h-12 px-4 rounded-2xl bg-green-500 hover:bg-green-600 text-white flex items-center gap-1"
-                >
-                  {friendSearchLoading ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
-                  Send
-                </Button>
-              </div>
-            </div>
-
-            {friendRequestMsg && (
-              <div className={`rounded-2xl p-4 text-sm font-medium ${
-                friendRequestMsg.type === 'ok'
-                  ? 'bg-green-50 border-2 border-green-200 text-green-700'
-                  : 'bg-red-50 border-2 border-red-200 text-red-700'
-              }`}>
-                {friendRequestMsg.text}
-              </div>
-            )}
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => { setShowAddFriendDialog(false); setFriendUsername(''); setFriendRequestMsg(null); }}
-            >
-              {t.cancel}
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 

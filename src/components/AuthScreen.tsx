@@ -70,14 +70,14 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
         display_name: signupName,
         age: parseInt(signupAge),
         user_type: selectedType!,
-        avatar: selectedType === 'kid' ? 'lion' : selectedType === 'creator' ? 'fox' : 'bear',
+        avatar: selectedType === 'kid' ? '🦁' : selectedType === 'creator' ? '🦊' : '🐻',
         device_id: deviceId,
       });
 
       const profile: UserProfile & { dbUserId?: number; username_handle?: string } = {
         name: user.display_name || signupName,
         age: user.age || parseInt(signupAge),
-        avatar: user.avatar || 'lion',
+        avatar: user.avatar || '🦁',
         dbUserId: user.id,
         username_handle: user.username_handle,
         ...(selectedType === 'parent' && { parentName: signupParentName, childCount: parseInt(signupChildCount) }),
@@ -102,7 +102,7 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
       const profile: UserProfile & { dbUserId?: number; username_handle?: string } = {
         name: user.display_name || loginUsername,
         age: user.age || (selectedType === 'kid' ? 9 : 35),
-        avatar: user.avatar || 'lion',
+        avatar: user.avatar || '🦁',
         dbUserId: user.id,
         username_handle: user.username_handle,
         ...(selectedType === 'parent' && { parentName: user.display_name, childCount: 1 }),

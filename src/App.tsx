@@ -1242,7 +1242,7 @@ export default function App() {
           />
         );
       case "leaderboard":
-        return <LeaderboardScreen language={language as any} />;
+        return <LeaderboardScreen language={language as any} userId={userId} userHandle={userHandle} userProfile={userProfile ? { name: userProfile.name, age: userProfile.age, avatar: userProfile.avatar } : null} />;
       case "messages":
         return <MessagingScreen language={language as any} />;
       case "skill-tree":
@@ -1263,6 +1263,7 @@ export default function App() {
             skillLevels={skillLevels}
             weeklyEvent={currentWeekEvent}
             language={language as any}
+            userId={userId}
           />
         );
       case "child-profile":

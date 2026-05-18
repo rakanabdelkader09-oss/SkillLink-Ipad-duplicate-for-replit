@@ -9,6 +9,15 @@ import { ScreenTimeTracker } from './ScreenTimeTracker';
 import { useTranslation, Language } from './translations';
 import { SkillCoin } from './CurrencyIcons';
 
+const AVATAR_EMOJI: Record<string, string> = {
+  lion: '🦁', fox: '🦊', bear: '🐻', owl: '🦉', rabbit: '🐰',
+  penguin: '🐧', tiger: '🐯', elephant: '🐘', unicorn: '🦄', dragon: '🐲',
+};
+function resolveAvatar(avatar: string | undefined): string {
+  if (!avatar) return '👋';
+  return AVATAR_EMOJI[avatar] || avatar;
+}
+
 interface HomeScreenProps {
   onNavigate: (screen: string) => void;
   userProfile: UserProfile | null;
@@ -83,7 +92,7 @@ export function HomeScreen({ onNavigate, userProfile, userPoints, skillLevels, w
           <div>
             <h3 className="text-primary-foreground/80">{t.welcomeTo}</h3>
             <h2 className="text-primary-foreground font-bold">
-              {userProfile?.name || 'Friend'}! {userProfile?.avatar || '👋'}
+              {userProfile?.name || 'Friend'}! {resolveAvatar(userProfile?.avatar)}
             </h2>
           </div>
           <div className="flex gap-4">

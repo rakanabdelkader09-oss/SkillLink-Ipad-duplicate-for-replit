@@ -729,6 +729,145 @@ app.get('/api/users/:userId/completed-course-ids', async (req, res) => {
   }
 });
 
+// ──────────────────────────────────────────────
+// Custom Quests (parent-created)
+// ──────────────────────────────────────────────
+app.post('/api/custom-quests', async (req, res) => {
+  const { parent_id, child_id, title, description, sc_reward, due_date } = req.body as {
+    parent_id: number;
+    child_id?: number;
+    title: string;
+    description?: string;
+    sc_reward: number;
+    due_date?: string;
+  };
+
+  if (!parent_id || !title) return res.status(400).json({ error: 'parent_id and title required' });
+  const reward = Math.min(15, Math.max(1, sc_reward || 5));
+
+  try {
+    // 1-per-day limit check
+    const dayCheck = await pool.query(
+      `SELECT COUNT(*) FROM custom_quests
+       WHERE parent_id = $1 AND DATE(created_at AT TIME ZONE 'UTC') = CURRENT_DATE`,
+      [parent_id]
+    );
+    if (parseInt(dayCheck.rows[0].count) >= 1) {
+      return res.status(429).json({ error: 'You can only create 1 custom quest per day' });
+    }
+
+    const result = await pool.query(
+      `INSERT INTO custom_quests (parent_id, child_id, title, description, sc_reward, due_date)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [parent_id, child_id ?? null, title.trim(), description?.trim() ?? null, reward, due_date ?? null]
+    );
+    return res.status(201).json({ quest: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.get('/api/custom-quests/:parentId', async (req, res) => {
+  const parentId = parseInt(req.params.parentId);
+  if (isNaN(parentId)) return res.status(400).json({ error: 'Invalid parentId' });
+  try {
+    const result = await pool.query(
+      `SELECT * FROM custom_quests WHERE parent_id = $1 ORDER BY created_at DESC`,
+      [parentId]
+    );
+    return res.json({ quests: result.rows });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.patch('/api/custom-quests/:questId/status', async (req, res) => {
+  const questId = parseInt(req.params.questId);
+  const { status } = req.body as { status: 'pending' | 'completed' | 'approved' };
+  if (isNaN(questId) || !['pending','completed','approved'].includes(status)) {
+    return res.status(400).json({ error: 'Invalid questId or status' });
+  }
+  try {
+    const result = await pool.query(
+      `UPDATE custom_quests SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
+      [status, questId]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Quest not found' });
+    return res.json({ quest: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// ──────────────────────────────────────────────
+// Quest Duels
+// ──────────────────────────────────────────────
+app.post('/api/duels/challenge', async (req, res) => {
+  const { challenger_id, challenged_id, quest_id } = req.body as {
+    challenger_id: number;
+    challenged_id: number;
+    quest_id: number;
+  };
+  if (!challenger_id || !challenged_id || !quest_id) {
+    return res.status(400).json({ error: 'challenger_id, challenged_id and quest_id required' });
+  }
+  try {
+    const result = await pool.query(
+      `INSERT INTO quest_duels (challenger_id, challenged_id, quest_id, status)
+       VALUES ($1, $2, $3, 'pending') RETURNING *`,
+      [challenger_id, challenged_id, quest_id]
+    );
+    return res.status(201).json({ duel: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.get('/api/duels/:userId', async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  if (isNaN(userId)) return res.status(400).json({ error: 'Invalid userId' });
+  try {
+    const result = await pool.query(
+      `SELECT d.*,
+        c.display_name AS challenger_name, c.avatar AS challenger_avatar,
+        ch.display_name AS challenged_name, ch.avatar AS challenged_avatar
+       FROM quest_duels d
+       JOIN users c  ON c.id  = d.challenger_id
+       JOIN users ch ON ch.id = d.challenged_id
+       WHERE d.challenger_id = $1 OR d.challenged_id = $1
+       ORDER BY d.created_at DESC`,
+      [userId]
+    );
+    return res.json({ duels: result.rows });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.patch('/api/duels/:duelId/respond', async (req, res) => {
+  const duelId = parseInt(req.params.duelId);
+  const { status } = req.body as { status: 'active' | 'declined' };
+  if (isNaN(duelId) || !['active','declined'].includes(status)) {
+    return res.status(400).json({ error: 'Invalid duelId or status' });
+  }
+  try {
+    const result = await pool.query(
+      `UPDATE quest_duels SET status = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
+      [status, duelId]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Duel not found' });
+    return res.json({ duel: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+});
+
 const PORT = 3001;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`SkillLink API running on port ${PORT}`);

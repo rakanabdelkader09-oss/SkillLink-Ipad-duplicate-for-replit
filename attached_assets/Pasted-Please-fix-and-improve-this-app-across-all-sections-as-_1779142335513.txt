@@ -1,0 +1,81 @@
+Please fix and improve this app across all sections as described below. Treat this as a comprehensive overhaul — every item must be implemented fully and tested end-to-end.
+
+---
+
+## 1. AUTH — Login & account creation (app-wide)
+- Make the full login and account creation flow work reliably app-wide for both parent and kid accounts.
+- After account creation, redirect each user type to the correct dashboard automatically.
+- Fix any broken session/state persistence so users stay logged in correctly.
+
+---
+
+## 2. PARENT DASHBOARD — Polish & fixes
+
+### Emoji / display bug
+- In the top-left of the parent dashboard there is text that literally says "bear" — this should be a 🐻 bear emoji, not the word. Fix this so the emoji renders correctly. If unsure, check the previous working version and match how it was displayed there (without the word "bear" showing).
+
+### Kid stats (keep as primary focus)
+- Kid stats must remain the most prominent and visually important element on the parent dashboard — largest card, highest visual hierarchy.
+
+### Custom quest section (make more visible, improve functionality)
+- The custom quest section should be a clearly visible, prominent section below the kid stats — give it a dedicated card with a clear heading and a visible "Create quest" button. It must NOT be buried or hard to find.
+- Rules to enforce:
+  - Maximum 15 SC (StarCoins or equivalent currency) can be allocated per custom quest.
+  - Parents can only create a maximum of 1 custom quest per day.
+  - Show the parent how many quests they have remaining for today (e.g. "1/1 quests used today" or "You can create 1 quest today").
+  - Validate these limits on both the frontend and backend. Show a clear error/message if the limit is reached.
+- Improve the custom quest creation form: add a title field, description field, SC reward field (capped at 15), and a due date or duration field.
+- Show a list of previously created custom quests with their status (pending / completed by child).
+
+---
+
+## 3. KID DASHBOARD — Display bug
+
+### Emoji / display bug
+- After creating a kid account, the top of the dashboard shows the text "lion" instead of a 🦁 lion emoji. Fix this so the emoji renders correctly. If it cannot be fixed cleanly, revert to the previous version where neither the word nor an emoji appeared there.
+
+---
+
+## 4. QUESTS SECTION — Full functionality overhaul
+
+### General
+- All quests must be fully functional (completable, reward-granting, trackable).
+- Add a banner or notice at the top of the quest screen: "Quests refresh every day — come back tomorrow for new ones!" (or similar friendly wording).
+- Kids are limited to completing 5 quests per day maximum. Show remaining quest slots clearly (e.g. "3 of 5 quests completed today").
+
+### Difficulty tiers & rewards
+Implement three difficulty levels with the following SC rewards:
+- Beginner → 5 SC
+- Intermediate → 10 SC
+- Advanced → 15 SC
+
+### Age-grouped quest content
+Assign quests by age group. Within each group, the same quest topics/activities appear at all three difficulties — only the complexity of the task changes:
+- Ages 6–8: simple, playful tasks appropriate for early readers
+- Ages 9–10: slightly more complex, requires more effort or thinking
+- Ages 11–12: more advanced, requires independent reasoning or longer tasks
+
+Each age group should have a variety of quest types (reading, math, chores, creativity, outdoor activity, etc.) across all three difficulties.
+
+---
+
+## 5. SOCIAL / FRIENDS — Move & expand
+
+### Move "Add friends" out of settings
+- Remove the "Add friends" feature from the kid settings screen entirely.
+- Add it to the Leaderboard section instead, making it clearly visible (e.g. an "Add friend" button near the top of the leaderboard, or a dedicated friends tab within it).
+
+### Expand the friends feature — Quest duels
+- After a kid adds a friend, give them the ability to challenge that friend to a quest duel.
+- A duel means: both kids attempt the same quest. Whoever completes it first (or scores higher) wins the duel.
+- Show duel invites in a visible notification or inbox area.
+- Show duel results on the leaderboard or a dedicated "Duels" section.
+- Keep the feature age-appropriate and fun in its UI language (e.g. "Challenge!", "Duel accepted!", "You won! 🏆").
+
+---
+
+## Notes for implementation
+- Do not remove or break any existing features not mentioned above.
+- Maintain consistent visual style throughout.
+- Test every flow end-to-end: auth → dashboard → quests → friends → parent custom quest.
+- All currency/reward limits must be enforced server-side, not just client-side.
