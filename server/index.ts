@@ -547,18 +547,28 @@ app.post('/api/auth/signup', async (req, res) => {
     }
 
     const devId = device_id || crypto.randomUUID();
+
+    // If this device already has a registered account, reject — don't overwrite
+    const deviceExisting = await pool.query(
+      `SELECT id FROM users WHERE device_id = $1 AND password_hash IS NOT NULL`,
+      [devId]
+    );
+    if (deviceExisting.rows.length > 0) {
+      return res.status(409).json({ error: 'This device already has an account. Please log in instead.' });
+    }
+
     const result = await pool.query(
       `INSERT INTO users
          (device_id, username_handle, password_hash, username, display_name, avatar, age, user_type, sc_coins)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,50)
        ON CONFLICT (device_id) DO UPDATE
-         SET username_handle = $2,
-             password_hash   = $3,
-             username        = $4,
-             display_name    = $5,
-             avatar          = $6,
-             age             = $7,
-             user_type       = $8
+         SET username_handle = EXCLUDED.username_handle,
+             password_hash   = EXCLUDED.password_hash,
+             username        = EXCLUDED.username,
+             display_name    = EXCLUDED.display_name,
+             avatar          = EXCLUDED.avatar,
+             age             = EXCLUDED.age,
+             user_type       = EXCLUDED.user_type
        RETURNING *`,
       [
         devId,
