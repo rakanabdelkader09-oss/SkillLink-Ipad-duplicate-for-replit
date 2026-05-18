@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Badge } from './ui/badge';
-import { Star, Sparkles, ChevronRight, RefreshCw, Lock } from 'lucide-react';
+import { Star, Sparkles, ChevronRight, RefreshCw, Lock, Timer } from 'lucide-react';
 import { Progress } from './ui/progress';
 import { UserProfile } from './ProfileSetupScreen';
 import { getAllAgeAppropriateQuests, getDailyCompletedCount, incrementDailyCompletedCount } from './DailyQuestAssigner';
@@ -40,6 +40,30 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, completedQuestIds
   }));
 
   const [dailyCount, setDailyCount] = useState(() => getDailyCompletedCount());
+
+  // ── Live countdown to UTC midnight ──────────────────────────────────────
+  const getMsUntilMidnight = () => {
+    const now = new Date();
+    const midnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
+    return midnight.getTime() - now.getTime();
+  };
+  const formatCountdown = (ms: number) => {
+    const total = Math.max(0, Math.floor(ms / 1000));
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    return `${h}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s`;
+  };
+  const [countdown, setCountdown] = useState(() => formatCountdown(getMsUntilMidnight()));
+
+  useEffect(() => {
+    const tick = setInterval(() => {
+      const ms = getMsUntilMidnight();
+      setCountdown(formatCountdown(ms));
+      if (ms <= 1000) window.location.reload(); // day flipped — reset everything
+    }, 1000);
+    return () => clearInterval(tick);
+  }, []);
 
   const completedCount = allQuests.filter(q => q.completed).length;
   const totalPoints = allQuests.filter(q => q.completed).reduce((sum, q) => sum + q.points, 0);
@@ -160,8 +184,8 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, completedQuestIds
             </div>
           )}
           <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 inline-flex items-center gap-2">
-            <RefreshCw size={14} className="text-white" />
-            <p className="text-white text-sm">Resets at Midnight</p>
+            <Timer size={14} className="text-white" />
+            <p className="text-white text-sm">Resets in {countdown}</p>
           </div>
         </div>
 
@@ -188,10 +212,10 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, completedQuestIds
         {/* Daily Refresh Banner */}
         <div className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl p-5 mb-6 shadow-md">
           <div className="flex items-center gap-3">
-            <RefreshCw className="text-white flex-shrink-0" size={22} />
+            <Timer className="text-white flex-shrink-0" size={22} />
             <div>
-              <p className="text-white font-bold text-sm">Quests refresh every day!</p>
-              <p className="text-blue-100 text-xs mt-0.5">Come back tomorrow for brand-new quests 🌟</p>
+              <p className="text-white font-bold text-sm">Quests refresh in {countdown}</p>
+              <p className="text-blue-100 text-xs mt-0.5">New quests unlock every day at midnight UTC 🌟</p>
             </div>
           </div>
         </div>

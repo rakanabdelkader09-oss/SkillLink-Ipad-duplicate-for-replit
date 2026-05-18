@@ -236,7 +236,7 @@ export function authSignup(params: {
   });
 }
 
-export function authLogin(params: { username_handle: string; password: string }) {
+export function authLogin(params: { username_handle: string; password: string; expected_user_type?: string }) {
   return request<{ user: DBUser }>('/auth/login', {
     method: 'POST',
     body: JSON.stringify(params),

@@ -1,0 +1,62 @@
+Fix the following three bugs in the app. Each one must be fully resolved and tested end-to-end before moving on to the next.
+
+---
+
+## BUG 1 — No real-time updates (friend requests, duels, notifications)
+
+### Problem
+Any action that one user performs that affects another user — such as sending a friend request, accepting a duel, or completing a duel — is not visible to the other user until they manually refresh the app. This is broken across all social/interactive features.
+
+### Fix required
+Implement real-time data sync so that all of the following update instantly for all relevant users without requiring a page refresh:
+- Friend requests: when kid A sends a request to kid B, kid B sees it appear immediately.
+- Friend request acceptance: when kid B accepts, kid A sees the updated friend status immediately.
+- Duel invites: when a duel is sent, the recipient sees it instantly.
+- Duel results: when a duel is completed, both participants see the outcome in real time.
+- Any other user-to-user interaction that is currently refresh-dependent.
+
+### Implementation guidance
+- Use a real-time listener (e.g. Firestore onSnapshot, Supabase Realtime, Socket.io, or equivalent depending on the current backend).
+- Do NOT use polling as the primary solution — use push-based listeners.
+- Listeners must be set up when the relevant screen mounts and torn down on unmount to avoid memory leaks.
+- Do not rely on the user navigating away and back to trigger a data refresh.
+
+---
+
+## BUG 2 — Daily quest limit not enforced + no countdown timer
+
+### Problem
+Kids can complete more than 5 quests per day. The limit is not being enforced. There is also no countdown showing how long until the quests reset.
+
+### Fix required
+#### Enforce the 5-quest daily limit
+- Each kid account may complete a maximum of 5 quests per day.
+- Track completions per kid per calendar day (reset at midnight in the user's local timezone, or at a fixed UTC midnight — pick one and be consistent).
+- Once 5 quests are completed, all remaining quests must be locked/greyed out with a message like "You've completed your 5 quests for today! Come back tomorrow."
+- Enforce this limit on the backend — do not rely on frontend-only checks. If a completion request comes in after the limit is reached, reject it server-side and return an error.
+
+#### Add a daily reset countdown
+- At the top of the quest screen, display a live countdown timer showing how long until the quests refresh. Format: "Quests refresh in 4h 23m 10s" — update every second.
+- When the countdown reaches zero, automatically refresh the quest screen so the new day's quests and reset limit are shown without the kid needing to manually reload.
+
+---
+
+## BUG 3 — Account type not enforced at login (kids can log in via parent portal)
+
+### Problem
+A kid account can be logged into through the parent login screen, which then incorrectly takes the user to the kid dashboard. Parent and kid accounts must be completely separated.
+
+### Fix required
+- Every user account must have a clearly stored account type field: "parent" or "kid".
+- At login, after credentials are verified, check the account type against the portal being used:
+  - If a kid account credential is entered on the parent login screen → reject login and show: "These credentials belong to a child account. Please use the child login."
+  - If a parent account credential is entered on the kid login screen → reject login and show: "These credentials belong to a parent account. Please use the parent login."
+- This check must happen server-side — do not rely on client-side routing alone.
+- Make sure account type is set correctly and permanently at account creation time for both parent and kid flows, and cannot be changed or spoofed.
+
+---
+
+## General notes
+- Do not break any existing features while fixing these bugs.
+- Test each fix with multiple accounts simultaneously to confirm real-time sync and limit enforcement both work correctly under real conditions.
+- All backend enforcement (quest limits, account type checks) must be verified server-side, not just in the UI.

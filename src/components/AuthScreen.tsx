@@ -97,7 +97,7 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
 
     setIsLoading(true);
     try {
-      const { user } = await authLogin({ username_handle: loginUsername, password: loginPassword });
+      const { user } = await authLogin({ username_handle: loginUsername, password: loginPassword, expected_user_type: selectedType || undefined });
 
       const profile: UserProfile & { dbUserId?: number; username_handle?: string } = {
         name: user.display_name || loginUsername,

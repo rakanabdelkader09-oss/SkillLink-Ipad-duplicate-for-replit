@@ -80,6 +80,25 @@ export function LeaderboardScreen({ language = 'en', userId, userHandle, userPro
     if (userId) loadFriends();
   }, [userId, loadFriends]);
 
+  // ── Real-time SSE subscription ────────────────────────────────────────────
+  useEffect(() => {
+    if (!userId) return;
+    const es = new EventSource(`/api/events/${userId}`);
+    es.onmessage = (e) => {
+      try {
+        const event = JSON.parse(e.data);
+        if (['friend_request', 'friend_update'].includes(event.type)) {
+          loadFriends();
+        }
+        if (['duel_challenge', 'duel_update'].includes(event.type)) {
+          loadFriends(); // reload friends so duel-tab counts reflect too
+        }
+      } catch {}
+    };
+    es.onerror = () => es.close();
+    return () => es.close();
+  }, [userId, loadFriends]);
+
   const handleAddFriend = async () => {
     if (!userId || !friendUsername.trim()) return;
     setFriendSearchLoading(true);

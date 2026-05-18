@@ -6,6 +6,34 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ── SSE pub/sub (real-time push for friends / duels) ───────────────────────
+const sseClients = new Map<number, Set<any>>();
+
+function emitToUser(userId: number, event: { type: string; [key: string]: any }) {
+  const clients = sseClients.get(userId);
+  if (!clients || clients.size === 0) return;
+  const payload = `data: ${JSON.stringify(event)}\n\n`;
+  clients.forEach((res: any) => { try { res.write(payload); } catch {} });
+}
+
+app.get('/api/events/:userId', (req, res) => {
+  const userId = parseInt(req.params.userId);
+  if (isNaN(userId)) { res.status(400).end(); return; }
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+  res.write(':ok\n\n');
+  if (!sseClients.has(userId)) sseClients.set(userId, new Set());
+  sseClients.get(userId)!.add(res);
+  const ping = setInterval(() => { try { res.write(':ping\n\n'); } catch { clearInterval(ping); } }, 25000);
+  req.on('close', () => {
+    clearInterval(ping);
+    sseClients.get(userId)?.delete(res);
+    if (sseClients.get(userId)?.size === 0) sseClients.delete(userId);
+  });
+});
+
 // ──────────────────────────────────────────────
 // Health
 // ──────────────────────────────────────────────
@@ -183,6 +211,17 @@ app.post('/api/users/:userId/quests', async (req, res) => {
   if (isNaN(userId) || !quest_id) return res.status(400).json({ error: 'Invalid params' });
 
   try {
+    // ── Server-side daily limit (5 quests per UTC day) ──────────────────────
+    const dailyCheck = await pool.query(
+      `SELECT COUNT(*) FROM quest_completions
+       WHERE user_id = $1 AND DATE(completed_at AT TIME ZONE 'UTC') = CURRENT_DATE
+         AND status IN ('completed', 'approved', 'pending_approval')`,
+      [userId]
+    );
+    if (parseInt(dailyCheck.rows[0].count) >= 5) {
+      return res.status(429).json({ error: 'Daily quest limit reached. Come back tomorrow!' });
+    }
+
     const questStatus = status || 'completed';
     const result = await pool.query(
       `INSERT INTO quest_completions (user_id, quest_id, quest_title, quest_icon, status, points_earned)
@@ -541,9 +580,10 @@ app.post('/api/auth/signup', async (req, res) => {
 });
 
 app.post('/api/auth/login', async (req, res) => {
-  const { username_handle, password } = req.body as {
+  const { username_handle, password, expected_user_type } = req.body as {
     username_handle: string;
     password: string;
+    expected_user_type?: string;
   };
 
   if (!username_handle || !password) {
@@ -563,6 +603,16 @@ app.post('/api/auth/login', async (req, res) => {
     const user = result.rows[0];
     if (user.password_hash !== password) {
       return res.status(401).json({ error: 'Wrong password. Try again.' });
+    }
+
+    // Account-type enforcement — prevent cross-portal login
+    if (expected_user_type && expected_user_type !== 'creator') {
+      if (user.user_type === 'kid' && expected_user_type === 'parent') {
+        return res.status(403).json({ error: 'These credentials belong to a child account. Please use the child login.' });
+      }
+      if (user.user_type === 'parent' && expected_user_type === 'kid') {
+        return res.status(403).json({ error: 'These credentials belong to a parent account. Please use the parent login.' });
+      }
     }
 
     // Update last_active
@@ -658,6 +708,8 @@ app.post('/api/friends/request', async (req, res) => {
        RETURNING *`,
       [requester_id, addresseeId]
     );
+    // Notify addressee in real-time
+    emitToUser(addresseeId, { type: 'friend_request', from_id: requester_id });
     return res.status(201).json({ friend: result.rows[0] });
   } catch (err) {
     console.error(err);
@@ -676,7 +728,12 @@ app.patch('/api/friends/:friendRowId', async (req, res) => {
       'UPDATE friends SET status = $2 WHERE id = $1 RETURNING *',
       [id, status]
     );
-    return res.json({ friend: result.rows[0] });
+    const row = result.rows[0];
+    if (row) {
+      emitToUser(row.requester_id, { type: 'friend_update', status });
+      emitToUser(row.addressee_id, { type: 'friend_update', status });
+    }
+    return res.json({ friend: row });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Database error' });
@@ -687,7 +744,13 @@ app.delete('/api/friends/:friendRowId', async (req, res) => {
   const id = parseInt(req.params.friendRowId);
   if (isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
   try {
+    const fetchRow = await pool.query('SELECT requester_id, addressee_id FROM friends WHERE id = $1', [id]);
     await pool.query('DELETE FROM friends WHERE id = $1', [id]);
+    if (fetchRow.rows.length > 0) {
+      const { requester_id, addressee_id } = fetchRow.rows[0];
+      emitToUser(requester_id, { type: 'friend_update', status: 'removed' });
+      emitToUser(addressee_id, { type: 'friend_update', status: 'removed' });
+    }
     return res.json({ ok: true });
   } catch (err) {
     console.error(err);
@@ -820,7 +883,9 @@ app.post('/api/duels/challenge', async (req, res) => {
        VALUES ($1, $2, $3, 'pending') RETURNING *`,
       [challenger_id, challenged_id, quest_id]
     );
-    return res.status(201).json({ duel: result.rows[0] });
+    const newDuel = result.rows[0];
+    emitToUser(challenged_id, { type: 'duel_challenge', from_id: challenger_id, duel: newDuel });
+    return res.status(201).json({ duel: newDuel });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Database error' });
@@ -861,7 +926,10 @@ app.patch('/api/duels/:duelId/respond', async (req, res) => {
       [status, duelId]
     );
     if (result.rows.length === 0) return res.status(404).json({ error: 'Duel not found' });
-    return res.json({ duel: result.rows[0] });
+    const duelRow = result.rows[0];
+    emitToUser(duelRow.challenger_id, { type: 'duel_update', status });
+    emitToUser(duelRow.challenged_id, { type: 'duel_update', status });
+    return res.json({ duel: duelRow });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Database error' });
