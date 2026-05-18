@@ -63,7 +63,6 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
 
     setIsLoading(true);
     try {
-      const deviceId = getOrCreateDeviceId();
       const { user } = await authSignup({
         username_handle: signupUsername,
         password: signupPassword,
@@ -71,7 +70,7 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
         age: parseInt(signupAge),
         user_type: selectedType!,
         avatar: selectedType === 'kid' ? '🦁' : selectedType === 'creator' ? '🦊' : '🐻',
-        device_id: deviceId,
+        device_id: crypto.randomUUID(),
       });
 
       const profile: UserProfile & { dbUserId?: number; username_handle?: string } = {

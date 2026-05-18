@@ -548,15 +548,6 @@ app.post('/api/auth/signup', async (req, res) => {
 
     const devId = device_id || crypto.randomUUID();
 
-    // If this device already has a registered account, reject — don't overwrite
-    const deviceExisting = await pool.query(
-      `SELECT id FROM users WHERE device_id = $1 AND password_hash IS NOT NULL`,
-      [devId]
-    );
-    if (deviceExisting.rows.length > 0) {
-      return res.status(409).json({ error: 'This device already has an account. Please log in instead.' });
-    }
-
     const result = await pool.query(
       `INSERT INTO users
          (device_id, username_handle, password_hash, username, display_name, avatar, age, user_type, sc_coins)
