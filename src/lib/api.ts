@@ -290,6 +290,38 @@ export function removeFriend(friendRowId: number) {
   return request<{ ok: boolean }>(`/friends/${friendRowId}`, { method: 'DELETE' });
 }
 
+// ── Custom Quests (parent-created) ────────────────────────────────────────
+
+export interface DBCustomQuest {
+  id: number;
+  parent_id: number;
+  child_id: number | null;
+  title: string;
+  description: string | null;
+  sc_reward: number;
+  due_date: string | null;
+  status: 'pending' | 'completed' | 'approved';
+  created_at: string;
+  updated_at: string;
+}
+
+export function getCustomQuests(parentId: number) {
+  return request<{ quests: DBCustomQuest[] }>(`/custom-quests/${parentId}`);
+}
+
+export function createCustomQuest(data: {
+  parent_id: number;
+  title: string;
+  description?: string;
+  sc_reward: number;
+  due_date?: string;
+}) {
+  return request<{ quest: DBCustomQuest }>('/custom-quests', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
 // ── Completed IDs ──────────────────────────────────────────────────────────
 
 export function getCompletedQuestIds(userId: number) {

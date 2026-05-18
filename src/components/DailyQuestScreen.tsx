@@ -31,11 +31,12 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, completedQuestIds
   const progress = Math.min((dailyCount / MAX_DAILY_QUESTS) * 100, 100);
   const remainingSlots = Math.max(0, MAX_DAILY_QUESTS - dailyCount);
 
-  // Live countdown to UTC midnight
+  // Live countdown to LOCAL midnight (feels natural — same as when the day changes on the device)
   const getMsUntilMidnight = () => {
     const now = new Date();
-    const midnight = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
-    return midnight.getTime() - now.getTime();
+    const nextMidnight = new Date(now);
+    nextMidnight.setHours(24, 0, 0, 0); // next local midnight
+    return nextMidnight.getTime() - now.getTime();
   };
   const formatCountdown = (ms: number) => {
     const total = Math.max(0, Math.floor(ms / 1000));
@@ -122,7 +123,7 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, completedQuestIds
           <Timer className="text-white flex-shrink-0" size={20} />
           <div>
             <p className="text-white font-bold text-sm">Quests refresh in {countdown}</p>
-            <p className="text-blue-100 text-xs mt-0.5">New quests unlock every day at midnight UTC 🌟</p>
+            <p className="text-blue-100 text-xs mt-0.5">New quests unlock every day at midnight 🌟</p>
           </div>
         </div>
 
@@ -168,7 +169,7 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, completedQuestIds
                   {/* Icon */}
                   <div className="text-3xl flex-shrink-0">{quest.icon}</div>
 
-                  {/* Title + badge */}
+                  {/* Title + badges */}
                   <div className="flex-1 min-w-0">
                     <p className={`text-sm font-semibold leading-snug ${
                       isCompleted ? 'line-through text-muted-foreground' :
@@ -176,9 +177,12 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, completedQuestIds
                     }`}>
                       {quest.title}
                     </p>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                       <Badge className={`${diff.badgeColor} text-white text-xs px-2 py-0`}>{diff.label}</Badge>
-                      <span className="text-xs">{diff.icon}</span>
+                      {quest.verifyType === 'film'
+                        ? <Badge className="bg-sky-500 text-white text-xs px-2 py-0">📹 Film it</Badge>
+                        : <Badge className="bg-violet-500 text-white text-xs px-2 py-0">✅ Parent approves</Badge>
+                      }
                     </div>
                   </div>
 

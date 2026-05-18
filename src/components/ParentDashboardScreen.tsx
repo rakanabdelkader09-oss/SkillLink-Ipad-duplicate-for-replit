@@ -19,6 +19,7 @@ import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Textarea } from './ui/textarea';
 import { useTranslation, Language } from './translations';
+import { getCustomQuests, createCustomQuest, DBCustomQuest } from '../lib/api';
 
 const AVATAR_EMOJI: Record<string, string> = {
   lion: '🦁', fox: '🦊', bear: '🐻', owl: '🦉', rabbit: '🐰',
@@ -82,20 +83,31 @@ export function ParentDashboardScreen({
   const [questDueDate, setQuestDueDate] = useState('');
   const [questError, setQuestError] = useState('');
 
-  const todayKey = getTodayKey();
-  const questsCreatedTodayKey = `skilllink-custom-quests-${userId}-${todayKey}`;
-  const questsCreatedToday = parseInt(localStorage.getItem(questsCreatedTodayKey) || '0', 10);
-  const canCreateQuest = questsCreatedToday < MAX_QUESTS_PER_DAY;
-
+  const [canCreateQuest, setCanCreateQuest] = useState(true);
   const [customQuests, setCustomQuests] = useState<CustomQuest[]>([]);
 
-  // Re-load custom quests from localStorage whenever the logged-in parent changes
+  // Fetch custom quests from DB whenever the logged-in parent changes
   useEffect(() => {
     if (userId == null) { setCustomQuests([]); return; }
-    try {
-      const stored = localStorage.getItem(`skilllink-custom-quests-list-${userId}`);
-      setCustomQuests(stored ? JSON.parse(stored) : []);
-    } catch { setCustomQuests([]); }
+    getCustomQuests(userId)
+      .then(({ quests }) => {
+        setCustomQuests(quests.map((q: DBCustomQuest) => ({
+          id: String(q.id),
+          title: q.title,
+          description: q.description ?? '',
+          scReward: q.sc_reward,
+          dueDate: q.due_date ?? '',
+          status: q.status,
+          createdAt: new Date(q.created_at).toLocaleString(),
+        })));
+        // Disable creation if parent already created one today
+        const today = getTodayKey();
+        const createdToday = quests.filter(
+          (q: DBCustomQuest) => q.created_at.startsWith(new Date().toISOString().slice(0, 10))
+        );
+        setCanCreateQuest(createdToday.length < MAX_QUESTS_PER_DAY);
+      })
+      .catch(() => setCustomQuests([]));
   }, [userId]);
 
   const [rewardRequests, setRewardRequests] = useState<Reward[]>([
@@ -153,7 +165,7 @@ export function ParentDashboardScreen({
     ? `Maintained a ${weeklySummary.currentStreak}-day streak!`
     : 'Great progress this week!';
 
-  const handleCreateCustomQuest = () => {
+  const handleCreateCustomQuest = async () => {
     setQuestError('');
     if (!questTitle.trim()) { setQuestError('Please enter a quest title'); return; }
     const sc = parseInt(questScReward);
@@ -165,27 +177,35 @@ export function ParentDashboardScreen({
       setQuestError(`You can only create ${MAX_QUESTS_PER_DAY} custom quest per day`);
       return;
     }
+    if (!userId) { setQuestError('You must be logged in to create quests'); return; }
 
-    const newQuest: CustomQuest = {
-      id: Date.now().toString(),
-      title: questTitle.trim(),
-      description: questDescription.trim(),
-      scReward: sc,
-      dueDate: questDueDate,
-      status: 'pending',
-      createdAt: new Date().toLocaleString(),
-    };
-
-    const updated = [newQuest, ...customQuests];
-    setCustomQuests(updated);
-    localStorage.setItem(`skilllink-custom-quests-list-${userId}`, JSON.stringify(updated));
-    localStorage.setItem(questsCreatedTodayKey, String(questsCreatedToday + 1));
-
-    setQuestTitle('');
-    setQuestDescription('');
-    setQuestScReward('5');
-    setQuestDueDate('');
-    setShowCustomQuestDialog(false);
+    try {
+      const { quest } = await createCustomQuest({
+        parent_id: userId,
+        title: questTitle.trim(),
+        description: questDescription.trim() || undefined,
+        sc_reward: sc,
+        due_date: questDueDate || undefined,
+      });
+      const newQuest: CustomQuest = {
+        id: String(quest.id),
+        title: quest.title,
+        description: quest.description ?? '',
+        scReward: quest.sc_reward,
+        dueDate: quest.due_date ?? '',
+        status: quest.status,
+        createdAt: new Date(quest.created_at).toLocaleString(),
+      };
+      setCustomQuests(prev => [newQuest, ...prev]);
+      setCanCreateQuest(false);
+      setQuestTitle('');
+      setQuestDescription('');
+      setQuestScReward('5');
+      setQuestDueDate('');
+      setShowCustomQuestDialog(false);
+    } catch (err: any) {
+      setQuestError(err.message || 'Failed to create quest. Please try again.');
+    }
   };
 
   const handleApproveReward = (rewardId: string) => {
