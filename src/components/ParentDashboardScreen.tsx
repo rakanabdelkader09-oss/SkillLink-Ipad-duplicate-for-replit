@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   TrendingUp, Award, Flame, CheckCircle, User, Video, Calendar, Settings,
   Plus, Gift, TrendingDown, Star, Sparkles, X, Crown, ChevronRight, Shield,
@@ -87,12 +87,16 @@ export function ParentDashboardScreen({
   const questsCreatedToday = parseInt(localStorage.getItem(questsCreatedTodayKey) || '0', 10);
   const canCreateQuest = questsCreatedToday < MAX_QUESTS_PER_DAY;
 
-  const [customQuests, setCustomQuests] = useState<CustomQuest[]>(() => {
+  const [customQuests, setCustomQuests] = useState<CustomQuest[]>([]);
+
+  // Re-load custom quests from localStorage whenever the logged-in parent changes
+  useEffect(() => {
+    if (userId == null) { setCustomQuests([]); return; }
     try {
       const stored = localStorage.getItem(`skilllink-custom-quests-list-${userId}`);
-      return stored ? JSON.parse(stored) : [];
-    } catch { return []; }
-  });
+      setCustomQuests(stored ? JSON.parse(stored) : []);
+    } catch { setCustomQuests([]); }
+  }, [userId]);
 
   const [rewardRequests, setRewardRequests] = useState<Reward[]>([
     { id: '1', name: '160 Robux', pointsCost: 750, requestedAt: 'Today, 2:45 PM', status: 'pending', type: 'robux' },

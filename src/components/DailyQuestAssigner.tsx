@@ -66,12 +66,12 @@ export const QUEST_POOL: Quest[] = [
   { id: 104, title: 'Help Prepare a Meal',         icon: '🍳', points: 10, completed: false, category: 'Responsibility', color: 'orange', minAge: 9, maxAge: 10, difficulty: 'intermediate', xp: 10 },
   { id: 105, title: 'Plan a Healthy Snack',        icon: '🥗', points: 10, completed: false, category: 'Responsibility', color: 'orange', minAge: 9, maxAge: 10, difficulty: 'intermediate', xp: 10 },
   // Ages 11-12 · Advanced
-  { id: 16, title: 'Clean and organize your room', icon: '🏠', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
-  { id: 17, title: 'Do your own laundry',          icon: '🧺', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
-  { id: 55, title: 'Help cook a full meal',        icon: '🍳', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
-  { id: 56, title: 'Clean the bathroom',           icon: '🚽', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
-  { id: 57, title: 'Organize the garage or storage area', icon: '📦', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
-  { id: 58, title: 'Prepare breakfast for the family', icon: '🥞', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 16, title: 'Deep-clean your room: vacuum, dust all surfaces, organize wardrobe & make bed with fresh sheets', icon: '🏠', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 17, title: 'Do a full load of laundry: sort, wash, dry, fold and put away every item without help', icon: '🧺', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 55, title: 'Plan and cook a complete dinner for the family with main + side dish — no help allowed', icon: '🍳', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 56, title: 'Scrub the bathroom top-to-bottom: toilet, sink, mirror, and floor — leave it spotless', icon: '🚽', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 57, title: 'Sort and organize a cluttered storage area — label or group everything so it stays tidy', icon: '📦', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 58, title: 'Plan and prepare a full breakfast for the whole family: 3+ items, cooked and plated neatly', icon: '🥞', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
   { id: 107, title: 'Cook a Meal Independently',   icon: '👨‍🍳', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
   { id: 109, title: 'Lead a Household Task',       icon: '🏡', points: 15, completed: false, category: 'Responsibility', color: 'orange', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
 
@@ -90,11 +90,11 @@ export const QUEST_POOL: Quest[] = [
   { id: 62, title: 'Practice multiplication tables', icon: '✖️', points: 10, completed: false, category: 'Learning', color: 'purple', minAge: 9, maxAge: 10, difficulty: 'intermediate', xp: 10 },
   { id: 106, title: 'Homework Streak — no reminders!', icon: '📚', points: 10, completed: false, category: 'Learning', color: 'purple', minAge: 9, maxAge: 10, difficulty: 'intermediate', xp: 10 },
   // Ages 11-12 · Advanced
-  { id: 24, title: 'Read for 30 minutes',          icon: '📖', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15, isTimed: true, timerSeconds: 1800 },
-  { id: 25, title: 'Complete 20 math problems',    icon: '🔢', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
-  { id: 64, title: 'Write a book report',          icon: '📝', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
-  { id: 65, title: 'Research and present a topic', icon: '🔬', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
-  { id: 66, title: 'Complete all homework for the week', icon: '📚', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 24, title: 'Read for 30 minutes then write a 5-sentence summary: what happened, what you learned, and your opinion', icon: '📖', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15, isTimed: true, timerSeconds: 1800 },
+  { id: 25, title: 'Complete 20 math problems showing all working — check every answer and correct any mistakes', icon: '🔢', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 64, title: 'Write a detailed book report: characters, plot, your favourite moment and why you recommend (or not) this book', icon: '📝', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 65, title: 'Research a topic for 30 minutes and create a visual summary (poster or slides) with 5+ facts', icon: '🔬', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 66, title: 'Finish ALL homework for the day without reminders — then review it for mistakes before putting it away', icon: '📚', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
   { id: 108, title: 'Plan Your Next Day',          icon: '📅', points: 15, completed: false, category: 'Learning', color: 'purple', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
 
   // ── Creativity ─────────────────────────────────────────────────────────────
@@ -114,7 +114,7 @@ export const QUEST_POOL: Quest[] = [
   { id: 71, title: 'Build something from recycled materials', icon: '♻️', points: 10, completed: false, category: 'Creativity', color: 'pink', minAge: 9, maxAge: 10, difficulty: 'intermediate', xp: 10 },
   { id: 110, title: 'Speed Drawing — animal in 60 sec', icon: '⚡', points: 10, completed: false, category: 'Creativity', color: 'pink', minAge: 9, maxAge: 10, difficulty: 'intermediate', xp: 10, isTimed: true, timerSeconds: 60 },
   // Ages 11-12 · Advanced
-  { id: 32, title: 'Write a short story (200+ words)', icon: '✍️', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 32, title: 'Write a short story (300+ words) with a clear beginning, middle and ending — include vivid description and dialogue', icon: '✍️', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
   { id: 33, title: 'Create an original art piece', icon: '🎨', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
   { id: 72, title: 'Practice an instrument for 30 min', icon: '🎹', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15, isTimed: true, timerSeconds: 1800 },
   { id: 73, title: 'Choreograph a dance routine', icon: '💃', points: 15, completed: false, category: 'Creativity', color: 'pink', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
@@ -135,11 +135,11 @@ export const QUEST_POOL: Quest[] = [
   { id: 78, title: 'Call or video chat with a relative', icon: '📞', points: 10, completed: false, category: 'Social Skills', color: 'red', minAge: 9, maxAge: 10, difficulty: 'intermediate', xp: 10 },
   { id: 79, title: 'Include someone who feels left out', icon: '🫂', points: 10, completed: false, category: 'Social Skills', color: 'red', minAge: 9, maxAge: 10, difficulty: 'intermediate', xp: 10 },
   // Ages 11-12 · Advanced
-  { id: 40, title: 'Resolve a conflict peacefully', icon: '🕊️', points: 15, completed: false, category: 'Social Skills', color: 'red', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
-  { id: 41, title: 'Teach someone something new',  icon: '👨‍🏫', points: 15, completed: false, category: 'Social Skills', color: 'red', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
-  { id: 80, title: 'Volunteer or do community service', icon: '🌍', points: 15, completed: false, category: 'Social Skills', color: 'red', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
-  { id: 81, title: 'Have a meaningful conversation with a parent', icon: '💬', points: 15, completed: false, category: 'Social Skills', color: 'red', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
-  { id: 82, title: 'Stand up for someone being treated unfairly', icon: '⚖️', points: 15, completed: false, category: 'Social Skills', color: 'red', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 40, title: 'Solve a real disagreement with a sibling or friend — explain the steps you took and how both people felt afterwards', icon: '🕊️', points: 15, completed: false, category: 'Social Skills', color: 'red', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 41, title: 'Teach a family member something new: prepare a mini-lesson with 3 clear steps and practice until they understand', icon: '👨‍🏫', points: 15, completed: false, category: 'Social Skills', color: 'red', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 80, title: 'Do 30 minutes of community service or volunteering — describe what you did and how it helped others', icon: '🌍', points: 15, completed: false, category: 'Social Skills', color: 'red', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 81, title: 'Have a 10-minute conversation with a parent or grandparent — ask 5 thoughtful questions and really listen to the answers', icon: '💬', points: 15, completed: false, category: 'Social Skills', color: 'red', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
+  { id: 82, title: 'Notice someone being treated unfairly and take a real action to help — tell a trusted adult or speak up respectfully', icon: '⚖️', points: 15, completed: false, category: 'Social Skills', color: 'red', minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 15 },
 ];
 
 /**
@@ -198,6 +198,63 @@ export function getAllAgeAppropriateQuests(userAge: number): Quest[] {
   return QUEST_POOL.filter(
     quest => userAge >= quest.minAge && userAge <= quest.maxAge
   );
+}
+
+/**
+ * Select exactly 5 quests for the day with mixed difficulty.
+ * Deterministic: same result for the same date + age, all day long.
+ * Mix: up to 1 advanced + up to 2 intermediate + rest beginner.
+ */
+export function getDailyQuestSelection(userAge: number, date: Date = new Date()): Quest[] {
+  const seed =
+    date.getFullYear() * 10000 +
+    (date.getMonth() + 1) * 100 +
+    date.getDate() +
+    userAge * 7;
+
+  function seededPick(arr: Quest[], n: number, offset: number): Quest[] {
+    if (arr.length === 0) return [];
+    const result: Quest[] = [];
+    const used = new Set<number>();
+    for (let i = 0; i < n; i++) {
+      let idx = Math.abs((seed + offset + i * 13) % arr.length);
+      let attempts = 0;
+      while (used.has(idx) && attempts < arr.length) {
+        idx = (idx + 1) % arr.length;
+        attempts++;
+      }
+      if (!used.has(idx)) { used.add(idx); result.push({ ...arr[idx] }); }
+    }
+    return result;
+  }
+
+  const all = QUEST_POOL.filter(q => userAge >= q.minAge && userAge <= q.maxAge);
+  const beginners     = all.filter(q => q.difficulty === 'beginner');
+  const intermediates = all.filter(q => q.difficulty === 'intermediate');
+  const advanceds     = all.filter(q => q.difficulty === 'advanced');
+
+  const usedIds = new Set<number>();
+  const selected: Quest[] = [];
+  const addUnique = (picks: Quest[]) =>
+    picks.forEach(q => { if (!usedIds.has(q.id)) { usedIds.add(q.id); selected.push(q); } });
+
+  addUnique(seededPick(advanceds,     1, 200));
+  addUnique(seededPick(intermediates, 2, 100));
+  addUnique(seededPick(beginners,     2,   0));
+
+  // Fill remaining slots if a tier was empty
+  if (selected.length < 5) {
+    const pool = all.filter(q => !usedIds.has(q.id));
+    addUnique(seededPick(pool, 5 - selected.length, 300));
+  }
+
+  // Shuffle using seed so order varies each day
+  for (let i = selected.length - 1; i > 0; i--) {
+    const j = Math.abs((seed + i * 31)) % (i + 1);
+    [selected[i], selected[j]] = [selected[j], selected[i]];
+  }
+
+  return selected;
 }
 
 /**
