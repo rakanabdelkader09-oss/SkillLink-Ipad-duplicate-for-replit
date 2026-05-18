@@ -296,8 +296,8 @@ export function ParentDashboardScreen({
           <div className={`rounded-2xl px-4 py-2 mb-4 text-sm flex items-center gap-3 ${canCreateQuest ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300' : 'bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300'}`}>
             <Clock size={14} />
             {canCreateQuest
-              ? `You can create ${MAX_QUESTS_PER_DAY - questsCreatedToday} more quest today`
-              : `Daily limit reached — ${questsCreatedToday}/${MAX_QUESTS_PER_DAY} quest${questsCreatedToday !== 1 ? 's' : ''} used today`
+              ? `You can create 1 quest today`
+              : `Daily limit reached — ${MAX_QUESTS_PER_DAY}/${MAX_QUESTS_PER_DAY} quest used today`
             }
           </div>
 
