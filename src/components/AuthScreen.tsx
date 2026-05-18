@@ -144,76 +144,60 @@ export function AuthScreen({ onAuth }: AuthScreenProps) {
           <p className="text-center text-slate-600 mb-8">Who's joining us today?</p>
 
           <div className="space-y-4">
-            {/* Kid */}
-            <div className="rounded-3xl border-4 border-blue-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-400 to-blue-500 p-4 flex items-center gap-3">
-                <div className="bg-white rounded-full p-3">
-                  <Baby className="text-[#2563eb]" size={24} />
-                </div>
-                <span className="text-white text-xl font-bold">Kid Account</span>
+            <button
+              onClick={() => handleUserTypeSelect('kid', 'signup')}
+              className="w-full bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white p-6 rounded-3xl shadow-lg flex items-center justify-center gap-4 transform hover:scale-105 transition-all"
+            >
+              <div className="bg-white rounded-full p-5">
+                <Baby className="text-[#2563eb]" size={32} />
               </div>
-              <div className="bg-white flex divide-x divide-blue-100">
-                <button
-                  onClick={() => handleUserTypeSelect('kid', 'login')}
-                  className="flex-1 py-4 text-[#2563eb] hover:bg-blue-50 font-semibold transition-colors"
-                >
-                  Log In
-                </button>
-                <button
-                  onClick={() => handleUserTypeSelect('kid', 'signup')}
-                  className="flex-1 py-4 text-slate-500 hover:bg-slate-50 font-semibold transition-colors"
-                >
-                  Create Account
-                </button>
-              </div>
-            </div>
+              <span className="text-2xl">I'm a Kid</span>
+            </button>
 
-            {/* Parent */}
-            <div className="rounded-3xl border-4 border-green-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-green-400 to-emerald-500 p-4 flex items-center gap-3">
-                <div className="bg-white rounded-full p-3">
-                  <User className="text-green-600" size={24} />
-                </div>
-                <span className="text-white text-xl font-bold">Parent Account</span>
+            <button
+              onClick={() => handleUserTypeSelect('parent', 'signup')}
+              className="w-full bg-white border-4 border-blue-200 hover:border-blue-300 text-[#2563eb] p-6 rounded-3xl shadow-md flex items-center justify-center gap-4 transform hover:scale-105 transition-all"
+            >
+              <div className="bg-blue-100 rounded-full p-5">
+                <User className="text-[#2563eb]" size={32} />
               </div>
-              <div className="bg-white flex divide-x divide-green-100">
-                <button
-                  onClick={() => handleUserTypeSelect('parent', 'login')}
-                  className="flex-1 py-4 text-green-700 hover:bg-green-50 font-semibold transition-colors"
-                >
-                  Log In
-                </button>
-                <button
-                  onClick={() => handleUserTypeSelect('parent', 'signup')}
-                  className="flex-1 py-4 text-slate-500 hover:bg-slate-50 font-semibold transition-colors"
-                >
-                  Create Account
-                </button>
-              </div>
-            </div>
+              <span className="text-2xl">I'm a Parent</span>
+            </button>
 
-            {/* Creator */}
-            <div className="rounded-3xl border-4 border-purple-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-purple-400 to-pink-500 p-4 flex items-center gap-3">
-                <div className="bg-white rounded-full p-3">
-                  <Sparkles className="text-purple-500" size={24} />
-                </div>
-                <span className="text-white text-xl font-bold">Creator Account</span>
+            <button
+              onClick={() => handleUserTypeSelect('creator', 'signup')}
+              className="w-full bg-gradient-to-r from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 text-white p-6 rounded-3xl shadow-lg flex items-center justify-center gap-4 transform hover:scale-105 transition-all"
+            >
+              <div className="bg-white rounded-full p-5">
+                <Sparkles className="text-purple-500" size={32} />
               </div>
-              <div className="bg-white flex divide-x divide-purple-100">
-                <button
-                  onClick={() => handleUserTypeSelect('creator', 'login')}
-                  className="flex-1 py-4 text-purple-600 hover:bg-purple-50 font-semibold transition-colors"
-                >
-                  Log In
-                </button>
-                <button
-                  onClick={() => handleUserTypeSelect('creator', 'signup')}
-                  className="flex-1 py-4 text-slate-500 hover:bg-slate-50 font-semibold transition-colors"
-                >
-                  Create Account
-                </button>
-              </div>
+              <span className="text-2xl">I'm a Creator</span>
+            </button>
+          </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-slate-500 mb-2">Already have an account?</p>
+            <div className="flex gap-4 justify-center flex-wrap">
+              <button
+                onClick={() => handleUserTypeSelect('kid', 'login')}
+                className="text-[#2563eb] hover:text-[#1d4ed8] underline"
+              >
+                Kid Login
+              </button>
+              <span className="text-slate-300">|</span>
+              <button
+                onClick={() => handleUserTypeSelect('parent', 'login')}
+                className="text-[#2563eb] hover:text-[#1d4ed8] underline"
+              >
+                Parent Login
+              </button>
+              <span className="text-slate-300">|</span>
+              <button
+                onClick={() => handleUserTypeSelect('creator', 'login')}
+                className="text-purple-500 hover:text-purple-600 underline"
+              >
+                Creator Login
+              </button>
             </div>
           </div>
         </div>
