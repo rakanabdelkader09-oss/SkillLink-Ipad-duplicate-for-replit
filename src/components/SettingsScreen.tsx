@@ -15,6 +15,8 @@ import {
 import { Button } from "./ui/button";
 import { Switch } from "./ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 import { useTranslation, Language } from "./translations";
 interface SettingsScreenProps {
   onBack: () => void;
