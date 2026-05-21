@@ -136,12 +136,26 @@ const DIFFICULTY_CONFIG = {
 };
 
 function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
+  const [playing, setPlaying] = useState(false);
+
+  if (playing) {
+    return (
+      <div className="relative w-full h-44 bg-black">
+        <iframe
+          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0`}
+          className="w-full h-full border-0"
+          allow="autoplay; encrypted-media; fullscreen"
+          allowFullScreen
+          title="Origami tutorial"
+        />
+      </div>
+    );
+  }
+
   return (
     <div
-      className="relative w-full h-44 bg-black"
-      onClick={() =>
-        window.open(`https://www.youtube.com/watch?v=${youtubeId}`, "_blank")
-      }
+      className="relative w-full h-44 bg-black cursor-pointer"
+      onClick={() => setPlaying(true)}
     >
       <img
         src={`https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`}
@@ -152,7 +166,6 @@ function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
             "https://placehold.co/320x180/1e1e1e/ffffff?text=Tap+to+Play";
         }}
       />
-
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="bg-red-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-xl">
           <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
@@ -160,9 +173,8 @@ function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
           </svg>
         </div>
       </div>
-
       <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
-        Tap to play
+        ▶ Tap to play
       </div>
     </div>
   );

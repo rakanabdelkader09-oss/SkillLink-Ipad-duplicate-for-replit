@@ -137,7 +137,7 @@ export function ShopScreen({ currentPoints, onPurchase, onBack }: ShopScreenProp
             </TabsTrigger>
             <TabsTrigger value="robux" className="rounded-xl text-sm font-bold data-[state=active]:bg-gray-900 data-[state=active]:text-white">
               <RobuxBadge size={18} />
-              <span className="ml-1.5">Buy Robux</span>
+              <span className="ml-1.5">Redeem Rewards</span>
             </TabsTrigger>
           </TabsList>
 
@@ -238,15 +238,23 @@ export function ShopScreen({ currentPoints, onPurchase, onBack }: ShopScreenProp
           {/* ── ROBUX TAB ── */}
           <TabsContent value="robux" className="mt-5">
             {/* Banner */}
-            <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-5 mb-5 shadow-xl">
+            <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-5 mb-4 shadow-xl">
               <div className="flex items-center gap-4">
                 <RobuxIcon size={56} />
                 <div>
-                  <p className="text-white font-black text-xl">Buy Robux</p>
-                  <p className="text-gray-300 text-sm">Convert your SkillCoins into Robux!</p>
-                  <p className="text-yellow-400 text-xs mt-1 font-semibold">Earn SC → Exchange for R$</p>
+                  <p className="text-white font-black text-xl">Redeem Rewards</p>
+                  <p className="text-gray-300 text-sm">Earn SkillCoins → Unlock Robux gift cards funded by your parent.</p>
+                  <p className="text-yellow-400 text-xs mt-1 font-semibold">Complete quests · Earn SC · Get rewarded!</p>
                 </div>
               </div>
+            </div>
+
+            {/* Parent note */}
+            <div className="bg-blue-50 border-2 border-blue-200 rounded-2xl px-4 py-3 mb-4 flex items-start gap-3">
+              <span className="text-lg flex-shrink-0">👨‍👩‍👧</span>
+              <p className="text-blue-700 text-xs leading-relaxed">
+                <span className="font-bold">Parents:</span> Robux gift cards are purchased by you through the official Roblox store and allocated to your child via SkillLink. SkillLink does not sell Robux directly.
+              </p>
             </div>
 
             {/* Exchange rate info */}

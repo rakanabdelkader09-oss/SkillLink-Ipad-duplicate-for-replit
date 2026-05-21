@@ -99,6 +99,7 @@ export default function App() {
   const [userId, setUserId] = useState<number | null>(null);
   const [deviceId] = useState<string>(() => getOrCreateDeviceId());
   const [userPoints, setUserPoints] = useState<number>(0);
+  const [userXP, setUserXP] = useState<number>(1247);
   const [selectedCategory, setSelectedCategory] =
     useState<string>("");
   const [selectedCourseId, setSelectedCourseId] =
@@ -908,6 +909,7 @@ export default function App() {
       // Came from real auth API — user already in DB
       setUserId(p.dbUserId);
       setUserPoints(50);
+      setUserXP(1247);
       loadCompletedIds(p.dbUserId);
     } else {
       // Fallback: sync by device_id
@@ -1184,6 +1186,7 @@ export default function App() {
             onNavigate={handleNavigate}
             userProfile={userProfile}
             userPoints={userPoints}
+            userXP={userXP}
             skillLevels={skillLevels}
             weeklyEvent={currentWeekEvent}
             language={language as any}
@@ -1410,6 +1413,7 @@ export default function App() {
             onNavigate={handleNavigate}
             userProfile={userProfile}
             userPoints={userPoints}
+            userXP={userXP}
             skillLevels={skillLevels}
             weeklyEvent={currentWeekEvent}
             language={language as any}

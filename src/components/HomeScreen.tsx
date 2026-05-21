@@ -22,6 +22,7 @@ interface HomeScreenProps {
   onNavigate: (screen: string) => void;
   userProfile: UserProfile | null;
   userPoints: number;
+  userXP?: number;
   skillLevels?: SkillLevels;
   weeklyEvent?: WeeklyEvent;
   language?: Language;
@@ -48,7 +49,7 @@ function StreakReminderBanner({ onDismiss }: { onDismiss: () => void }) {
   );
 }
 
-export function HomeScreen({ onNavigate, userProfile, userPoints, skillLevels, weeklyEvent, language = 'en', assignedQuests = [] }: HomeScreenProps) {
+export function HomeScreen({ onNavigate, userProfile, userPoints, userXP = 1247, skillLevels, weeklyEvent, language = 'en', assignedQuests = [] }: HomeScreenProps) {
   const t = useTranslation(language);
   const [showStreakBanner, setShowStreakBanner] = useState(false);
 
@@ -105,35 +106,45 @@ export function HomeScreen({ onNavigate, userProfile, userPoints, skillLevels, w
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-3 gap-5">
+        {/* Stats Cards — 2×2 grid: SkillCoins · Streak / XP · Badges */}
+        <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => onNavigate('statistics')}
-            className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 text-center active:scale-95 transition-transform"
+            className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center active:scale-95 transition-transform"
           >
             <div className="flex items-center justify-center gap-1 mb-1">
-              <SkillCoin size={20} />
-              <span className="text-white text-sm">{t.points}</span>
+              <SkillCoin size={18} />
+              <span className="text-white text-xs font-medium">SkillCoins</span>
             </div>
             <p className="text-white text-2xl font-bold">{userPoints}</p>
           </button>
           <button
             onClick={() => onNavigate('statistics')}
-            className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 text-center active:scale-95 transition-transform"
+            className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center active:scale-95 transition-transform"
           >
             <div className="flex items-center justify-center gap-1 mb-1">
-              <Flame className="text-orange-400" size={20} />
-              <span className="text-white text-sm">{t.streak}</span>
+              <Flame className="text-orange-400" size={18} />
+              <span className="text-white text-xs font-medium">{t.streak}</span>
             </div>
             <p className="text-white text-2xl font-bold">7 {language === 'es' ? 'días' : language === 'fr' ? 'jours' : language === 'de' ? 'Tage' : language === 'ja' ? '日' : language === 'zh' ? '天' : 'days'}</p>
           </button>
           <button
-            onClick={() => onNavigate('badges')}
-            className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 text-center active:scale-95 transition-transform"
+            onClick={() => onNavigate('leaderboard')}
+            className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center active:scale-95 transition-transform"
           >
             <div className="flex items-center justify-center gap-1 mb-1">
-              <Trophy className="text-yellow-300" size={20} />
-              <span className="text-white text-sm">{t.badges}</span>
+              <TrendingUp className="text-green-300" size={18} />
+              <span className="text-white text-xs font-medium">XP</span>
+            </div>
+            <p className="text-white text-2xl font-bold">{userXP.toLocaleString()}</p>
+          </button>
+          <button
+            onClick={() => onNavigate('badges')}
+            className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-center active:scale-95 transition-transform"
+          >
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <Trophy className="text-yellow-300" size={18} />
+              <span className="text-white text-xs font-medium">{t.badges}</span>
             </div>
             <p className="text-white text-2xl font-bold">12</p>
           </button>

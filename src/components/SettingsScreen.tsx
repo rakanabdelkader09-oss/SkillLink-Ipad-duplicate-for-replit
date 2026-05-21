@@ -5,7 +5,6 @@ import {
   Moon,
   Palette,
   Globe,
-  LogOut,
   Bell,
   Shield,
   HelpCircle,
@@ -49,7 +48,6 @@ export function SettingsScreen({
   const [showThemeDialog, setShowThemeDialog] = useState(false);
   const [showColorDialog, setShowColorDialog] = useState(false);
   const [showLanguageDialog, setShowLanguageDialog] = useState(false);
-  const [showSignOutDialog, setShowSignOutDialog] = useState(false);
   const [notifications, setNotifications] = useState<boolean>(() => {
     const saved = localStorage.getItem("skilllink-notifications");
     return saved === null ? true : saved === "true";
@@ -115,11 +113,6 @@ export function SettingsScreen({
     { name: "Svenska", value: "sv", flag: "🇸🇪" },
     { name: "Nederlands", value: "nl", flag: "🇳🇱" },
   ];
-
-  const handleSignOut = () => {
-    setShowSignOutDialog(false);
-    onSignOut();
-  };
 
   return (
     <div className="h-full bg-background overflow-y-auto pb-20">
@@ -253,27 +246,8 @@ export function SettingsScreen({
           </div>
         </div>
 
-        {/* Account Section */}
-        <div className="bg-card rounded-3xl p-6 shadow-md">
-          <h3 className="text-card-foreground mb-4">👤 {t.account}</h3>
-
-          <div
-            className="flex items-center justify-between p-6 rounded-2xl hover:bg-red-50 dark:hover:bg-red-950 cursor-pointer transition-colors"
-            onClick={() => setShowSignOutDialog(true)}
-          >
-            <div className="flex items-center gap-4">
-              <LogOut className="w-6 h-6 text-red-500" />
-              <div>
-                <p className="text-red-600">{t.signOut}</p>
-                <p className="text-muted-foreground">{t.logOutAccount}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* App Version */}
         <div className="text-center text-muted-foreground py-4">
-          <p>SkillLink v1.0.0</p>
           <p className="mt-2">{t.madeWithLove}</p>
         </div>
       </div>
@@ -481,31 +455,6 @@ export function SettingsScreen({
         </DialogContent>
       </Dialog>
 
-      {/* Sign Out Confirmation Dialog */}
-      <Dialog open={showSignOutDialog} onOpenChange={setShowSignOutDialog}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>{t.signOut}?</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to sign out of your account?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowSignOutDialog(false)}
-            >
-              {t.cancel}
-            </Button>
-            <Button
-              onClick={handleSignOut}
-              className="bg-red-500 hover:bg-red-600 text-white"
-            >
-              {t.signOut}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

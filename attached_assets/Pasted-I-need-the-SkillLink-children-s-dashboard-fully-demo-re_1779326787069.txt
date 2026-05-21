@@ -1,0 +1,71 @@
+I need the SkillLink children's dashboard fully demo-ready for a competition next week. Judges will tap around freely on a phone. Every visible button must work. Keep the existing visual style (gradients, rounded cards, current color palette, emoji icons) — do not redesign anything, only apply the fixes below.
+1. Implement a clean two-currency system across the entire app.
+SkillLink uses two distinct values that must never be confused:
+
+SkillCoins (SC) — spendable currency. Used only in the Shop for borders, avatars, and Robux gift card redemption. Earned as a quest reward (5–15 SC per quest). Displayed with the gold coin icon.
+XP (experience points) — lifetime progress score. Used only for leaderboard ranking and the parent dashboard's "Total Points" / "Total XP" stat. Cannot be spent. Displayed with a trophy or star icon.
+
+Each completed quest awards both: an SC reward and a larger XP reward. On every quest card, show both rewards side by side, e.g., "+5 SC · +20 XP."
+Update all screens accordingly:
+
+Home screen: replace the ambiguous "Points: 50" stat with two clear stats — "SkillCoins" (e.g., 50) and "XP" (e.g., 1,247). Keep the streak and badges stats as they are.
+Quest cards: show both "+X SC" and "+X XP" rewards on every quest.
+Leaderboard rankings: sort by total XP, not SC. The numbers shown next to each user (e.g., "Emma 2150") are XP.
+Shop: balance shown is SC only, since XP is not spendable. Keep "SkillCoin Balance: 50 SC" wording.
+Profile: display both totals clearly — "1,247 XP · 50 SC."
+
+2. Fix the SkillLink Shop legal exposure on Robux.
+
+Rename the "Buy Robux" tab to "Redeem Rewards."
+Replace the header "Convert your SkillCoins into Robux!" with "Earn SkillCoins → Unlock Robux gift cards funded by your parent."
+Add a one-line note under the header: "Parents purchase official Robux gift cards and allocate them through SkillLink."
+Fix the exchange rate math so it's internally consistent. Use 5 SC = 1 Robux flat. Apply bonus tiers as extra SC granted at higher redemption levels, not weird Robux bonuses. Show the conversion clearly on screen.
+
+3. Make the "Film it" button on all quest cards fully functional.
+
+When tapped, open a modal with: a "Record video" button (use the device camera if possible, or simulate with a "Choose from gallery" placeholder), a short preview area, and a "Submit for parent approval" button.
+After submission, the quest changes state to "Waiting for parent approval" with a visible status badge.
+
+4. Pre-populate the Friends tab so it's never empty.
+
+Add 6 example friends with names (Emma, Noah, Liam, Sophia, Mason, Olivia), emoji-style avatars, streak counts (3–12 days), and a mix of online/offline status indicators.
+Remove the "No friends yet!" empty state from the demo by default.
+Keep the "Add Friend" button functional — tapping it opens a simple search/invite modal with a username input.
+
+5. Fix the broken video on the Paper Boat lesson screen.
+
+Embed a real working YouTube origami tutorial video for the Paper Boat lesson (any public origami paper boat tutorial works). The play button must actually play the video when tapped.
+
+6. Make the home screen Quick Actions fully clickable.
+
+"Daily Quests" navigates to the Quests tab.
+"Courses" navigates to the Courses tab.
+"See Plans" on the Unlock Premium banner opens the Premium Plans screen.
+The settings gear icon opens the Settings page.
+The sparkle icon opens a small modal showing a daily motivational tip.
+
+7. Make the Leaderboard Duels tab interactive.
+
+Each duel card ("Read for 15 minutes vs Emma" and "Make your bed vs Noah") is tappable and opens a detail modal showing quest description, opponent's progress, your progress, and a "Mark as complete" button.
+The "Add friends to challenge them to a duel!" prompt is a tappable button that navigates to the Friends tab.
+
+8. Make the Profile / Border customization fully functional.
+
+Tapping any border option in the grid applies it live to the user's profile avatar.
+Locked borders (above the user's current SC balance) show a lock icon. Tapping them shows a tooltip: "Earn more SC to unlock."
+The "Upload Photo" button opens a file picker (or shows a placeholder upload flow if not available in the dev environment).
+
+9. Make Settings options minimally functional.
+
+Theme switcher (Light Mode → Dark Mode) actually toggles the app's color scheme.
+Color Theme opens a small selector with 4–5 color choices and applies the choice live.
+Push Notifications toggle works visually (on/off state persists).
+Hide the "Sign Out" button entirely in the demo build to prevent accidental logouts.
+Remove the "v1.0.0" version number from the footer.
+
+10. Pre-loaded demo state for the child account.
+
+Demo account should show: 50 SC balance, 1,247 XP, 7-day streak, 12 badges, 2–3 quests in progress (one marked "waiting for parent approval"), a completed beginner course (Paper Boat), and an in-progress intermediate course in the Courses section.
+
+11. Critical rule: no dead buttons, no empty states, no broken video players in the demo build. If any feature is not ready, hide the button or remove the screen from navigation entirely. Everything visible must work or have a clear functional response when tapped.
+Apply all these fixes in one consistent pass. Match the existing visual identity — gradients, rounded cards, bold typography.

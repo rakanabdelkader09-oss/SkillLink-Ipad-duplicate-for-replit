@@ -186,10 +186,15 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, completedQuestIds
                     </div>
                   </div>
 
-                  {/* SC reward */}
-                  <div className={`flex items-center gap-1 rounded-full px-3 py-1.5 flex-shrink-0 ${isCompleted ? 'bg-green-500' : 'bg-primary'}`}>
-                    <SkillCoin size={12} />
-                    <span className="text-white text-xs font-bold">+{quest.points}</span>
+                  {/* SC + XP rewards */}
+                  <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                    <div className={`flex items-center gap-1 rounded-full px-2.5 py-1 ${isCompleted ? 'bg-green-500' : 'bg-primary'}`}>
+                      <SkillCoin size={11} />
+                      <span className="text-white text-xs font-bold">+{quest.points} SC</span>
+                    </div>
+                    <div className="flex items-center gap-1 rounded-full px-2.5 py-1 bg-purple-500">
+                      <span className="text-white text-xs font-bold">+{quest.points * 4} XP</span>
+                    </div>
                   </div>
                 </div>
 

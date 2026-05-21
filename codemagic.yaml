@@ -24,6 +24,10 @@ workflows:
         XCODE_SCHEME: App
         BUNDLE_ID: com.skilllink.app
         APP_NAME: SkillLink
+        # Set this to your deployed Replit URL so the iOS app points to the live API.
+        # Example: https://skilllink.replit.app
+        # Leave blank to use the relative /api proxy (only works in web preview).
+        VITE_API_URL: ""
     scripts:
       # 1. Install JS dependencies for the web layer
       - name: Install npm dependencies

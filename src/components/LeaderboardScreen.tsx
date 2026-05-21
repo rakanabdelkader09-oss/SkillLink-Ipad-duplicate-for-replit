@@ -17,6 +17,15 @@ function resolveAvatar(avatar: string | undefined): string {
   return AVATAR_EMOJI[avatar] || avatar;
 }
 
+const DEMO_FRIENDS: FriendRow[] = [
+  { id: 9001, status: 'accepted', direction: 'sent', display_name: 'Emma',   username_handle: 'emma_learns',   avatar: '👧', level: 8,  sc_coins: 2150 },
+  { id: 9002, status: 'accepted', direction: 'sent', display_name: 'Noah',   username_handle: 'noah_quests',   avatar: '👦', level: 7,  sc_coins: 1890 },
+  { id: 9003, status: 'accepted', direction: 'sent', display_name: 'Liam',   username_handle: 'liam_rocks',    avatar: '👦', level: 6,  sc_coins: 1520 },
+  { id: 9004, status: 'accepted', direction: 'sent', display_name: 'Sophia', username_handle: 'sophia_star',   avatar: '👧', level: 5,  sc_coins: 1105 },
+  { id: 9005, status: 'accepted', direction: 'sent', display_name: 'Mason',  username_handle: 'mason_goes',    avatar: '👦', level: 4,  sc_coins: 980  },
+  { id: 9006, status: 'accepted', direction: 'sent', display_name: 'Olivia', username_handle: 'olivia_bright', avatar: '👧', level: 3,  sc_coins: 780  },
+];
+
 interface Duel {
   id: string;
   opponentName: string;
@@ -59,10 +68,12 @@ export function LeaderboardScreen({ language = 'en', userId, userHandle, userPro
 
   // ── Duels state ──────────────────────────────────────────────────────────
   const [duels, setDuels] = useState<Duel[]>([
-    { id: '1', opponentName: 'Emma', opponentAvatar: '👧', questTitle: 'Read for 15 minutes', questIcon: '📖', status: 'pending', createdAt: 'Today' },
-    { id: '2', opponentName: 'Noah', opponentAvatar: '👦', questTitle: 'Make your bed', questIcon: '🛏️', status: 'won', createdAt: 'Yesterday' },
+    { id: '1', opponentName: 'Emma',   opponentAvatar: '👧', questTitle: 'Read for 15 minutes',        questIcon: '📖', status: 'pending', createdAt: 'Today' },
+    { id: '2', opponentName: 'Noah',   opponentAvatar: '👦', questTitle: 'Make your bed neatly',       questIcon: '🛏️', status: 'won',     createdAt: 'Yesterday' },
+    { id: '3', opponentName: 'Liam',   opponentAvatar: '👦', questTitle: 'Water every plant',          questIcon: '🌱', status: 'active',  createdAt: 'Today' },
   ]);
   const [showChallengeDialog, setShowChallengeDialog] = useState(false);
+  const [selectedDuel, setSelectedDuel] = useState<Duel | null>(null);
   const [challengeTarget, setChallengeTarget] = useState<FriendRow | null>(null);
   const [selectedQuestId, setSelectedQuestId] = useState<number | null>(null);
 
@@ -153,7 +164,8 @@ export function LeaderboardScreen({ language = 'en', userId, userHandle, userPro
     setActiveTab('duels');
   };
 
-  const acceptedFriends = friends.filter(f => f.status === 'accepted');
+  const realAccepted = friends.filter(f => f.status === 'accepted');
+  const acceptedFriends = [...DEMO_FRIENDS, ...realAccepted];
   const pendingReceived = friends.filter(f => f.status === 'pending' && f.direction === 'received');
   const pendingSent     = friends.filter(f => f.status === 'pending' && f.direction === 'sent');
 
@@ -206,7 +218,7 @@ export function LeaderboardScreen({ language = 'en', userId, userHandle, userPro
                   <span className="text-white text-sm">2nd</span>
                 </div>
                 <p className="text-slate-700 font-semibold text-sm">{players[1].name}</p>
-                <p className="text-slate-600 text-sm">{players[1].points}</p>
+                <p className="text-slate-600 text-xs font-bold">{players[1].points.toLocaleString()} XP</p>
               </div>
             </div>
             <div className="flex-1 text-center -mt-6">
@@ -217,7 +229,7 @@ export function LeaderboardScreen({ language = 'en', userId, userHandle, userPro
                   <span className="text-white font-bold">1st</span>
                 </div>
                 <p className="text-yellow-900 font-bold text-sm">{players[0].name}</p>
-                <p className="text-yellow-800 text-sm">{players[0].points}</p>
+                <p className="text-yellow-800 text-xs font-bold">{players[0].points.toLocaleString()} XP</p>
               </div>
             </div>
             <div className="flex-1 text-center">
@@ -228,7 +240,7 @@ export function LeaderboardScreen({ language = 'en', userId, userHandle, userPro
                   <span className="text-white text-sm">3rd</span>
                 </div>
                 <p className="text-orange-700 font-semibold text-sm">{players[2].name}</p>
-                <p className="text-orange-600 text-sm">{players[2].points}</p>
+                <p className="text-orange-600 text-xs font-bold">{players[2].points.toLocaleString()} XP</p>
               </div>
             </div>
           </div>
@@ -248,7 +260,7 @@ export function LeaderboardScreen({ language = 'en', userId, userHandle, userPro
                   <p className={`font-semibold ${player.isCurrentUser ? 'text-primary-foreground' : 'text-foreground'}`}>{player.name}</p>
                   <p className={`text-sm ${player.isCurrentUser ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>🔥 {player.streak} {t.dayStreak}</p>
                 </div>
-                <Badge className={player.isCurrentUser ? 'bg-primary-foreground text-primary' : 'bg-primary'}>{player.points}</Badge>
+                <Badge className={player.isCurrentUser ? 'bg-primary-foreground text-primary' : 'bg-primary'}>{player.points.toLocaleString()} XP</Badge>
               </div>
             ))}
           </div>
@@ -256,7 +268,7 @@ export function LeaderboardScreen({ language = 'en', userId, userHandle, userPro
           <div className="mt-6 mb-6 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 border-2 border-green-300 dark:border-green-700 rounded-3xl p-5 text-center">
             <TrendingUp className="text-green-600 dark:text-green-400 mx-auto mb-2" size={32} />
             <h3 className="text-green-700 dark:text-green-300 font-bold mb-1">{t.keepGoingMessage}</h3>
-            <p className="text-green-600 dark:text-green-400 text-sm">You're only 93 {t.pointsAway} 🎯</p>
+            <p className="text-green-600 dark:text-green-400 text-sm">You're only 93 XP away from the next rank 🎯</p>
           </div>
         </div>
       )}
@@ -326,38 +338,30 @@ export function LeaderboardScreen({ language = 'en', userId, userHandle, userPro
                 </div>
               )}
 
-              {/* Accepted friends */}
-              {acceptedFriends.length > 0 ? (
-                <div>
-                  <p className="text-sm font-bold text-green-600 dark:text-green-400 mb-2">✅ Friends ({acceptedFriends.length})</p>
-                  <div className="space-y-2">
-                    {acceptedFriends.map(f => (
-                      <div key={f.id} className="flex items-center gap-3 bg-card border-2 border-green-100 dark:border-green-800 rounded-2xl p-3 shadow-sm">
-                        <span className="text-3xl">{resolveAvatar(f.avatar)}</span>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-bold text-sm text-foreground truncate">{f.display_name}</p>
-                          <p className="text-muted-foreground text-xs">Lvl {f.level ?? 1} · {f.sc_coins ?? 0} 🪙</p>
-                        </div>
-                        <button
-                          onClick={() => handleChallengeFriend(f)}
-                          className="flex items-center gap-1.5 bg-orange-500 text-white text-xs px-3 py-1.5 rounded-xl font-bold hover:bg-orange-600 transition-colors"
-                        >
-                          <Swords size={12} /> Duel!
-                        </button>
-                        <button onClick={() => handleRemoveFriend(f.id)} className="text-slate-300 dark:text-slate-600 hover:text-red-400 transition-colors ml-1"><X size={14} /></button>
+              {/* Accepted friends — always includes 6 demo friends */}
+              <div>
+                <p className="text-sm font-bold text-green-600 dark:text-green-400 mb-2">✅ Friends ({acceptedFriends.length})</p>
+                <div className="space-y-2">
+                  {acceptedFriends.map(f => (
+                    <div key={f.id} className="flex items-center gap-3 bg-card border-2 border-green-100 dark:border-green-800 rounded-2xl p-3 shadow-sm">
+                      <span className="text-3xl">{typeof f.avatar === 'string' && f.avatar.length <= 2 ? f.avatar : resolveAvatar(f.avatar)}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-sm text-foreground truncate">{f.display_name}</p>
+                        <p className="text-muted-foreground text-xs">Lvl {f.level ?? 1} · {(f.sc_coins ?? 0).toLocaleString()} XP</p>
                       </div>
-                    ))}
-                  </div>
+                      <button
+                        onClick={() => handleChallengeFriend(f)}
+                        className="flex items-center gap-1.5 bg-orange-500 text-white text-xs px-3 py-1.5 rounded-xl font-bold hover:bg-orange-600 transition-colors"
+                      >
+                        <Swords size={12} /> Duel!
+                      </button>
+                      {f.id >= 9001 ? null : (
+                        <button onClick={() => handleRemoveFriend(f.id)} className="text-slate-300 dark:text-slate-600 hover:text-red-400 transition-colors ml-1"><X size={14} /></button>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              ) : (
-                friends.filter(f => f.status === 'pending').length === 0 && (
-                  <div className="text-center py-10 text-muted-foreground">
-                    <p className="text-4xl mb-3">🤝</p>
-                    <p className="font-semibold">No friends yet!</p>
-                    <p className="text-sm mt-1">Tap <strong>Add Friend</strong> to connect with someone.</p>
-                  </div>
-                )
-              )}
+              </div>
             </>
           )}
         </div>
@@ -414,12 +418,16 @@ export function LeaderboardScreen({ language = 'en', userId, userHandle, userPro
           ) : (
             <div className="space-y-3">
               {duels.map(duel => (
-                <div key={duel.id} className={`rounded-2xl p-4 border-2 ${
-                  duel.status === 'won'     ? 'bg-green-50 dark:bg-green-950/30 border-green-300 dark:border-green-700' :
-                  duel.status === 'lost'    ? 'bg-red-50 dark:bg-red-950/30 border-red-300 dark:border-red-700' :
-                  duel.status === 'active'  ? 'bg-blue-50 dark:bg-blue-950/30 border-blue-300 dark:border-blue-700' :
-                                             'bg-orange-50 dark:bg-orange-950/30 border-orange-300 dark:border-orange-700'
-                }`}>
+                <button
+                  key={duel.id}
+                  onClick={() => setSelectedDuel(duel)}
+                  className={`w-full rounded-2xl p-4 border-2 text-left active:scale-[0.98] transition-transform ${
+                    duel.status === 'won'     ? 'bg-green-50 dark:bg-green-950/30 border-green-300 dark:border-green-700' :
+                    duel.status === 'lost'    ? 'bg-red-50 dark:bg-red-950/30 border-red-300 dark:border-red-700' :
+                    duel.status === 'active'  ? 'bg-blue-50 dark:bg-blue-950/30 border-blue-300 dark:border-blue-700' :
+                                               'bg-orange-50 dark:bg-orange-950/30 border-orange-300 dark:border-orange-700'
+                  }`}
+                >
                   <div className="flex items-center gap-3">
                     <div className="text-3xl">{duel.questIcon}</div>
                     <div className="flex-1">
@@ -439,7 +447,7 @@ export function LeaderboardScreen({ language = 'en', userId, userHandle, userPro
                       )}
                       {duel.status === 'won' && (
                         <span className="flex items-center gap-1 text-xs font-bold text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40 px-2 py-1 rounded-full">
-                          🏆 You Won!
+                          🏆 Won!
                         </span>
                       )}
                       {duel.status === 'lost' && (
@@ -449,12 +457,92 @@ export function LeaderboardScreen({ language = 'en', userId, userHandle, userPro
                       )}
                     </div>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           )}
         </div>
       )}
+
+      {/* ── DUEL DETAIL DIALOG ──────────────────────────────────────────────── */}
+      <Dialog open={!!selectedDuel} onOpenChange={(open) => { if (!open) setSelectedDuel(null); }}>
+        <DialogContent className="max-w-md">
+          {selectedDuel && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-xl">
+                  <span className="text-3xl">{selectedDuel.questIcon}</span>
+                  Quest Duel
+                </DialogTitle>
+                <DialogDescription>
+                  vs {selectedDuel.opponentAvatar} {selectedDuel.opponentName} · {selectedDuel.createdAt}
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4 py-2">
+                <div className="bg-muted/50 rounded-2xl p-4 text-center">
+                  <p className="text-muted-foreground text-xs mb-1">Quest</p>
+                  <p className="font-bold text-foreground text-base">{selectedDuel.questTitle}</p>
+                </div>
+
+                {/* Progress comparison */}
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="font-bold text-primary">You</span>
+                      <span className="text-muted-foreground">
+                        {selectedDuel.status === 'won' ? '100%' : selectedDuel.status === 'active' ? '60%' : '0%'}
+                      </span>
+                    </div>
+                    <div className="h-3 bg-muted rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-primary rounded-full transition-all"
+                        style={{ width: selectedDuel.status === 'won' ? '100%' : selectedDuel.status === 'active' ? '60%' : '5%' }}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="font-bold text-orange-500">{selectedDuel.opponentAvatar} {selectedDuel.opponentName}</span>
+                      <span className="text-muted-foreground">
+                        {selectedDuel.status === 'won' ? '75%' : selectedDuel.status === 'active' ? '40%' : '0%'}
+                      </span>
+                    </div>
+                    <div className="h-3 bg-muted rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-orange-400 rounded-full transition-all"
+                        style={{ width: selectedDuel.status === 'won' ? '75%' : selectedDuel.status === 'active' ? '40%' : '5%' }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {selectedDuel.status === 'won' && (
+                  <div className="bg-green-50 dark:bg-green-950/30 border-2 border-green-300 dark:border-green-700 rounded-2xl p-4 text-center">
+                    <p className="text-3xl mb-1">🏆</p>
+                    <p className="text-green-700 dark:text-green-300 font-bold">You won this duel!</p>
+                  </div>
+                )}
+              </div>
+
+              <DialogFooter className="gap-2">
+                <Button variant="outline" onClick={() => setSelectedDuel(null)}>Close</Button>
+                {(selectedDuel.status === 'pending' || selectedDuel.status === 'active') && (
+                  <Button
+                    onClick={() => {
+                      setDuels(prev => prev.map(d => d.id === selectedDuel.id ? { ...d, status: 'won' } : d));
+                      setSelectedDuel(null);
+                    }}
+                    className="bg-green-500 hover:bg-green-600 text-white"
+                  >
+                    ✓ Mark as Complete
+                  </Button>
+                )}
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* ── ADD FRIEND DIALOG ───────────────────────────────────────────────── */}
       <Dialog open={showAddFriendDialog} onOpenChange={setShowAddFriendDialog}>
