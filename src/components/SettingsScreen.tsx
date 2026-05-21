@@ -5,6 +5,7 @@ import {
   Moon,
   Palette,
   Globe,
+  LogOut,
   Bell,
   Shield,
   HelpCircle,
@@ -53,6 +54,12 @@ export function SettingsScreen({
     return saved === null ? true : saved === "true";
   });
   const [showParentalDialog, setShowParentalDialog] = useState(false);
+  const [showSignOutDialog, setShowSignOutDialog] = useState(false);
+
+  const handleSignOut = () => {
+    setShowSignOutDialog(false);
+    onSignOut();
+  };
 
   type ParentalControls = {
     screenTimeLimit: boolean;
@@ -246,11 +253,42 @@ export function SettingsScreen({
           </div>
         </div>
 
+        {/* Sign Out */}
+        <div
+          className="flex items-center gap-4 p-5 rounded-2xl border-2 border-red-100 dark:border-red-900 hover:bg-red-50 dark:hover:bg-red-950/30 cursor-pointer transition-colors active:scale-[0.98]"
+          onClick={() => setShowSignOutDialog(true)}
+        >
+          <LogOut className="w-5 h-5 text-red-500 flex-shrink-0" />
+          <div className="flex-1">
+            <p className="text-red-600 dark:text-red-400 font-medium text-sm">{t.signOut}</p>
+          </div>
+        </div>
+
         {/* App Version */}
         <div className="text-center text-muted-foreground py-4">
           <p className="mt-2">{t.madeWithLove}</p>
         </div>
       </div>
+
+      {/* Sign Out Confirmation Dialog */}
+      <Dialog open={showSignOutDialog} onOpenChange={setShowSignOutDialog}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t.signOut}?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to sign out of your account?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowSignOutDialog(false)}>
+              {t.cancel}
+            </Button>
+            <Button onClick={handleSignOut} className="bg-red-500 hover:bg-red-600 text-white">
+              {t.signOut}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Theme Dialog */}
       <Dialog open={showThemeDialog} onOpenChange={setShowThemeDialog}>
