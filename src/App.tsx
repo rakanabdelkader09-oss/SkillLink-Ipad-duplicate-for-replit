@@ -873,6 +873,7 @@ export default function App() {
         isTeamQuest: curated?.isTeamQuest ?? false,
         isTimed: canonical.isTimed ?? false,
         timerSeconds: canonical.timerSeconds,
+        supervised: canonical.supervised ?? false,
       };
     }
 

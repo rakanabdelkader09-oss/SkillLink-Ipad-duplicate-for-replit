@@ -17,6 +17,8 @@ export interface Quest {
   /** When true, the quest detail screen shows a timer */
   isTimed?: boolean;
   timerSeconds?: number;
+  /** When true, a parent/guardian must be present before the child starts */
+  supervised?: boolean;
 }
 
 // SC rewards per difficulty tier
@@ -171,11 +173,11 @@ export const QUEST_POOL: Quest[] = [
 
   { id: 201, title: 'Wipe down the kitchen counters and hob after a meal — film them clean',
     icon: '🍳', points: 10, completed: false, category: 'Responsibility', color: 'orange',
-    minAge: 9, maxAge: 12, difficulty: 'intermediate', xp: 40, verifyType: 'film' },
+    minAge: 9, maxAge: 12, difficulty: 'intermediate', xp: 40, verifyType: 'film', supervised: true },
 
   { id: 203, title: 'Prepare a healthy snack from scratch (no help) and film the finished result',
     icon: '🥗', points: 10, completed: false, category: 'Responsibility', color: 'orange',
-    minAge: 9, maxAge: 12, difficulty: 'intermediate', xp: 40, verifyType: 'film' },
+    minAge: 9, maxAge: 12, difficulty: 'intermediate', xp: 40, verifyType: 'film', supervised: true },
 
   // ── ADVANCED  (demanding — 15 SC) ────────────────────────────────────────
   // Starts at age 8+ with lighter ones; harder tasks from age 10+
@@ -226,15 +228,15 @@ export const QUEST_POOL: Quest[] = [
 
   { id: 56,  title: 'Scrub the bathroom from top to bottom — toilet, sink, mirror and floor — film the spotless result',
     icon: '🚽', points: 15, completed: false, category: 'Responsibility', color: 'orange',
-    minAge: 10, maxAge: 12, difficulty: 'advanced', xp: 60, verifyType: 'film' },
+    minAge: 10, maxAge: 12, difficulty: 'advanced', xp: 60, verifyType: 'film', supervised: true },
 
   { id: 17,  title: 'Do a full load of laundry: sort, wash, dry, fold and put every item away — parent approves',
     icon: '🧺', points: 15, completed: false, category: 'Responsibility', color: 'orange',
-    minAge: 10, maxAge: 12, difficulty: 'advanced', xp: 60, verifyType: 'parent' },
+    minAge: 10, maxAge: 12, difficulty: 'advanced', xp: 60, verifyType: 'parent', supervised: true },
 
   { id: 55,  title: 'Plan and cook a complete meal for the family (main + side) without help — film the finished meal',
     icon: '🍳', points: 15, completed: false, category: 'Responsibility', color: 'orange',
-    minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 60, verifyType: 'film' },
+    minAge: 11, maxAge: 12, difficulty: 'advanced', xp: 60, verifyType: 'film', supervised: true },
 ];
 
 /**

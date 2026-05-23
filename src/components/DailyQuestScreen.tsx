@@ -183,6 +183,9 @@ export function DailyQuestScreen({ onQuestSelect, userProfile, completedQuestIds
                         ? <Badge className="bg-sky-500 text-white text-xs px-2 py-0">📹 Film it</Badge>
                         : <Badge className="bg-violet-500 text-white text-xs px-2 py-0">✅ Parent approves</Badge>
                       }
+                      {quest.supervised && (
+                        <Badge className="bg-amber-500 text-white text-xs px-2 py-0">👨‍👩‍👧 With Parent</Badge>
+                      )}
                     </div>
                   </div>
 

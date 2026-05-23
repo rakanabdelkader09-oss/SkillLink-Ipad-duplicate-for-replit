@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, CheckCircle, Sparkles, Users, Upload, Camera, Play, Pause, RotateCcw } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Sparkles, Users, Upload, Camera, Play, Pause, RotateCcw, ShieldAlert } from 'lucide-react';
 import { Button } from './ui/button';
 import { SkillCoin } from './CurrencyIcons';
 
@@ -106,6 +106,7 @@ function DynamicTimer({ defaultSeconds = 120 }: { defaultSeconds?: number }) {
 export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSubmit, questData: propQuestData, alreadyCompleted }: QuestDetailScreenProps) {
   const [completionMode, setCompletionMode] = useState<'select' | 'solo' | 'challenge' | 'complete'>('select');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [parentConfirmed, setParentConfirmed] = useState(false);
 
   const defaultQuestData: Record<number, any> = {
     1: { title: 'Brush your teeth', icon: '🪥', points: 10, instructions: ['Get your toothbrush and toothpaste', 'Put a pea-sized amount on the brush', 'Brush for 2 minutes (all teeth!)', 'Rinse your mouth with water', 'Put everything away neatly'], tips: 'Brush twice a day - morning and night!', color: 'from-[#2563eb] to-[#1d4ed8]', timerSeconds: 120 },
@@ -303,25 +304,55 @@ export function QuestDetailScreen({ questId, onBack, onStartChallenge, onSoloSub
           <p className="text-purple-600">{quest.tips}</p>
         </div>
 
+        {/* Supervised warning banner */}
+        {quest.supervised && (
+          <div className="bg-amber-50 border-2 border-amber-400 rounded-3xl p-5 mb-5 shadow-md">
+            <div className="flex items-start gap-3 mb-3">
+              <ShieldAlert className="text-amber-500 flex-shrink-0 mt-0.5" size={24} />
+              <div>
+                <p className="text-amber-800 font-bold text-sm">Adult Supervision Required</p>
+                <p className="text-amber-700 text-sm mt-1">
+                  This quest involves things that could be dangerous on your own — like heat, cleaning products or heavy appliances. <strong>A parent or grown-up must be with you</strong> before you start.
+                </p>
+              </div>
+            </div>
+            <label className="flex items-center gap-3 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={parentConfirmed}
+                onChange={e => setParentConfirmed(e.target.checked)}
+                className="w-5 h-5 accent-amber-500 rounded"
+              />
+              <span className="text-amber-800 font-semibold text-sm">I have a parent or grown-up with me ✓</span>
+            </label>
+          </div>
+        )}
+
         {/* Mode selection */}
         <h3 className="text-gray-700 font-bold mb-4">How do you want to complete this?</h3>
 
         <button
-          onClick={() => setCompletionMode('solo')}
-          className="w-full bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-3xl p-6 mb-4 shadow-lg active:scale-95 transition-transform"
+          onClick={() => { if (!quest.supervised || parentConfirmed) setCompletionMode('solo'); }}
+          className={`w-full bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-3xl p-6 mb-4 shadow-lg transition-all ${
+            quest.supervised && !parentConfirmed ? 'opacity-40 cursor-not-allowed' : 'active:scale-95'
+          }`}
         >
           <div className="flex items-center gap-4">
             <div className="bg-white rounded-full p-5"><Camera className="text-blue-500" size={32} /></div>
             <div className="text-left">
               <h3 className="text-xl font-bold mb-1">Do It Solo</h3>
-              <p className="text-blue-100 text-sm">Complete on your own and upload proof</p>
+              <p className="text-blue-100 text-sm">
+                {quest.supervised && !parentConfirmed ? '⚠️ Tick the box above first' : 'Complete on your own and upload proof'}
+              </p>
             </div>
           </div>
         </button>
 
         <button
-          onClick={handleChallengeMode}
-          className="w-full bg-gradient-to-r from-orange-400 to-yellow-400 text-white rounded-3xl p-6 shadow-lg mb-6 active:scale-95 transition-transform"
+          onClick={() => { if (!quest.supervised || parentConfirmed) handleChallengeMode(); }}
+          className={`w-full bg-gradient-to-r from-orange-400 to-yellow-400 text-white rounded-3xl p-6 shadow-lg mb-6 transition-all ${
+            quest.supervised && !parentConfirmed ? 'opacity-40 cursor-not-allowed' : 'active:scale-95'
+          }`}
         >
           <div className="flex items-center gap-4">
             <div className="bg-white rounded-full p-5"><Users className="text-orange-500" size={32} /></div>
