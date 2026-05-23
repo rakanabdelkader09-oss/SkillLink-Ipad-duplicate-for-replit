@@ -1,0 +1,52 @@
+Currently, when a user completes a course or lesson in the Courses section, there is no visual indication that they've finished. I need clear, satisfying completion feedback throughout the courses flow.
+Required behavior:
+1. Lesson completion
+
+When a user finishes the last step of a lesson, show a completion modal/screen with:
+
+A celebration icon (checkmark, trophy, or star)
+Text: "Lesson Complete! 🎉"
+Reward earned shown clearly: "+X SC · +Y XP" (use the existing two-currency system)
+A "Continue" or "Next Lesson" button that returns the user to the course overview
+
+
+The completed lesson should then visibly show a checkmark or "✓ Completed" badge on its card in the course overview
+
+2. Course completion
+
+When a user completes all lessons in a course (e.g., finishing all 7 Paper Crafts), show a course-level completion modal:
+
+Larger celebration (trophy icon, gentle confetti animation if simple to implement)
+Text: "Course Complete! You've finished [Course Name]"
+Total rewards earned shown
+A "Back to Courses" button
+
+
+The completed course should show a "✓ Completed" badge on its tile in the Courses main page
+
+3. Persistent visual indicators on course tiles
+
+In the Courses main page, each course card should show progress visually:
+
+Not started: no badge
+In progress: small progress bar or "X / Y lessons" text (e.g., "2 / 7")
+Completed: green checkmark badge ("✓ Completed")
+
+
+
+4. Pre-populate the demo account with:
+
+Paper Crafts course showing 2 / 7 lessons completed (so judges see "in progress" state)
+Drawing Basics showing 1 / 5 lessons completed with Lesson 1 marked as ✓ Completed
+One fully completed course (e.g., a Daily Habits course) showing the "✓ Completed" badge — so judges see all three states (not started, in progress, completed) at a glance
+
+5. Skill points awarded on completion
+
+Completing a lesson awards SC and XP to the user's account
+The home screen counters should reflect the updated values after completing a lesson
+
+Critical:
+
+Completion states must persist across navigation — if a user finishes a lesson, goes back to the courses page, and returns, the lesson must still show as completed
+All completion indicators must be visible at a glance — judges should be able to see progress across courses without tapping into each one
+Keep animations simple and fast (under 1 second). No long celebration sequences that delay the demo.

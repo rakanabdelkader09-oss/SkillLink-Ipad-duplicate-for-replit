@@ -5,6 +5,8 @@ interface CourseListScreenProps {
   category: string;
   onBack: () => void;
   onCourseSelect: (courseId: string) => void;
+  completedCourseIds?: string[];
+  lessonCompletions?: Record<string, number[]>;
 }
 
 export const COURSE_CATEGORY_INFO: Record<string, { name: string; color: string; emoji: string }> = {
@@ -105,7 +107,7 @@ export function getCourseById(courseId: string): CourseSummary | undefined {
   return ALL_COURSES.find(c => c.id === courseId);
 }
 
-export function CourseListScreen({ category, onBack, onCourseSelect }: CourseListScreenProps) {
+export function CourseListScreen({ category, onBack, onCourseSelect, completedCourseIds, lessonCompletions }: CourseListScreenProps) {
   const info = COURSE_CATEGORY_INFO[category] || COURSE_CATEGORY_INFO['life-skills'];
   const courses = COURSES_BY_CATEGORY[category] || COURSES_BY_CATEGORY['life-skills'];
 
@@ -125,8 +127,9 @@ export function CourseListScreen({ category, onBack, onCourseSelect }: CourseLis
 
       <div className="px-6 mt-6 space-y-4">
         {courses.map((course) => {
-          const progress = course.completed > 0 ? (course.completed / course.lessons) * 100 : 0;
-          const isCompleted = course.completed === course.lessons;
+          const doneLessons = lessonCompletions?.[course.id]?.length ?? course.completed;
+          const isCompleted = completedCourseIds?.includes(course.id) ?? (doneLessons >= course.lessons && course.lessons > 0);
+          const progress = doneLessons > 0 ? (doneLessons / course.lessons) * 100 : 0;
 
           return (
             <button
@@ -142,9 +145,9 @@ export function CourseListScreen({ category, onBack, onCourseSelect }: CourseLis
                     <span className="text-sm">Done!</span>
                   </div>
                 )}
-                {!isCompleted && course.completed > 0 && (
-                  <div className="absolute top-3 right-3 bg-yellow-400 text-yellow-900 rounded-full px-3 py-1 text-sm">
-                    In Progress
+                {!isCompleted && doneLessons > 0 && (
+                  <div className="absolute top-3 right-3 bg-yellow-400 text-yellow-900 rounded-full px-3 py-1 text-sm font-bold">
+                    {doneLessons}/{course.lessons} done
                   </div>
                 )}
               </div>
@@ -165,7 +168,7 @@ export function CourseListScreen({ category, onBack, onCourseSelect }: CourseLis
                 {progress > 0 && (
                   <div>
                     <div className="flex justify-between text-sm text-slate-500 mb-1">
-                      <span>{course.completed}/{course.lessons} complete</span>
+                      <span>{doneLessons}/{course.lessons} complete</span>
                       <span>{Math.round(progress)}%</span>
                     </div>
                     <div className="w-full bg-blue-100 rounded-full h-2">

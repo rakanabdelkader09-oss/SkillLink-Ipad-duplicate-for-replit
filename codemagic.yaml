@@ -1,17 +1,13 @@
 # Codemagic CI/CD configuration for SkillLink — Kids Learning
 # ------------------------------------------------------------
-# This pipeline builds an unsigned iOS .ipa from the React + Vite +
-# Capacitor source. It runs from the repository root (no
-# working_directory) and uses `build/` as the web bundle output, which
-# matches both `vite.config.ts` (build.outDir = "build") and
-# `capacitor.config.ts` (webDir = "build").
-#
-# Required runtime assets (already shipped in `public/`):
-#   - paper-crafts-header.mp4  (Paper Crafts header background video)
-#   - SC Coin icon used inline as the 🪙 emoji glyph
+# Two workflows:
+#   ios-unsigned-build  → unsigned .ipa (sideloadable)
+#   android-debug-build → debug .apk (open project in Android Studio or install directly)
 #
 # App metadata: SkillLink / com.skilllink.app
 workflows:
+
+  # ── iOS ─────────────────────────────────────────────────────────────────────
   ios-unsigned-build:
     name: SkillLink iOS Unsigned IPA
     instance_type: mac_mini_m2
@@ -24,24 +20,16 @@ workflows:
         XCODE_SCHEME: App
         BUNDLE_ID: com.skilllink.app
         APP_NAME: SkillLink
-        # Set this to your deployed Replit URL so the iOS app points to the live API.
-        # Example: https://skilllink.replit.app
-        # Leave blank to use the relative /api proxy (only works in web preview).
+        # Point to your deployed Replit URL so the iOS app calls the live API.
+        # Leave blank to use the relative /api proxy (web preview only).
         VITE_API_URL: ""
     scripts:
-      # 1. Install JS dependencies for the web layer
       - name: Install npm dependencies
-        script: |
-          npm ci || npm install
+        script: npm ci || npm install
 
-      # 2. Build the production web bundle into ./build (matches webDir)
       - name: Build web bundle
-        script: |
-          npm run build
+        script: npm run build
 
-      # 3. Make sure the iOS native shell exists, then sync the web
-      #    bundle (HTML/CSS/JS + public assets like
-      #    paper-crafts-header.mp4 and the SC coin icon) into it.
       - name: Initialise & sync iOS shell
         script: |
           if [ ! -d ios ]; then
@@ -49,7 +37,6 @@ workflows:
           fi
           npx cap sync ios
 
-      # 4. Build an unsigned .app archive — no signing keys required.
       - name: Build unsigned .app
         script: |
           xcodebuild build \
@@ -63,7 +50,6 @@ workflows:
             CODE_SIGN_IDENTITY="" \
             PROVISIONING_PROFILE=""
 
-      # 5. Repackage the .app into an unsigned .ipa for distribution.
       - name: Package unsigned IPA
         script: |
           mkdir -p build_ios/ipa/Payload
@@ -72,3 +58,36 @@ workflows:
     artifacts:
       - build_ios/ipa/*.ipa
       - build_ios/Build/Products/Release-iphoneos/*.app
+
+  # ── Android ─────────────────────────────────────────────────────────────────
+  android-debug-build:
+    name: SkillLink Android Debug APK
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      node: 20.18.0
+      java: 17
+      vars:
+        VITE_API_URL: ""
+    scripts:
+      - name: Install npm dependencies
+        script: npm ci || npm install
+
+      - name: Build web bundle
+        script: npm run build
+
+      - name: Initialise & sync Android shell
+        script: |
+          if [ ! -d android ]; then
+            npx cap add android
+          fi
+          npx cap sync android
+
+      - name: Build debug APK
+        script: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+    artifacts:
+      - android/app/build/outputs/apk/debug/*.apk

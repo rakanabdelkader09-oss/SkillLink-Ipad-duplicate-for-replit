@@ -9,6 +9,8 @@ interface CourseDetailScreenProps {
   courseId: string;
   onBack: () => void;
   onCourseComplete?: (courseId: string, points: number) => void;
+  onLessonComplete?: (courseId: string, lessonId: number, sc: number, xp: number) => void;
+  completedLessons?: number[];
   alreadyCompleted?: boolean;
 }
 
@@ -304,9 +306,11 @@ function buildGenericCourse(courseId: string) {
   };
 }
 
-export function CourseDetailScreen({ courseId, onBack, onCourseComplete, alreadyCompleted }: CourseDetailScreenProps) {
+export function CourseDetailScreen({ courseId, onBack, onCourseComplete, onLessonComplete, completedLessons, alreadyCompleted }: CourseDetailScreenProps) {
   const course = courseData[courseId] || buildGenericCourse(courseId) || courseData['ls-1'];
-  const [lessons, setLessons] = useState<Lesson[]>(course.lessons);
+  const [lessons, setLessons] = useState<Lesson[]>(() =>
+    course.lessons.map((l: Lesson) => ({ ...l, completed: completedLessons?.includes(l.id) ?? l.completed }))
+  );
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null);
   const [activeStep, setActiveStep] = useState(0);
   const [phase, setPhase] = useState<LessonPhase>('steps');
@@ -319,8 +323,15 @@ export function CourseDetailScreen({ courseId, onBack, onCourseComplete, already
   const [quizScore, setQuizScore] = useState(0);
   const [quizPassed, setQuizPassed] = useState(false);
 
-  const completedLessons = lessons.filter(l => l.completed).length;
-  const progress = lessons.length > 0 ? (completedLessons / lessons.length) * 100 : 0;
+  // Completion modal state
+  const [showLessonModal, setShowLessonModal] = useState(false);
+  const [showCourseModal, setShowCourseModal] = useState(false);
+  const [lastLessonTitle, setLastLessonTitle] = useState('');
+  const [lastLessonSC, setLastLessonSC] = useState(0);
+  const [lastLessonXP, setLastLessonXP] = useState(0);
+
+  const completedCount = lessons.filter(l => l.completed).length;
+  const progress = lessons.length > 0 ? (completedCount / lessons.length) * 100 : 0;
   const nextLesson = lessons.find(l => !l.completed);
 
   const startLesson = (lesson: Lesson) => {
@@ -365,14 +376,24 @@ export function CourseDetailScreen({ courseId, onBack, onCourseComplete, already
     }
   };
 
+  const lessonSC = Math.max(5, Math.round(course.points / Math.max(1, course.lessons.length)));
+  const lessonXP = lessonSC * 4;
+
   const completeLesson = () => {
     if (!activeLesson) return;
+    setLastLessonTitle(activeLesson.title);
+    setLastLessonSC(lessonSC);
+    setLastLessonXP(lessonXP);
+    onLessonComplete?.(courseId, activeLesson.id, lessonSC, lessonXP);
     setLessons(prev => {
       const updated = prev.map(l => l.id === activeLesson.id ? { ...l, completed: true } : l);
       const allDone = updated.every(l => l.completed);
       if (allDone && !courseRewarded && !alreadyCompleted) {
         setCourseRewarded(true);
         onCourseComplete?.(courseId, course.points);
+        setShowCourseModal(true);
+      } else {
+        setShowLessonModal(true);
       }
       return updated;
     });
@@ -608,7 +629,7 @@ export function CourseDetailScreen({ courseId, onBack, onCourseComplete, already
         <div className="bg-white border-2 border-purple-100 rounded-3xl p-5 shadow-md">
           <div className="flex justify-between items-center mb-2">
             <span className="text-gray-600 font-medium">Your Progress</span>
-            <span className="text-purple-600 font-bold">{completedLessons}/{lessons.length} done</span>
+            <span className="text-purple-600 font-bold">{completedCount}/{lessons.length} done</span>
           </div>
           <Progress value={progress} className="h-3" />
         </div>
@@ -627,7 +648,7 @@ export function CourseDetailScreen({ courseId, onBack, onCourseComplete, already
         </div>
       )}
 
-      {completedLessons === lessons.length && (
+      {completedCount === lessons.length && (
         <div className="px-6 mt-4">
           <div className="bg-green-50 border-2 border-green-200 rounded-3xl p-5 text-center">
             <div className="text-4xl mb-2">🏆</div>
@@ -680,6 +701,59 @@ export function CourseDetailScreen({ courseId, onBack, onCourseComplete, already
           })}
         </div>
       </div>
+
+      {/* Lesson Complete Modal */}
+      {showLessonModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-6" onClick={() => setShowLessonModal(false)}>
+          <div className="bg-white rounded-3xl p-8 w-full max-w-sm text-center shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="text-6xl mb-2">✅</div>
+            <div className="text-2xl mb-3 tracking-widest">🎉 ⭐ ✨ 🌟 🎊</div>
+            <h2 className="text-2xl font-black text-gray-800 mb-1">Lesson Complete!</h2>
+            <p className="text-gray-500 text-sm mb-5">{lastLessonTitle}</p>
+            <div className="flex justify-center gap-3 mb-6">
+              <div className="bg-yellow-100 border-2 border-yellow-300 rounded-2xl px-5 py-3">
+                <p className="text-yellow-700 font-black text-xl">+{lastLessonSC} SC</p>
+              </div>
+              <div className="bg-purple-100 border-2 border-purple-300 rounded-2xl px-5 py-3">
+                <p className="text-purple-700 font-black text-xl">+{lastLessonXP} XP</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowLessonModal(false)}
+              className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold text-lg rounded-2xl active:scale-95 transition-transform"
+            >
+              {lessons.find(l => !l.completed) ? 'Next Lesson →' : 'See Results ✓'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Course Complete Modal */}
+      {showCourseModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-6">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-sm text-center shadow-2xl">
+            <div className="text-7xl mb-2">🏆</div>
+            <div className="text-2xl mb-3 tracking-widest">🎉 🌟 🎊 ⭐ ✨ 🎉</div>
+            <h2 className="text-2xl font-black text-gray-800 mb-1">Course Complete!</h2>
+            <p className="text-gray-500 text-sm mb-1">You finished</p>
+            <p className="text-purple-600 font-bold text-lg mb-5">{course.title}</p>
+            <div className="flex justify-center gap-3 mb-6">
+              <div className="bg-yellow-100 border-2 border-yellow-300 rounded-2xl px-5 py-3">
+                <p className="text-yellow-700 font-black text-xl">+{course.points} SC</p>
+              </div>
+              <div className="bg-purple-100 border-2 border-purple-300 rounded-2xl px-5 py-3">
+                <p className="text-purple-700 font-black text-xl">+{course.points * 4} XP</p>
+              </div>
+            </div>
+            <button
+              onClick={() => { setShowCourseModal(false); onBack(); }}
+              className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-2xl active:scale-95 transition-transform"
+            >
+              🎓 Back to Courses
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

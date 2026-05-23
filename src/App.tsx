@@ -115,7 +115,14 @@ export default function App() {
   const [dailyQuests, setDailyQuests] = useState<any[]>([]);
   const [videoSubmissions, setVideoSubmissions] = useState<VideoSubmission[]>([]);
   const [completedQuestIds, setCompletedQuestIds] = useState<number[]>([]);
-  const [completedCourseIds, setCompletedCourseIds] = useState<string[]>([]);
+  const [completedCourseIds, setCompletedCourseIds] = useState<string[]>(() => {
+    try { const s = localStorage.getItem('skilllink-completed-courses'); if (s) return JSON.parse(s); } catch {}
+    return ['dh-1'];
+  });
+  const [lessonCompletions, setLessonCompletions] = useState<Record<string, number[]>>(() => {
+    try { const s = localStorage.getItem('skilllink-lesson-completions'); if (s) return JSON.parse(s); } catch {}
+    return { 'cr-1': [1], 'dh-1': [1, 2, 3, 4] };
+  });
   const [userHandle, setUserHandle] = useState<string | null>(null);
 
   // Creator State
@@ -208,6 +215,14 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("skilllink-language", language);
   }, [language]);
+
+  // Persist lesson completions and completed courses
+  useEffect(() => {
+    localStorage.setItem('skilllink-lesson-completions', JSON.stringify(lessonCompletions));
+  }, [lessonCompletions]);
+  useEffect(() => {
+    localStorage.setItem('skilllink-completed-courses', JSON.stringify(completedCourseIds));
+  }, [completedCourseIds]);
 
   // Sync user with backend on mount (returns existing coins for returning users)
   useEffect(() => {
@@ -1068,14 +1083,29 @@ export default function App() {
     if (completedCourseIds.includes(courseId)) return;
     setCompletedCourseIds((prev) => [...prev, courseId]);
     setUserPoints((prev) => prev + points);
+    const xpBonus = points * 4;
+    setUserXP((prev) => prev + xpBonus);
     if (userId) {
-      updateCourseProgress(userId, courseId, 'structured', 0, true)
-        .catch(console.error);
+      updateCourseProgress(userId, courseId, 'structured', 0, true).catch(console.error);
       awardCoins(userId, points, `Course complete: ${courseId}`)
-        .then(({ sc_coins }) => {
-          if (sc_coins !== null) setUserPoints(sc_coins);
-        })
+        .then(({ sc_coins }) => { if (sc_coins !== null) setUserPoints(sc_coins); })
         .catch(console.error);
+      addXP(userId, xpBonus).then(({ xp }) => setUserXP(xp)).catch(console.error);
+    }
+  };
+
+  const handleLessonComplete = (courseId: string, lessonId: number, sc: number, xp: number) => {
+    setLessonCompletions(prev => {
+      const cur = prev[courseId] ?? [];
+      if (cur.includes(lessonId)) return prev;
+      return { ...prev, [courseId]: [...cur, lessonId] };
+    });
+    setUserPoints(prev => prev + sc);
+    if (userId) {
+      awardCoins(userId, sc, `Lesson complete: ${courseId}`)
+        .then(({ sc_coins }) => { if (sc_coins !== null) setUserPoints(sc_coins); })
+        .catch(() => setUserPoints(prev => prev - sc));
+      addXP(userId, xp).then(({ xp: newXp }) => setUserXP(newXp)).catch(console.error);
     }
   };
 
@@ -1318,6 +1348,8 @@ export default function App() {
             category={selectedCategory}
             onBack={handleBack}
             onCourseSelect={handleCourseSelect}
+            completedCourseIds={completedCourseIds}
+            lessonCompletions={lessonCompletions}
           />
         );
       case "course-detail":
@@ -1326,6 +1358,8 @@ export default function App() {
             courseId={selectedCourseId}
             onBack={handleBack}
             onCourseComplete={handleCourseComplete}
+            onLessonComplete={handleLessonComplete}
+            completedLessons={lessonCompletions[selectedCourseId] ?? []}
             alreadyCompleted={completedCourseIds.includes(selectedCourseId)}
           />
         );

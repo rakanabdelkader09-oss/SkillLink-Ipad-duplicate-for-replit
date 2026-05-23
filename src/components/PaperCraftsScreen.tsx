@@ -32,7 +32,7 @@ const COURSES: OrigamiCourse[] = [
     emoji: '⛵',
     difficulty: 'easy',
     points: 20,
-    completed: false,
+    completed: true,
     steps: [
       { title: 'Fold in half', description: 'Take your paper and fold it in half horizontally.', youtubeId: 'a6V09L6OZwc', thumbnail: 'https://img.youtube.com/vi/a6V09L6OZwc/mqdefault.jpg' },
       { title: 'Fold corners down', description: 'Fold both top corners down to the center crease.', youtubeId: 'a6V09L6OZwc', thumbnail: 'https://img.youtube.com/vi/a6V09L6OZwc/mqdefault.jpg' },
@@ -46,7 +46,7 @@ const COURSES: OrigamiCourse[] = [
     emoji: '✈️',
     difficulty: 'easy',
     points: 20,
-    completed: false,
+    completed: true,
     steps: [
       { title: 'Fold lengthwise', description: 'Fold the paper in half lengthwise and unfold.', youtubeId: '7Cy3lRJGiR4', thumbnail: 'https://img.youtube.com/vi/7Cy3lRJGiR4/mqdefault.jpg' },
       { title: 'Fold top corners', description: 'Fold both top corners to the center line.', youtubeId: '7Cy3lRJGiR4', thumbnail: 'https://img.youtube.com/vi/7Cy3lRJGiR4/mqdefault.jpg' },
