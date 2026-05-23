@@ -234,7 +234,7 @@ app.post('/api/users/:userId/quests', async (req, res) => {
     let newBalance = null;
     if (questStatus === 'completed') {
       const coinResult = await pool.query(
-        `UPDATE users SET sc_coins = sc_coins + $2, xp = xp + $2 WHERE id = $1 RETURNING sc_coins`,
+        `UPDATE users SET sc_coins = sc_coins + $2 WHERE id = $1 RETURNING sc_coins`,
         [userId, points_earned]
       );
       newBalance = coinResult.rows[0]?.sc_coins ?? null;
