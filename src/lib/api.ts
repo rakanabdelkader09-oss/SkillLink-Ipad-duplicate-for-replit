@@ -1,13 +1,57 @@
-const BASE = '/api';
+// In a Capacitor sideloaded app relative URLs (/api/…) resolve to
+// capacitor://localhost/api/… which WKWebView rejects with
+// "the string did not match the expected pattern".
+// Set VITE_API_URL to your deployed Replit URL (e.g. https://skilllink.replit.app)
+// in Codemagic → App settings → Environment variables before building the IPA.
+const STATIC_API_URL =
+  (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') || '';
+
+function resolveBase(): string {
+  if (STATIC_API_URL) return `${STATIC_API_URL}/api`;
+  // Detect Capacitor native (iOS/Android sideloaded)
+  if (
+    typeof window !== 'undefined' &&
+    (window as any)?.Capacitor?.isNativePlatform?.()
+  ) {
+    throw new Error(
+      'SkillLink cannot reach its server on this device.\n\n' +
+      'To fix: deploy your Replit app, then set VITE_API_URL to your ' +
+      '.replit.app URL in Codemagic → Environment variables and rebuild the IPA.'
+    );
+  }
+  return '/api';
+}
 
 async function request<T>(
   path: string,
   options?: RequestInit
 ): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
-  });
+  const base = resolveBase();
+  let res: Response;
+  try {
+    res = await fetch(`${base}${path}`, {
+      headers: { 'Content-Type': 'application/json' },
+      ...options,
+    });
+  } catch (err: any) {
+    // Convert WKWebView's native "string did not match the expected pattern"
+    // and generic network failures into readable messages.
+    const msg: string = err?.message || '';
+    if (
+      msg.includes('pattern') ||
+      msg.includes('Failed to fetch') ||
+      msg.includes('NetworkError') ||
+      msg.includes('Load failed')
+    ) {
+      throw new Error(
+        'Cannot reach the SkillLink server.\n' +
+        'Make sure VITE_API_URL is set to your deployed Replit URL ' +
+        '(e.g. https://skilllink.replit.app) in Codemagic environment variables, ' +
+        'then rebuild the IPA.'
+      );
+    }
+    throw err;
+  }
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: res.statusText }));
     throw new Error(err.error || 'API error');
