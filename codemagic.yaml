@@ -1,8 +1,12 @@
 # Codemagic CI/CD configuration for SkillLink — Kids Learning
 # ------------------------------------------------------------
 # Two workflows:
-#   ios-unsigned-build  → unsigned .ipa (sideloadable)
-#   android-debug-build → debug .apk (open project in Android Studio or install directly)
+#   ios-unsigned-build  → unsigned .ipa (sideloadable via AltStore / Sideloadly)
+#   android-debug-build → debug .apk (installable directly or open android/ in Android Studio)
+#
+# To point the app at your live API, set VITE_API_URL in the Codemagic
+# Environment variables UI (App settings → Environment variables) rather than
+# here, so the value is never committed to the repo.
 #
 # App metadata: SkillLink / com.skilllink.app
 workflows:
@@ -20,9 +24,6 @@ workflows:
         XCODE_SCHEME: App
         BUNDLE_ID: com.skilllink.app
         APP_NAME: SkillLink
-        # Point to your deployed Replit URL so the iOS app calls the live API.
-        # Leave blank to use the relative /api proxy (web preview only).
-        VITE_API_URL: ""
     scripts:
       - name: Install npm dependencies
         script: npm ci || npm install
@@ -67,8 +68,6 @@ workflows:
     environment:
       node: 20.18.0
       java: 17
-      vars:
-        VITE_API_URL: ""
     scripts:
       - name: Install npm dependencies
         script: npm ci || npm install
