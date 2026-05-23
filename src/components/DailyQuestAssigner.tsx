@@ -175,8 +175,8 @@ export const QUEST_POOL: Quest[] = [
 
   // ── ADVANCED  (demanding, thorough — 15 SC) ──────────────────────────────
   { id: 16,  title: 'Deep-clean your bedroom: vacuum/sweep the floor, dust all surfaces, organise wardrobe, make bed with fresh sheets — film the result',
-    icon: '🏠', points: 15, completed: false, category: 'Responsibility', color: 'orange',
-    minAge: 6, maxAge: 12, difficulty: 'advanced', xp: 15, verifyType: 'film' },
+    icon: '🏠', points: 45, completed: false, category: 'Responsibility', color: 'orange',
+    minAge: 6, maxAge: 12, difficulty: 'advanced', xp: 180, verifyType: 'film' },
 
   { id: 17,  title: 'Do a full load of laundry: sort, wash, dry, fold and put every item away — parent approves the finished wardrobe',
     icon: '🧺', points: 15, completed: false, category: 'Responsibility', color: 'orange',

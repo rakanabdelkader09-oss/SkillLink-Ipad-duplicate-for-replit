@@ -37,6 +37,7 @@ import {
   spendCoins,
   completeQuest,
   awardCoins,
+  addXP,
   updateCourseProgress,
   getCompletedQuestIds,
   getCompletedCourseIds,
@@ -1034,7 +1035,7 @@ export default function App() {
     setVideoSubmissions((prev) => [...prev, submission]);
     setCompletedQuestIds((prev) => [...prev, questId]);
 
-    // Persist to DB and award coins
+    // Persist to DB and award coins + XP
     if (userId && qd) {
       completeQuest(userId, {
         quest_id: questId,
@@ -1046,6 +1047,11 @@ export default function App() {
         .then(({ sc_coins }) => {
           if (sc_coins !== null) setUserPoints(sc_coins);
         })
+        .catch(console.error);
+
+      const xpToAward = qd.points * 4;
+      addXP(userId, xpToAward)
+        .then(({ xp }) => setUserXP(xp))
         .catch(console.error);
     }
   };
@@ -1389,7 +1395,6 @@ export default function App() {
           <CleanRoomQuestScreen
             onBack={handleBack}
             onComplete={(pts) => {
-              setUserPoints((prev) => prev + pts);
               if (userId) {
                 completeQuest(userId, {
                   quest_id: 16,
@@ -1401,6 +1406,10 @@ export default function App() {
                   .then(({ sc_coins }) => {
                     if (sc_coins !== null) setUserPoints(sc_coins);
                   })
+                  .catch(console.error);
+
+                addXP(userId, pts * 4)
+                  .then(({ xp }) => setUserXP(xp))
                   .catch(console.error);
               }
               handleBack();
