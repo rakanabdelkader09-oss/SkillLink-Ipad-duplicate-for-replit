@@ -1036,6 +1036,9 @@ export default function App() {
     setVideoSubmissions((prev) => [...prev, submission]);
     setCompletedQuestIds((prev) => [...prev, questId]);
 
+    // Optimistic SC update — corrected by DB response below
+    if (qd) setUserPoints((prev) => prev + qd.points);
+
     // Persist to DB and award coins + XP
     if (userId && qd) {
       completeQuest(userId, {
@@ -1048,7 +1051,11 @@ export default function App() {
         .then(({ sc_coins }) => {
           if (sc_coins !== null) setUserPoints(sc_coins);
         })
-        .catch(console.error);
+        .catch((err) => {
+          // Roll back optimistic update on failure
+          setUserPoints((prev) => prev - qd.points);
+          console.error("completeQuest failed:", err);
+        });
 
       const xpToAward = qd.points * 4;
       addXP(userId, xpToAward)
