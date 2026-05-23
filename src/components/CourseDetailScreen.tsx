@@ -229,6 +229,25 @@ function ytEmbedUrl(id: string) {
   return `https://www.youtube.com/embed/${id}?playsinline=1&rel=0&modestbranding=1`;
 }
 
+// One relevant video per category used by all generic placeholder lessons in that category.
+const CATEGORY_FALLBACK_VIDEO: Record<string, string> = {
+  'ls':  's2sGVdkPBZA', // life-skills  — shoe tying
+  'cr':  'ZlBFyMfPHlw', // creativity   — drawing basics
+  'hh':  'ic73LpTKcjs', // healthy-habits — morning routine for kids
+  'ss':  'hk7jSjb319I', // social-skills  — teamwork animated short
+  'tw':  'hk7jSjb319I', // teamwork       — teamwork animated short
+  'dh':  'ic73LpTKcjs', // daily-habits   — morning routine for kids
+  'ei':  '6YV4n3INLXA', // emotional-intelligence — feelings for kids
+  'ps':  'qCzUSmV5PdY', // problem-solving — problem solving kids
+  'cm':  '2JG9AC0ZxuY', // communication  — communication skills kids
+  'co':  'H1XOb6OSEhE', // cooking        — kitchen safety
+};
+
+function getCategoryVideoId(courseId: string): string {
+  const prefix = courseId.split('-')[0];
+  return CATEGORY_FALLBACK_VIDEO[prefix] ?? 'ZlBFyMfPHlw';
+}
+
 // Build a generic placeholder course for IDs that don't yet have curated
 // content, so every course card opens its own page (never a fallback to
 // "Tying Your Shoes"). Title/emoji/points come from the canonical
@@ -236,6 +255,7 @@ function ytEmbedUrl(id: string) {
 function buildGenericCourse(courseId: string) {
   const summary = getCourseById(courseId);
   if (!summary) return null;
+  const videoId = getCategoryVideoId(courseId);
   const lessonCount = Math.max(1, summary.lessons);
   const lessons: Lesson[] = Array.from({ length: lessonCount }).map((_, i) => ({
     id: i + 1,
@@ -245,13 +265,13 @@ function buildGenericCourse(courseId: string) {
     steps: [
       {
         heading: `Introduction to ${summary.title}`,
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        videoUrl: `https://www.youtube.com/embed/${videoId}`,
         videoLabel: `${summary.title} — overview`,
         instructions: `Watch the video and learn the basics of "${summary.title}". Take your time and follow along step by step.`,
       },
       {
         heading: 'Try it yourself',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        videoUrl: `https://www.youtube.com/embed/${videoId}`,
         videoLabel: `${summary.title} — practice`,
         instructions: `Now it's your turn! Practice what you learned about ${summary.title.toLowerCase()}. Ask a grown-up for help if you need it.`,
       },

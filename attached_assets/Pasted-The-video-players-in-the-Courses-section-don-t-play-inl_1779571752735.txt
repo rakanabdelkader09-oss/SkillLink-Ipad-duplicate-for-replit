@@ -1,0 +1,39 @@
+The video players in the Courses section don't play inline — they either don't render or redirect to YouTube when tapped. I need a focused fix that works on iOS Safari specifically (the strictest browser).
+Technical requirements for ALL video players in Courses:
+
+Use YouTube IFrame embeds with the URL pattern: https://www.youtube.com/embed/[VIDEO_ID]?rel=0&modestbranding=1&playsinline=1
+Set iframe attributes: allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" and allowfullscreen
+Iframe must be 100% width with 16:9 aspect ratio (use aspect-ratio: 16/9 CSS)
+The playsinline=1 parameter is critical to prevent iOS from handing off to the YouTube app
+Tapping play must play the video INSIDE the app, not redirect to youtube.com
+
+Priority 1 — Apply working videos to these fully-scripted lessons:
+Paper Crafts category (7 tutorials):
+
+Paper Boat → search YouTube for "paper boat origami easy tutorial" — pick first short kid-friendly result, use that video ID
+Paper Airplane → search "basic paper airplane tutorial kids"
+Paper Cup → search "origami paper cup tutorial"
+Origami Crane → search "origami crane easy tutorial"
+Jumping Frog → search "origami jumping frog tutorial"
+Origami Dragon → search "origami dragon tutorial easy"
+Origami Rose → search "origami rose tutorial easy"
+
+Drawing Basics (2 fully-scripted lessons):
+
+Lesson 1 (Lines & Circles) → search "basic drawing lines circles for kids"
+Lesson 2 (Drawing a Cat) → search "how to draw a cat easy for kids"
+
+Priority 2 — For all OTHER courses (generic placeholder lessons):
+Use ONE shared fallback video per category to avoid bloating the build. Assign the most relevant general video per category:
+
+Creativity (other 3 courses) → reuse first Drawing Basics video
+Teamwork → search "teamwork for kids animated short"
+Daily Habits → search "morning routine for kids"
+Emotional Intelligence → search "feelings for kids animated"
+Problem Solving → search "problem solving for kids"
+Communication → search "communication skills for kids"
+
+The shared fallback per category means all generic lessons in that category use the same embedded video. This is acceptable for demo purposes.
+Critical: do NOT try to find unique videos for every generic lesson. Use the category fallback to save tokens and ensure completion.
+Verification step:
+After implementing, test the Paper Boat lesson specifically: the YouTube thumbnail must be visible, tapping play must play the video inline without redirecting, and the video must remain in the lesson page when paused or finished.

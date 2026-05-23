@@ -140,11 +140,11 @@ function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
 
   if (playing) {
     return (
-      <div className="relative w-full h-44 bg-black">
+      <div className="relative w-full bg-black" style={{ aspectRatio: '16/9' }}>
         <iframe
-          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0`}
-          className="w-full h-full border-0"
-          allow="autoplay; encrypted-media; fullscreen"
+          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0&modestbranding=1`}
+          className="absolute inset-0 w-full h-full border-0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
           allowFullScreen
           title="Origami tutorial"
         />
@@ -154,13 +154,14 @@ function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
 
   return (
     <div
-      className="relative w-full h-44 bg-black cursor-pointer"
+      className="relative w-full bg-black cursor-pointer"
+      style={{ aspectRatio: '16/9' }}
       onClick={() => setPlaying(true)}
     >
       <img
         src={`https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`}
         alt="Video thumbnail"
-        className="w-full h-full object-cover opacity-80"
+        className="absolute inset-0 w-full h-full object-cover opacity-80"
         onError={(e) => {
           (e.target as HTMLImageElement).src =
             "https://placehold.co/320x180/1e1e1e/ffffff?text=Tap+to+Play";
