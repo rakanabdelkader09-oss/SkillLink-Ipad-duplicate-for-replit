@@ -121,19 +121,19 @@ const courseData: Record<string, any> = {
         steps: [
           {
             heading: 'Get Your Tools Ready',
-            videoUrl: 'https://www.youtube.com/embed/ZlBFyMfPHlw',
+            videoUrl: 'https://www.youtube.com/embed/kFhH7-zuHfk',
             videoLabel: 'Art tools for beginners',
             instructions: 'Get a pencil and a blank piece of paper. Find a flat surface to draw on. Good preparation makes drawing easier!',
           },
           {
             heading: 'Draw Straight Lines',
-            videoUrl: 'https://www.youtube.com/embed/ZlBFyMfPHlw',
+            videoUrl: 'https://www.youtube.com/embed/kFhH7-zuHfk',
             videoLabel: 'Drawing straight lines',
             instructions: 'Hold your pencil lightly and move your whole arm to draw a straight line. Practice 5 horizontal lines and 5 vertical lines.',
           },
           {
             heading: 'Draw Circles',
-            videoUrl: 'https://www.youtube.com/embed/ZlBFyMfPHlw',
+            videoUrl: 'https://www.youtube.com/embed/kFhH7-zuHfk',
             videoLabel: 'Drawing perfect circles',
             instructions: 'Draw a circle slowly, keeping your hand steady. Try making 5 circles of different sizes. It is okay if they are wobbly - practice makes perfect!',
           },
@@ -152,19 +152,19 @@ const courseData: Record<string, any> = {
         steps: [
           {
             heading: 'Start with the Head',
-            videoUrl: 'https://www.youtube.com/embed/cqwYi64dFzw',
+            videoUrl: 'https://www.youtube.com/embed/a_cF19eNKNo',
             videoLabel: 'Drawing a cat step by step',
             instructions: 'Draw a big circle for the cat\'s head. Make it nice and round - this is the base for our cat!',
           },
           {
             heading: 'Add Ears and Face',
-            videoUrl: 'https://www.youtube.com/embed/cqwYi64dFzw',
+            videoUrl: 'https://www.youtube.com/embed/a_cF19eNKNo',
             videoLabel: 'Cat ears and face',
             instructions: 'Draw two small triangles on top for ears. Then add two circles for eyes, a small triangle nose, and a curved line for the mouth.',
           },
           {
             heading: 'Finish with Whiskers',
-            videoUrl: 'https://www.youtube.com/embed/cqwYi64dFzw',
+            videoUrl: 'https://www.youtube.com/embed/a_cF19eNKNo',
             videoLabel: 'Cat whiskers and details',
             instructions: 'Draw 3 lines on each side of the nose for whiskers. Add dots at the end of each whisker. Your cat is done - give it a name!',
           },
@@ -232,7 +232,7 @@ function ytEmbedUrl(id: string) {
 // One relevant video per category used by all generic placeholder lessons in that category.
 const CATEGORY_FALLBACK_VIDEO: Record<string, string> = {
   'ls':  's2sGVdkPBZA', // life-skills  — shoe tying
-  'cr':  'ZlBFyMfPHlw', // creativity   — drawing basics
+  'cr':  'kFhH7-zuHfk', // creativity   — drawing basics
   'hh':  'ic73LpTKcjs', // healthy-habits — morning routine for kids
   'ss':  'hk7jSjb319I', // social-skills  — teamwork animated short
   'tw':  'hk7jSjb319I', // teamwork       — teamwork animated short
@@ -245,7 +245,7 @@ const CATEGORY_FALLBACK_VIDEO: Record<string, string> = {
 
 function getCategoryVideoId(courseId: string): string {
   const prefix = courseId.split('-')[0];
-  return CATEGORY_FALLBACK_VIDEO[prefix] ?? 'ZlBFyMfPHlw';
+  return CATEGORY_FALLBACK_VIDEO[prefix] ?? 'kFhH7-zuHfk';
 }
 
 // Build a generic placeholder course for IDs that don't yet have curated
