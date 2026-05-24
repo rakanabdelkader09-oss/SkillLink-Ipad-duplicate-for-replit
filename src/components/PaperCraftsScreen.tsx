@@ -1,3 +1,4 @@
+﻿import { Browser } from '@capacitor/browser';
 import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, ChevronRight, CheckCircle, Star, Lock } from 'lucide-react';
 import { Progress } from './ui/progress';
@@ -29,7 +30,7 @@ const COURSES: OrigamiCourse[] = [
   {
     id: 'paper-boat',
     title: 'Paper Boat',
-    emoji: '⛵',
+    emoji: 'â›µ',
     difficulty: 'easy',
     points: 20,
     completed: true,
@@ -43,7 +44,7 @@ const COURSES: OrigamiCourse[] = [
   {
     id: 'paper-airplane',
     title: 'Paper Airplane',
-    emoji: '✈️',
+    emoji: 'âœˆï¸',
     difficulty: 'easy',
     points: 20,
     completed: true,
@@ -58,7 +59,7 @@ const COURSES: OrigamiCourse[] = [
   {
     id: 'paper-cup',
     title: 'Paper Cup',
-    emoji: '🥤',
+    emoji: 'ðŸ¥¤',
     difficulty: 'easy',
     points: 20,
     steps: [
@@ -72,7 +73,7 @@ const COURSES: OrigamiCourse[] = [
   {
     id: 'origami-crane',
     title: 'Origami Crane',
-    emoji: '🕊️',
+    emoji: 'ðŸ•Šï¸',
     difficulty: 'intermediate',
     points: 35,
     steps: [
@@ -87,20 +88,20 @@ const COURSES: OrigamiCourse[] = [
   {
     id: 'origami-frog',
     title: 'Jumping Frog',
-    emoji: '🐸',
+    emoji: 'ðŸ¸',
     difficulty: 'intermediate',
     points: 35,
     steps: [
       { title: 'Fold and crease', description: 'Create valley and mountain folds to form the base.', youtubeId: '1kZjq8f8Mpo', thumbnail: 'https://img.youtube.com/vi/1kZjq8f8Mpo/mqdefault.jpg' },
       { title: 'Form the front legs', description: "Create the frog's two front legs from the top section.", youtubeId: '1kZjq8f8Mpo', thumbnail: 'https://img.youtube.com/vi/1kZjq8f8Mpo/mqdefault.jpg' },
       { title: 'Form the back legs', description: 'Fold the bottom section to create the back legs.', youtubeId: '1kZjq8f8Mpo', thumbnail: 'https://img.youtube.com/vi/1kZjq8f8Mpo/mqdefault.jpg' },
-      { title: 'Make it jump!', description: 'Press the back and release — your frog jumps!', youtubeId: '1kZjq8f8Mpo', thumbnail: 'https://img.youtube.com/vi/1kZjq8f8Mpo/mqdefault.jpg' },
+      { title: 'Make it jump!', description: 'Press the back and release â€” your frog jumps!', youtubeId: '1kZjq8f8Mpo', thumbnail: 'https://img.youtube.com/vi/1kZjq8f8Mpo/mqdefault.jpg' },
     ],
   },
   {
     id: 'origami-dragon',
     title: 'Origami Dragon',
-    emoji: '🐉',
+    emoji: 'ðŸ‰',
     difficulty: 'advanced',
     points: 50,
     locked: true,
@@ -115,7 +116,7 @@ const COURSES: OrigamiCourse[] = [
   {
     id: 'origami-rose',
     title: 'Origami Rose',
-    emoji: '🌹',
+    emoji: 'ðŸŒ¹',
     difficulty: 'advanced',
     points: 50,
     locked: true,
@@ -136,47 +137,15 @@ const DIFFICULTY_CONFIG = {
 };
 
 function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
-  const [playing, setPlaying] = useState(false);
-
-  if (playing) {
-    return (
-      <div className="relative w-full bg-black" style={{ aspectRatio: '16/9' }}>
-        <iframe
-          src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&origin=https://localhost`}
-          className="absolute inset-0 w-full h-full border-0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-          allowFullScreen
-          title="Origami tutorial"
-        />
-      </div>
-    );
-  }
-
   return (
-    <div
-      className="relative w-full bg-black cursor-pointer"
-      style={{ aspectRatio: '16/9' }}
-      onClick={() => setPlaying(true)}
-    >
-      <img
-        src={`https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`}
-        alt="Video thumbnail"
-        className="absolute inset-0 w-full h-full object-cover opacity-80"
-        onError={(e) => {
-          (e.target as HTMLImageElement).src =
-            "https://placehold.co/320x180/1e1e1e/ffffff?text=Tap+to+Play";
-        }}
-      />
+    <div className="relative w-full bg-black cursor-pointer" style={{ aspectRatio: '16/9' }} onClick={async () => { await Browser.open({ url: `https://www.youtube.com/watch?v=${youtubeId}` }); }}}>
+      <img src={`https://img.youtube.com/vi/\/mqdefault.jpg`} alt="Video thumbnail" className="absolute inset-0 w-full h-full object-cover opacity-80" />
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="bg-red-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-xl">
-          <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
-            <path d="M8 5v14l11-7z" />
-          </svg>
+          <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M8 5v14l11-7z" /></svg>
         </div>
       </div>
-      <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
-        ▶ Tap to play
-      </div>
+      <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">▶ Tap to watch</div>
     </div>
   );
 }
@@ -235,7 +204,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
                   : 'bg-card border-border text-muted-foreground'
               }`}
             >
-              {completedSteps.has(i) ? '✓' : i + 1}
+              {completedSteps.has(i) ? 'âœ“' : i + 1}
             </button>
           ))}
         </div>
@@ -261,7 +230,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
                     : 'border-border text-muted-foreground'
                 }`}
               >
-                {completedSteps.has(currentStep) ? <CheckCircle size={20} /> : <span className="text-lg">○</span>}
+                {completedSteps.has(currentStep) ? <CheckCircle size={20} /> : <span className="text-lg">â—‹</span>}
               </button>
             </div>
 
@@ -271,7 +240,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
                   onClick={() => setCurrentStep(i => i - 1)}
                   className="flex-1 py-3 bg-muted rounded-2xl text-foreground font-semibold text-sm active:scale-95 transition-transform"
                 >
-                  ← Previous
+                  â† Previous
                 </button>
               )}
               {currentStep < course.steps.length - 1 ? (
@@ -279,14 +248,14 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
                   onClick={() => { toggleStep(currentStep); setCurrentStep(i => i + 1); }}
                   className="flex-1 py-3 bg-primary rounded-2xl text-primary-foreground font-semibold text-sm active:scale-95 transition-transform"
                 >
-                  Next Step →
+                  Next Step â†’
                 </button>
               ) : (
                 <button
                   onClick={() => toggleStep(currentStep)}
                   className="flex-1 py-3 bg-green-500 rounded-2xl text-white font-semibold text-sm active:scale-95 transition-transform"
                 >
-                  {completedSteps.has(currentStep) ? '✅ Done!' : 'Mark Complete!'}
+                  {completedSteps.has(currentStep) ? 'âœ… Done!' : 'Mark Complete!'}
                 </button>
               )}
             </div>
@@ -308,7 +277,7 @@ function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: ()
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
                   completedSteps.has(i) ? 'bg-green-500 text-white' : i === currentStep ? 'bg-primary text-primary-foreground' : 'bg-border text-muted-foreground'
                 }`}>
-                  {completedSteps.has(i) ? '✓' : i + 1}
+                  {completedSteps.has(i) ? 'âœ“' : i + 1}
                 </div>
                 <span className={`text-sm font-medium ${completedSteps.has(i) ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
                   {s.title}
@@ -373,7 +342,7 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
                   <SkillCoin size={14} />
                   <span>+{course.points} SC coins</span>
                 </div>
-                {course.completed && <span className="block mt-1 text-xs text-green-600 font-semibold">✅ Completed</span>}
+                {course.completed && <span className="block mt-1 text-xs text-green-600 font-semibold">âœ… Completed</span>}
               </div>
               <div className="flex items-center gap-4">
                 {course.locked ? (
@@ -401,7 +370,7 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
 
   return (
     <div className="h-full bg-background overflow-y-auto pb-6">
-      {/* ── Header: background video with gradient overlay ── */}
+      {/* â”€â”€ Header: background video with gradient overlay â”€â”€ */}
       <div className="relative h-56 bg-gradient-to-br from-amber-200 to-orange-300 overflow-hidden">
         <video
           ref={videoRef}
@@ -422,28 +391,31 @@ export function PaperCraftsScreen({ onBack }: PaperCraftsScreenProps) {
         </button>
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col items-center justify-end pb-6 px-6 pointer-events-none">
           <div className="text-center">
-            <p className="text-4xl mb-2">📜✂️</p>
+            <p className="text-4xl mb-2">ðŸ“œâœ‚ï¸</p>
             <h2 className="text-white font-bold text-2xl drop-shadow-lg">Paper Crafts</h2>
             <p className="text-white/90 text-sm">Learn origami step-by-step</p>
           </div>
         </div>
       </div>
 
-      {/* ── Course list ── */}
+      {/* â”€â”€ Course list â”€â”€ */}
       <div className="px-6 mt-6">
         <div className="bg-gradient-to-r from-amber-400 to-orange-400 rounded-3xl p-5 mb-6 shadow-lg">
           <div className="flex items-center gap-5">
-            <div className="text-4xl">🎁</div>
+            <div className="text-4xl">ðŸŽ</div>
             <div>
               <h3 className="text-white font-bold">Start with Easy!</h3>
-              <p className="text-amber-100 text-sm">Progress from Easy → Intermediate → Advanced</p>
+              <p className="text-amber-100 text-sm">Progress from Easy â†’ Intermediate â†’ Advanced</p>
             </div>
           </div>
         </div>
-        {renderSection('Beginner', '🌱', easy, 'easy')}
-        {renderSection('Intermediate', '⚡', intermediate, 'intermediate')}
-        {renderSection('Master', '🏆', advanced, 'advanced')}
+        {renderSection('Beginner', 'ðŸŒ±', easy, 'easy')}
+        {renderSection('Intermediate', 'âš¡', intermediate, 'intermediate')}
+        {renderSection('Master', 'ðŸ†', advanced, 'advanced')}
       </div>
     </div>
   );
 }
+
+
+
