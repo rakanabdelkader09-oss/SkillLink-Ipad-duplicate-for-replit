@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, ChevronRight, CheckCircle, Star, Lock } from 'lucide-react';
 import { Progress } from './ui/progress';
 import { SkillCoin } from './CurrencyIcons';
-import { Browser } from '@capacitor/browser';
 
 interface PaperCraftsScreenProps {
   onBack: () => void;
@@ -137,28 +136,21 @@ const DIFFICULTY_CONFIG = {
 };
 
 function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
-  const openVideo = async () => {
-    await Browser.open({ url: `https://www.youtube.com/watch?v=${youtubeId}` });
-  };
-  return (
-    <div className="relative w-full bg-black cursor-pointer" style={{ aspectRatio: '16/9' }} onClick={openVideo}>
-      <img
-        src={`https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`}
-        alt="Video thumbnail"
-        className="absolute inset-0 w-full h-full object-cover opacity-80"
-        onError={(e) => { (e.target as HTMLImageElement).src = "https://placehold.co/320x180/1e1e1e/ffffff?text=Tap+to+Play"; }}
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="bg-red-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-xl">
-          <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M8 5v14l11-7z" /></svg>
-        </div>
+  const [playing, setPlaying] = useState(false);
+
+  if (playing) {
+    return (
+      <div className="relative w-full bg-black" style={{ aspectRatio: '16/9' }}>
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&origin=https://localhost`}
+          className="absolute inset-0 w-full h-full border-0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+          allowFullScreen
+          title="Origami tutorial"
+        />
       </div>
-      <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
-        ▶ Tap to watch
-      </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
     <div
