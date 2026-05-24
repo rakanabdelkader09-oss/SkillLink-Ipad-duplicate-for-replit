@@ -31,7 +31,7 @@ workflows:
         script: npm ci || npm install
 
       - name: Build web bundle
-        script: VITE_API_URL=https://skill-link-ipad-duplicate-for-replit.replit.app npm run build
+        script: VITE_API_URL=https://skilllink-ipad-duplicate-for-replit-production.up.railway.app npm run build
 
       - name: Initialise & sync iOS shell
         script: |
@@ -77,7 +77,7 @@ workflows:
         script: npm ci || npm install
 
       - name: Build web bundle
-        script: VITE_API_URL=https://skill-link-ipad-duplicate-for-replit.replit.app npm run build
+        script: VITE_API_URL=https://skilllink-ipad-duplicate-for-replit-production.up.railway.app npm run build
 
       - name: Initialise & sync Android shell
         script: |
