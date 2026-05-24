@@ -93,8 +93,8 @@ interface VideoSubmission {
 
 export default function App() {
   const [currentScreen, setCurrentScreen] =
-    useState<Screen>("onboarding");
-  const [userType, setUserType] = useState<UserType>(null);
+    useState<Screen>(() => { try { const s = localStorage.getItem('skilllink-session'); if (s) { const d = JSON.parse(s); if (d.userType) return d.userType === 'parent' ? 'parent' : d.userType === 'creator' ? 'creator' : 'home'; } } catch(e) {} return 'onboarding'; });
+  const [userType, setUserType] = useState<UserType>(() => { try { const s = localStorage.getItem('skilllink-session'); if (s) return JSON.parse(s).userType || null; } catch(e) {} return null; });
   const [userProfile, setUserProfile] =
     useState<UserProfile | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
@@ -947,7 +947,7 @@ export default function App() {
         .catch(console.error);
     }
 
-    // Navigate to appropriate screen based on user type
+    localStorage.setItem('skilllink-session', JSON.stringify({ userType: type, userProfile: profile, userId: (profile as any).dbUserId || null }));    // Navigate to appropriate screen based on user type
     if (type === "parent") {
       setCurrentScreen("parent");
     } else if (type === "creator") {
@@ -966,7 +966,7 @@ export default function App() {
     }
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = () => { localStorage.removeItem('skilllink-session');
     setUserType(null);
     setUserProfile(null);
     setCurrentScreen("onboarding");
