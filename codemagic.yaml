@@ -19,6 +19,8 @@ workflows:
     environment:
       node: 20.18.0
       xcode: latest
+      groups:
+        - skilllink
       vars:
         XCODE_WORKSPACE: ios/App/App.xcworkspace
         XCODE_SCHEME: App
@@ -68,6 +70,8 @@ workflows:
     environment:
       node: 20.18.0
       java: 17
+      groups:
+        - skilllink
     scripts:
       - name: Install npm dependencies
         script: npm ci || npm install
