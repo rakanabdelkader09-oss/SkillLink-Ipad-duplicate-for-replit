@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
 import { getCourseById } from './CourseListScreen';
+import { Browser } from '@capacitor/browser';
 
 interface CourseDetailScreenProps {
   courseId: string;
@@ -546,16 +547,20 @@ export function CourseDetailScreen({ courseId, onBack, onCourseComplete, onLesso
           {/* In-app YouTube player with full-screen support */}
           <div className="rounded-3xl overflow-hidden border-2 border-purple-100 shadow-lg mb-4 bg-black relative">
             <div className="relative w-full" style={{ aspectRatio: '16 / 9' }}>
-              <iframe
-                key={ytId + activeStep}
-                src={ytEmbedUrl(ytId)}
-                title={step.videoLabel}
-                className="absolute inset-0 w-full h-full"
-                frameBorder={0}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                allowFullScreen
-                referrerPolicy="strict-origin-when-cross-origin"
-              />
+             <div
+  className="absolute inset-0 w-full h-full flex items-center justify-center cursor-pointer"
+  onClick={async () => { await Browser.open({ url: `https://www.youtube.com/watch?v=${ytId}` }); }}
+>
+  <img
+    src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
+    alt="Video thumbnail"
+    className="absolute inset-0 w-full h-full object-cover opacity-80"
+  />
+  <div className="relative z-10 bg-red-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-xl">
+    <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M8 5v14l11-7z" /></svg>
+  </div>
+  <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full z-10">▶ Tap to watch</div>
+</div>
             </div>
           </div>
           <p className="text-gray-400 text-xs text-center mb-5 italic">{step.videoLabel}</p>
