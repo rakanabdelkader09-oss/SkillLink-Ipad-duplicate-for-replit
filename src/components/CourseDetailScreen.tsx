@@ -4,7 +4,6 @@ import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
 import { getCourseById } from './CourseListScreen';
-import { Browser } from '@capacitor/browser';
 
 interface CourseDetailScreenProps {
   courseId: string;
@@ -306,7 +305,49 @@ function buildGenericCourse(courseId: string) {
     lessons,
   };
 }
-
+function VideoModal({ youtubeId }: { youtubeId: string }) {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      {open && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 9999,
+          background: 'black', display: 'flex', flexDirection: 'column'
+        }}>
+          <button
+            onClick={() => setOpen(false)}
+            style={{
+              position: 'absolute', top: 50, right: 16, zIndex: 10000,
+              background: 'rgba(0,0,0,0.7)', color: 'white',
+              border: 'none', borderRadius: 20, padding: '8px 16px',
+              fontSize: 16, cursor: 'pointer'
+            }}
+          >✕ Close</button>
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0&modestbranding=1`}
+            style={{ flex: 1, border: 'none', width: '100%', height: '100%' }}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            allowFullScreen
+          />
+        </div>
+      )}
+      <div
+        className="absolute inset-0 w-full h-full flex items-center justify-center cursor-pointer"
+        onClick={() => setOpen(true)}
+      >
+        <img
+          src={`https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`}
+          alt="Video thumbnail"
+          className="absolute inset-0 w-full h-full object-cover opacity-80"
+        />
+        <div className="relative z-10 bg-red-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-xl">
+          <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M8 5v14l11-7z" /></svg>
+        </div>
+        <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full z-10">▶ Tap to watch</div>
+      </div>
+    </>
+  );
+}
 export function CourseDetailScreen({ courseId, onBack, onCourseComplete, onLessonComplete, completedLessons, alreadyCompleted }: CourseDetailScreenProps) {
   const course = courseData[courseId] || buildGenericCourse(courseId) || courseData['ls-1'];
   const [lessons, setLessons] = useState<Lesson[]>(() =>
@@ -547,20 +588,7 @@ export function CourseDetailScreen({ courseId, onBack, onCourseComplete, onLesso
           {/* In-app YouTube player with full-screen support */}
           <div className="rounded-3xl overflow-hidden border-2 border-purple-100 shadow-lg mb-4 bg-black relative">
             <div className="relative w-full" style={{ aspectRatio: '16 / 9' }}>
-             <div
-  className="absolute inset-0 w-full h-full flex items-center justify-center cursor-pointer"
-  onClick={async () => { await Browser.open({ url: `https://www.youtube.com/watch?v=${ytId}` }); }}
->
-  <img
-    src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
-    alt="Video thumbnail"
-    className="absolute inset-0 w-full h-full object-cover opacity-80"
-  />
-  <div className="relative z-10 bg-red-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-xl">
-    <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M8 5v14l11-7z" /></svg>
-  </div>
-  <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full z-10">▶ Tap to watch</div>
-</div>
+<VideoModal youtubeId={ytId} />
             </div>
           </div>
           <p className="text-gray-400 text-xs text-center mb-5 italic">{step.videoLabel}</p>
