@@ -160,34 +160,7 @@ function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
   );
 }
 
-  return (
-    <div
-      className="relative w-full bg-black cursor-pointer"
-      style={{ aspectRatio: '16/9' }}
-      onClick={() => setPlaying(true)}
-    >
-      <img
-        src={`https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`}
-        alt="Video thumbnail"
-        className="absolute inset-0 w-full h-full object-cover opacity-80"
-        onError={(e) => {
-          (e.target as HTMLImageElement).src =
-            "https://placehold.co/320x180/1e1e1e/ffffff?text=Tap+to+Play";
-        }}
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="bg-red-600 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-xl">
-          <svg viewBox="0 0 24 24" fill="white" width="28" height="28">
-            <path d="M8 5v14l11-7z" />
-          </svg>
-        </div>
-      </div>
-      <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full">
-        ▶ Tap to play
-      </div>
-    </div>
-  );
-}
+
 
 function CourseStepsView({ course, onBack }: { course: OrigamiCourse; onBack: () => void }) {
   const [currentStep, setCurrentStep] = useState(0);
