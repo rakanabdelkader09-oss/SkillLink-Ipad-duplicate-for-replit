@@ -1,17 +1,4 @@
-# Codemagic CI/CD configuration for SkillLink — Kids Learning
-# ------------------------------------------------------------
-# Two workflows:
-#   ios-unsigned-build  → unsigned .ipa (sideloadable via AltStore / Sideloadly)
-#   android-debug-build → debug .apk (installable directly or open android/ in Android Studio)
-#
-# To point the app at your live API, set VITE_API_URL in the Codemagic
-# Environment variables UI (App settings → Environment variables) rather than
-# here, so the value is never committed to the repo.
-#
-# App metadata: SkillLink / com.skilllink.app
 workflows:
-
-  # ── iOS ─────────────────────────────────────────────────────────────────────
   ios-unsigned-build:
     name: SkillLink iOS Unsigned IPA
     instance_type: mac_mini_m2
@@ -29,23 +16,19 @@ workflows:
     scripts:
       - name: Install npm dependencies
         script: npm ci || npm install
-
       - name: Build web bundle
         script: VITE_API_URL=https://skilllink-ipad-duplicate-for-replit-production.up.railway.app npm run build
-
       - name: Initialise & sync iOS shell
         script: |
           if [ ! -d ios ]; then
             npx cap add ios
           fi
           npx cap sync ios
-	
-	- name: Copy app icon
+      - name: Copy app icon
         script: |
           cp assets/appicon/Icon-*.png ios/App/App/Assets.xcassets/AppIcon.appiconset/
           cp assets/appicon/AppIcon~ios-marketing.png ios/App/App/Assets.xcassets/AppIcon.appiconset/
           cp assets/appicon/Contents.json ios/App/App/Assets.xcassets/AppIcon.appiconset/
-
       - name: Build unsigned .app
         script: |
           xcodebuild build \
@@ -58,7 +41,6 @@ workflows:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
             PROVISIONING_PROFILE=""
-
       - name: Package unsigned IPA
         script: |
           mkdir -p build_ios/ipa/Payload
@@ -67,8 +49,6 @@ workflows:
     artifacts:
       - build_ios/ipa/*.ipa
       - build_ios/Build/Products/Release-iphoneos/*.app
-
-  # ── Android ─────────────────────────────────────────────────────────────────
   android-debug-build:
     name: SkillLink Android Debug APK
     instance_type: mac_mini_m2
@@ -81,22 +61,30 @@ workflows:
     scripts:
       - name: Install npm dependencies
         script: npm ci || npm install
-
       - name: Build web bundle
         script: VITE_API_URL=https://skilllink-ipad-duplicate-for-replit-production.up.railway.app npm run build
-
       - name: Initialise & sync Android shell
         script: |
           if [ ! -d android ]; then
             npx cap add android
           fi
           npx cap sync android
-
+      - name: Copy Android icons
+        script: |
+          cp assets/appicon/android/mipmap-mdpi/ic_launcher.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+          cp assets/appicon/android/mipmap-mdpi/ic_launcher_round.png android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png
+          cp assets/appicon/android/mipmap-hdpi/ic_launcher.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+          cp assets/appicon/android/mipmap-hdpi/ic_launcher_round.png android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png
+          cp assets/appicon/android/mipmap-xhdpi/ic_launcher.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+          cp assets/appicon/android/mipmap-xhdpi/ic_launcher_round.png android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png
+          cp assets/appicon/android/mipmap-xxhdpi/ic_launcher.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+          cp assets/appicon/android/mipmap-xxhdpi/ic_launcher_round.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
+          cp assets/appicon/android/mipmap-xxxhdpi/ic_launcher.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          cp assets/appicon/android/mipmap-xxxhdpi/ic_launcher_round.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
       - name: Build debug APK
         script: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
-
     artifacts:
       - android/app/build/outputs/apk/debug/*.apk
