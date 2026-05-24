@@ -52,19 +52,19 @@ const courseData: Record<string, any> = {
         steps: [
           {
             heading: 'Find Your Shoes',
-            videoUrl: 'https://www.youtube.com/embed/s2sGVdkPBZA',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/s2sGVdkPBZA',
             videoLabel: 'Preparing to tie shoes',
             instructions: 'Pick up both shoes and sit in a comfortable spot. Make sure the laces are untangled before we start.',
           },
           {
             heading: 'Hold the Laces',
-            videoUrl: 'https://www.youtube.com/embed/s2sGVdkPBZA',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/s2sGVdkPBZA',
             videoLabel: 'Holding the laces correctly',
             instructions: 'Hold one lace in each hand. Pull them out so they are the same length on each side of the shoe.',
           },
           {
             heading: 'Cross and Tuck',
-            videoUrl: 'https://www.youtube.com/embed/s2sGVdkPBZA',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/s2sGVdkPBZA',
             videoLabel: 'Cross and tuck step',
             instructions: 'Cross the right lace over the left, then tuck it underneath and pull both ends tight. This is the first knot!',
           },
@@ -83,19 +83,19 @@ const courseData: Record<string, any> = {
         steps: [
           {
             heading: 'Make the First Loop',
-            videoUrl: 'https://www.youtube.com/embed/s2sGVdkPBZA',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/s2sGVdkPBZA',
             videoLabel: 'Making bunny ear loops',
             instructions: 'Take one lace and fold it into a loop - this is the first "bunny ear". Hold it between your thumb and finger.',
           },
           {
             heading: 'Make the Second Loop',
-            videoUrl: 'https://www.youtube.com/embed/s2sGVdkPBZA',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/s2sGVdkPBZA',
             videoLabel: 'Second bunny ear loop',
             instructions: 'Do the same with the other lace - make a second loop. Now you have two bunny ears!',
           },
           {
             heading: 'Cross and Pull Through',
-            videoUrl: 'https://www.youtube.com/embed/s2sGVdkPBZA',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/s2sGVdkPBZA',
             videoLabel: 'Finishing the knot',
             instructions: 'Cross one bunny ear over the other, tuck it through, and pull both ears tight. Your shoe is tied!',
           },
@@ -123,19 +123,19 @@ const courseData: Record<string, any> = {
         steps: [
           {
             heading: 'Get Your Tools Ready',
-            videoUrl: 'https://www.youtube.com/embed/kFhH7-zuHfk',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/kFhH7-zuHfk',
             videoLabel: 'Art tools for beginners',
             instructions: 'Get a pencil and a blank piece of paper. Find a flat surface to draw on. Good preparation makes drawing easier!',
           },
           {
             heading: 'Draw Straight Lines',
-            videoUrl: 'https://www.youtube.com/embed/kFhH7-zuHfk',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/kFhH7-zuHfk',
             videoLabel: 'Drawing straight lines',
             instructions: 'Hold your pencil lightly and move your whole arm to draw a straight line. Practice 5 horizontal lines and 5 vertical lines.',
           },
           {
             heading: 'Draw Circles',
-            videoUrl: 'https://www.youtube.com/embed/kFhH7-zuHfk',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/kFhH7-zuHfk',
             videoLabel: 'Drawing perfect circles',
             instructions: 'Draw a circle slowly, keeping your hand steady. Try making 5 circles of different sizes. It is okay if they are wobbly - practice makes perfect!',
           },
@@ -154,19 +154,19 @@ const courseData: Record<string, any> = {
         steps: [
           {
             heading: 'Start with the Head',
-            videoUrl: 'https://www.youtube.com/embed/a_cF19eNKNo',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/a_cF19eNKNo',
             videoLabel: 'Drawing a cat step by step',
             instructions: 'Draw a big circle for the cat\'s head. Make it nice and round - this is the base for our cat!',
           },
           {
             heading: 'Add Ears and Face',
-            videoUrl: 'https://www.youtube.com/embed/a_cF19eNKNo',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/a_cF19eNKNo',
             videoLabel: 'Cat ears and face',
             instructions: 'Draw two small triangles on top for ears. Then add two circles for eyes, a small triangle nose, and a curved line for the mouth.',
           },
           {
             heading: 'Finish with Whiskers',
-            videoUrl: 'https://www.youtube.com/embed/a_cF19eNKNo',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/a_cF19eNKNo',
             videoLabel: 'Cat whiskers and details',
             instructions: 'Draw 3 lines on each side of the nose for whiskers. Add dots at the end of each whisker. Your cat is done - give it a name!',
           },
@@ -194,19 +194,19 @@ const courseData: Record<string, any> = {
         steps: [
           {
             heading: 'Why Safety Matters',
-            videoUrl: 'https://www.youtube.com/embed/H1XOb6OSEhE',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/H1XOb6OSEhE',
             videoLabel: 'Kitchen safety for kids',
             instructions: 'The kitchen is an exciting place but it can also be dangerous. Always have an adult nearby when you cook. Watch this video carefully!',
           },
           {
             heading: 'Washing Your Hands',
-            videoUrl: 'https://www.youtube.com/embed/H1XOb6OSEhE',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/H1XOb6OSEhE',
             videoLabel: 'Hand washing before cooking',
             instructions: 'Before touching any food, wash your hands with soap for 20 seconds. Clean hands keep food safe and healthy!',
           },
           {
             heading: 'Hot Surfaces',
-            videoUrl: 'https://www.youtube.com/embed/H1XOb6OSEhE',
+            videoUrl: 'https://www.youtube-nocookie.com/embed/H1XOb6OSEhE',
             videoLabel: 'Staying safe around heat',
             instructions: 'Never touch the stove, oven, or microwave without an adult. Keep a towel nearby for spills and always turn pot handles inward so they do not get knocked over.',
           },
@@ -228,7 +228,7 @@ function getYouTubeId(videoUrl: string): string {
 }
 
 function ytEmbedUrl(id: string) {
-  return `https://www.youtube.com/embed/${id}?playsinline=1&rel=0&modestbranding=1`;
+  return `https://www.youtube-nocookie.com/embed/${id}?playsinline=1&rel=0&modestbranding=1`;
 }
 
 // One relevant video per category used by all generic placeholder lessons in that category.
@@ -267,13 +267,13 @@ function buildGenericCourse(courseId: string) {
     steps: [
       {
         heading: `Introduction to ${summary.title}`,
-        videoUrl: `https://www.youtube.com/embed/${videoId}`,
+        videoUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
         videoLabel: `${summary.title} — overview`,
         instructions: `Watch the video and learn the basics of "${summary.title}". Take your time and follow along step by step.`,
       },
       {
         heading: 'Try it yourself',
-        videoUrl: `https://www.youtube.com/embed/${videoId}`,
+        videoUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
         videoLabel: `${summary.title} — practice`,
         instructions: `Now it's your turn! Practice what you learned about ${summary.title.toLowerCase()}. Ask a grown-up for help if you need it.`,
       },

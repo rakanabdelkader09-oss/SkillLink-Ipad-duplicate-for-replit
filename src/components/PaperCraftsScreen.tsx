@@ -142,7 +142,7 @@ function YouTubePlayer({ youtubeId }: { youtubeId: string }) {
     return (
       <div className="relative w-full bg-black" style={{ aspectRatio: '16/9' }}>
         <iframe
-          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0&modestbranding=1`}
+          src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0&modestbranding=1&origin=https://localhost`}
           className="absolute inset-0 w-full h-full border-0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
           allowFullScreen
