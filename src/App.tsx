@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { OnboardingScreen } from "./components/OnboardingScreen";
 import { AuthScreen } from "./components/AuthScreen";
 import { UserProfile } from "./components/ProfileSetupScreen";
@@ -93,11 +93,11 @@ interface VideoSubmission {
 
 export default function App() {
   const [currentScreen, setCurrentScreen] =
-    useState<Screen>(() => { try { const s = localStorage.getItem('skilllink-session'); if (s) { const d = JSON.parse(s); if (d.userType) return d.userType === 'parent' ? 'parent' : d.userType === 'creator' ? 'creator' : 'home'; } } catch {} return 'onboarding'; });
-  const [userType, setUserType] = useState<UserType>(() => { try { const s = localStorage.getItem('skilllink-session'); if (s) return JSON.parse(s).userType || null; } catch {} return null; });
+    useState<Screen>("onboarding");
+  const [userType, setUserType] = useState<UserType>(null);
   const [userProfile, setUserProfile] =
     useState<UserProfile | null>(null);
-  const [userId, setUserId] = useState<number | null>(() => { try { const s = localStorage.getItem('skilllink-session'); if (s) return JSON.parse(s).userId || null; } catch {} return null; });
+  const [userId, setUserId] = useState<number | null>(null);
   const [deviceId] = useState<string>(() => getOrCreateDeviceId());
   const [userPoints, setUserPoints] = useState<number>(0);
   const [userXP, setUserXP] = useState<number>(1247);
@@ -232,7 +232,7 @@ export default function App() {
         setUserPoints(user.sc_coins);
       })
       .catch(() => {
-        // Server not ready yet � start with 50 coins as fallback
+        // Server not ready yet — start with 50 coins as fallback
         setUserPoints(50);
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -266,7 +266,7 @@ export default function App() {
       // Personal Care - Easy
       1: {
         title: "Brush your teeth",
-        icon: "??",
+        icon: "🪥",
         points: 10,
         instructions: [
           "Get your toothbrush and toothpaste",
@@ -283,7 +283,7 @@ export default function App() {
       },
       2: {
         title: "Wash your hands",
-        icon: "??",
+        icon: "🧼",
         points: 10,
         instructions: [
           "Turn on the water",
@@ -300,7 +300,7 @@ export default function App() {
       },
       3: {
         title: "Do 5 jumping jacks",
-        icon: "??",
+        icon: "🤸",
         points: 10,
         instructions: [
           "Stand with feet together",
@@ -319,7 +319,7 @@ export default function App() {
       // Personal Care - Medium
       4: {
         title: "Do 10 jumping jacks",
-        icon: "??",
+        icon: "🤸",
         points: 15,
         instructions: [
           "Stand up straight",
@@ -336,7 +336,7 @@ export default function App() {
       },
       5: {
         title: "Drink 4 glasses of water",
-        icon: "??",
+        icon: "💧",
         points: 15,
         instructions: [
           "Get a clean glass",
@@ -353,7 +353,7 @@ export default function App() {
       },
       6: {
         title: "Take a shower by yourself",
-        icon: "??",
+        icon: "🚿",
         points: 20,
         instructions: [
           "Get your towel and clean clothes ready",
@@ -372,7 +372,7 @@ export default function App() {
       // Personal Care - Hard
       7: {
         title: "Do 20 jumping jacks and 10 push-ups",
-        icon: "??",
+        icon: "💪",
         points: 25,
         instructions: [
           "Warm up with light stretching",
@@ -389,7 +389,7 @@ export default function App() {
       },
       8: {
         title: "Create a personal hygiene checklist",
-        icon: "??",
+        icon: "📋",
         points: 25,
         instructions: [
           "Think about daily hygiene tasks",
@@ -408,7 +408,7 @@ export default function App() {
       // Responsibility - Easy
       9: {
         title: "Make your bed",
-        icon: "???",
+        icon: "🛏️",
         points: 10,
         instructions: [
           "Pull up your sheets",
@@ -425,7 +425,7 @@ export default function App() {
       },
       10: {
         title: "Put your toys away",
-        icon: "??",
+        icon: "🧸",
         points: 10,
         instructions: [
           "Pick up your toys",
@@ -442,7 +442,7 @@ export default function App() {
       },
       11: {
         title: "Put dirty clothes in hamper",
-        icon: "??",
+        icon: "👕",
         points: 10,
         instructions: [
           "Find your dirty clothes",
@@ -461,7 +461,7 @@ export default function App() {
       // Responsibility - Medium
       12: {
         title: "Help with dishes",
-        icon: "???",
+        icon: "🍽️",
         points: 15,
         instructions: [
           "Clear your plate from the table",
@@ -478,7 +478,7 @@ export default function App() {
       },
       13: {
         title: "Organize your backpack",
-        icon: "??",
+        icon: "🎒",
         points: 15,
         instructions: [
           "Empty everything from your backpack",
@@ -495,7 +495,7 @@ export default function App() {
       },
       14: {
         title: "Water the plants",
-        icon: "??",
+        icon: "🌱",
         points: 15,
         instructions: [
           "Get a watering can or cup",
@@ -514,7 +514,7 @@ export default function App() {
       // Responsibility - Hard
       15: {
         title: "Clean and organize your room",
-        icon: "??",
+        icon: "🏠",
         points: 25,
         instructions: [
           "Pick up all items from the floor",
@@ -532,7 +532,7 @@ export default function App() {
       },
       16: {
         title: "Help prepare a simple meal",
-        icon: "??",
+        icon: "🍳",
         points: 30,
         instructions: [
           "Wash your hands thoroughly",
@@ -550,7 +550,7 @@ export default function App() {
       },
       17: {
         title: "Do your own laundry",
-        icon: "??",
+        icon: "🧺",
         points: 30,
         instructions: [
           "Collect dirty clothes",
@@ -570,7 +570,7 @@ export default function App() {
       // Learning - Easy
       18: {
         title: "Read a picture book",
-        icon: "??",
+        icon: "📚",
         points: 15,
         instructions: [
           "Pick a fun picture book",
@@ -587,7 +587,7 @@ export default function App() {
       },
       19: {
         title: "Count to 20",
-        icon: "??",
+        icon: "🔢",
         points: 15,
         instructions: [
           "Start at 1",
@@ -604,7 +604,7 @@ export default function App() {
       },
       20: {
         title: "Learn 2 new words",
-        icon: "??",
+        icon: "📝",
         points: 15,
         instructions: [
           "Pick 2 new words you don't know",
@@ -623,7 +623,7 @@ export default function App() {
       // Learning - Medium
       21: {
         title: "Read for 15 minutes",
-        icon: "??",
+        icon: "📖",
         points: 20,
         instructions: [
           "Choose a book you enjoy",
@@ -640,7 +640,7 @@ export default function App() {
       },
       22: {
         title: "Practice 10 math problems",
-        icon: "??",
+        icon: "🔢",
         points: 25,
         instructions: [
           "Get your math homework or worksheet",
@@ -657,7 +657,7 @@ export default function App() {
       },
       23: {
         title: "Learn 5 new vocabulary words",
-        icon: "??",
+        icon: "📝",
         points: 20,
         instructions: [
           "Find 5 words you don't know",
@@ -676,7 +676,7 @@ export default function App() {
       // Creative quests
       28: {
         title: "Color a picture",
-        icon: "???",
+        icon: "🖍️",
         points: 15,
         instructions: [
           "Get crayons and coloring book",
@@ -693,7 +693,7 @@ export default function App() {
       },
       31: {
         title: "Draw your favorite animal",
-        icon: "??",
+        icon: "🎨",
         points: 20,
         instructions: [
           "Get paper and drawing tools",
@@ -710,7 +710,7 @@ export default function App() {
       },
       34: {
         title: "Write a short story (200+ words)",
-        icon: "??",
+        icon: "✍️",
         points: 35,
         instructions: [
           "Think of an interesting idea",
@@ -729,7 +729,7 @@ export default function App() {
       // Social quests
       37: {
         title: "Give someone a hug",
-        icon: "??",
+        icon: "🤗",
         points: 10,
         instructions: [
           "Find someone you love",
@@ -746,7 +746,7 @@ export default function App() {
       },
       40: {
         title: "Say something kind to 3 people",
-        icon: "??",
+        icon: "💝",
         points: 15,
         instructions: [
           "Think of something nice to say",
@@ -763,7 +763,7 @@ export default function App() {
       },
       43: {
         title: "Resolve a conflict peacefully",
-        icon: "???",
+        icon: "🕊️",
         points: 30,
         instructions: [
           "If you have a disagreement, stay calm",
@@ -782,7 +782,7 @@ export default function App() {
       // Parent-Kid Team Quests (Bonus points!)
       50: {
         title: "Cook a meal together",
-        icon: "?????",
+        icon: "👨‍🍳",
         points: 40,
         instructions: [
           "Choose a recipe together",
@@ -800,7 +800,7 @@ export default function App() {
       },
       51: {
         title: "Build something together",
-        icon: "??",
+        icon: "🔨",
         points: 35,
         instructions: [
           "Choose a project (LEGO, craft, birdhouse)",
@@ -818,7 +818,7 @@ export default function App() {
       },
       52: {
         title: "Read a book together",
-        icon: "??",
+        icon: "📖",
         points: 30,
         instructions: [
           "Pick a book you both like",
@@ -836,7 +836,7 @@ export default function App() {
       },
       53: {
         title: "Clean a room together",
-        icon: "??",
+        icon: "🧹",
         points: 35,
         instructions: [
           "Choose a room to clean",
@@ -880,7 +880,7 @@ export default function App() {
           "Take your time and enjoy it",
           "Mark the quest as done when finished",
         ],
-        tips: curated?.tips ?? "You've got this � give it your best!",
+        tips: curated?.tips ?? "You've got this — give it your best!",
         color: colorMap[canonical.color] ?? "from-purple-400 to-purple-500",
         difficulty: canonical.difficulty,
         category: canonical.category,
@@ -923,7 +923,7 @@ export default function App() {
     if (p.username_handle) setUserHandle(p.username_handle);
 
     if (p.dbUserId) {
-      // Came from real auth API � user already in DB
+      // Came from real auth API — user already in DB
       setUserId(p.dbUserId);
       setUserPoints(50);
       setUserXP(1247);
@@ -947,7 +947,7 @@ export default function App() {
         .catch(console.error);
     }
 
-    localStorage.setItem('skilllink-session', JSON.stringify({ userType: type, userProfile: profile, userId: (profile as any).dbUserId || null }));`n    // Navigate to appropriate screen based on user type
+    // Navigate to appropriate screen based on user type
     if (type === "parent") {
       setCurrentScreen("parent");
     } else if (type === "creator") {
@@ -1038,7 +1038,7 @@ export default function App() {
       id: `sub-${Date.now()}`,
       questId: questId,
       questTitle: qd?.title || "Quest",
-      questIcon: qd?.icon || "??",
+      questIcon: qd?.icon || "🎯",
       questPoints: qd?.points || 10,
       childName: userProfile?.name || "Child",
       challengedWith: [],
@@ -1051,7 +1051,7 @@ export default function App() {
     setVideoSubmissions((prev) => [...prev, submission]);
     setCompletedQuestIds((prev) => [...prev, questId]);
 
-    // Optimistic SC update � corrected by DB response below
+    // Optimistic SC update — corrected by DB response below
     if (qd) setUserPoints((prev) => prev + qd.points);
 
     // Persist to DB and award coins + XP
@@ -1441,7 +1441,7 @@ export default function App() {
                 completeQuest(userId, {
                   quest_id: 16,
                   quest_title: "Clean and organize your room",
-                  quest_icon: "??",
+                  quest_icon: "🧹",
                   points_earned: pts,
                   status: "completed",
                 })
@@ -1495,7 +1495,7 @@ export default function App() {
 
   return (
     <div className="w-full bg-white flex items-center justify-center" style={{ minHeight: '100vh', height: '100dvh' }}>
-      {/* Adaptive container � full-bleed on phones, contained on tablets/desktops */}
+      {/* Adaptive container — full-bleed on phones, contained on tablets/desktops */}
       <div className="relative w-full h-full bg-white shadow-2xl overflow-hidden mx-auto" style={{ maxWidth: 'min(100vw, 768px)' }}>
         {renderScreen()}
         {showBottomNav && (
@@ -1509,10 +1509,5 @@ export default function App() {
     </div>
   );
 }
-
-
-
-
-
 
 
