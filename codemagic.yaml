@@ -39,6 +39,12 @@ workflows:
             npx cap add ios
           fi
           npx cap sync ios
+	
+	- name: Copy app icon
+        script: |
+          cp assets/appicon/Icon-*.png ios/App/App/Assets.xcassets/AppIcon.appiconset/
+          cp assets/appicon/AppIcon~ios-marketing.png ios/App/App/Assets.xcassets/AppIcon.appiconset/
+          cp assets/appicon/Contents.json ios/App/App/Assets.xcassets/AppIcon.appiconset/
 
       - name: Build unsigned .app
         script: |
